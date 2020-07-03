@@ -111,7 +111,33 @@ async function getMerchandiseByName(merchName) {
 
     //createMerchandiseReview(merchId, fields={})
 
+    async function createMerchandise({name, description, price, rating=null, cat}) {
+        const { rows: [reviews] } = await db.query(`
+        UPDATE reviews
+        INSERT VALUES($1, $2, $3, $4, $5 )
+        RETURNING *;
+    `, [name, description, price, rating, cat]);
+
+        return reviews;
+    }
+
+
+
     //deleteMerchandise(merchId)
+    async function deleteMerchandise(merchId) {
+        try {
+            const {rows: [merchandise]} = await db.query(`
+            DELETE FROM merchandise
+            WHERE merch_id=${merchId}
+            RETURNING *;
+            `)
+
+        return merchandise;
+
+        } catch (error) {
+            throw error;
+        }
+    }
 
     //deleteMerchandiseReview(reviewId)
 
@@ -159,7 +185,15 @@ async function getMerchandiseByName(merchName) {
 
     //createPayment(userId)
 
-    module.exports={db}
+    module.exports={
+        db,
+        createMerchandise,
+        getAllMerchandiseReviews,
+        getMerchandiseByCategory,
+        getMerchandiseById,
+        getMerchandiseByName,
+
+    }
 
 
 

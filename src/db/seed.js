@@ -1,9 +1,8 @@
 
 //each teammember please create seed method to test your
 
-const { db } = require('./index');
-// const {Client} = require('pg');
-// const connectString = process.env.DATABASE_URL || "postgres:/localhost:5432//great-outdoors";
+const { db, createMerchandise } = require('./index');
+const faker = require('faker')
 const chalk = require('chalk');
 
 // const db = new Client(connectString);
@@ -47,20 +46,26 @@ async function createTables(){
             hashpassword VARCHAR(255) NOT NULL,
             firstname VARCHAR(255) NOT NULL,
             lastname VARCHAR(255) NOT NULL
-        );
+        );`)
 
+        console.log('creating categories');
+        await db.query(`
         CREATE TABLE IF NOT EXISTS categories(
                 cat_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL
-            );
+            );`)
 
+        console.log('creating reviews')
+        await db.query(`
         CREATE TABLE IF NOT EXISTS reviews(
             review_id SERIAL PRIMARY KEY,
             author INTEGER REFERENCES users(user_id) NOT NULL,
             merchId INTEGER REFERENCES merchandise(merch_id)NOT NULL,
             rating INTEGER DEFAULT 5
-        )
+        );`)
         
+        console.log('creating merchandise')
+        await db.query(`
         CREATE TABLE IF NOT EXISTS merchandise(
             merch_id SERIAL PRIMARY KEY,
             name VARCHAR(255) UNIQUE NOT NULL,
@@ -69,62 +74,61 @@ async function createTables(){
             rating INTEGER,
             cats INTEGER REFERENCES categories(cat_id)
             
-        );
-
-        CREATE TABLE IF NOT EXISTS images(
+        );`)
+        
+        console.log('creating images')
+        await db.query(`CREATE TABLE IF NOT EXISTS images(
             imageId SERIAL PRIMARY KEY,
             merch_id SERIAL REFERENCES merchandise(merch_id)
             
-        );
+        );`)
+        
     
-    
-        CREATE TABLE IF NOT EXISTS blogs(
+        await db.query(` CREATE TABLE IF NOT EXISTS blogs(
             blog_id SERIAL PRIMARY KEY,
             merchId INTEGER REFERENCES merchandise(merch_id),
             title VARCHAR(255) UNIQUE NOT NULL,
             "blogText" TEXT NOT NULL,
             "authorId" INTEGER REFERENCES users(user_id)
-        );
-    
-        CREATE TABLE IF NOT EXISTS wishlist(
+        );`)
+       
+        await db.query(`CREATE TABLE IF NOT EXISTS wishlist(
             wish_id SERIAL PRIMARY KEY,
             "merchId" INTEGER REFERENCES merchandise(merch_id),
             title VARCHAR(255) UNIQUE NOT NULL,
             "userId" INTEGER REFERENCES users(user_id)
-        );
-    
-        CREATE TABLE IF NOT EXISTS orderItem(
-           item_id SERIAL PRIMARY KEY,
-            "merchId" INTEGER REFERENCES merchandise(merch_id),
-            quantity INTEGER DEFAULT 1
-        );
-    
-        CREATE TABLE IF NOT EXISTS orders(
+        );`)
+        
+        await db.query(`CREATE TABLE IF NOT EXISTS orderItem(
+            item_id SERIAL PRIMARY KEY,
+             "merchId" INTEGER REFERENCES merchandise(merch_id),
+             quantity INTEGER DEFAULT 1
+         );`)
+        
+        await db.query(`CREATE TABLE IF NOT EXISTS orders(
             userId INTEGER REFERENCES users(user_id)
-        );
-    
-        CREATE TABLE IF NOT EXISTS userPreferences(
-            preference_id SERIAL PRIMARY KEY,
-            userId INTEGER REFERENCES users(user_id),
-            street VARCHAR(255) NOT NULL,
-            city TEXT NOT NULL,
-            state TEXT NOT NULL,
-            zip INTEGER NOT NULL,
-            save_pmt BOOLEAN DEFAULT FALSE,
-            shipping VARCHAR(255)
-    
-        );
-    
-        CREATE TABLE IF NOT EXISTS payments(
+        );`)
+        
+            await db.query(`CREATE TABLE IF NOT EXISTS userPreferences(
+                preference_id SERIAL PRIMARY KEY,
+                userId INTEGER REFERENCES users(user_id),
+                street VARCHAR(255) NOT NULL,
+                city TEXT NOT NULL,
+                state TEXT NOT NULL,
+                zip INTEGER NOT NULL,
+                save_pmt BOOLEAN DEFAULT FALSE,
+                shipping VARCHAR(255)
+        
+            );`)
+        
+        await db.query(` CREATE TABLE IF NOT EXISTS payments(
             userId INTEGER REFERENCES users(user_id),
             name VARCHAR(255) NOT NULL,
             number INTEGER UNIQUE NOT NULL,
             CID INTEGER NOT NULL,
             expiration DATE NOT NULL
-    
-        );
-    
-        `)
+        );`)
+       
 
         console.log('tables successfully built!');
     } catch (error) {
@@ -137,6 +141,14 @@ async function createTables(){
 async function testDB(){
 
     //Please put your test code for your db functions here!
+    for (let i = 0; i < 20; i++) {
+        
+        const newMerch = createMerchandise({name:faker.commerce.productName, description: faker.random.words,price:faker.commerce.price, cat:faker.commerce.department});
+
+
+        console.log(newMerch);
+    }
+    
 
 }
 
