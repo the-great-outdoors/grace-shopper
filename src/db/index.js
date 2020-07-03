@@ -41,18 +41,67 @@ const db = new Client(connectionString);
 
 // -- Sean 
 
+    //getAllMerchandise
+async function getAllMerchandise() {
+    const { rows: [ merchIds ] } = await db.query(`
+        SELECT merch_id FROM merchandise;
+    `)
+
+    const merchandise = await Promise.all(merchIds.map((merch)=>getMerchandiseById(merch.merch_id)))
+
+    return merchandise;
+}
+
     //gerMerchandiseByName(merchName)
+async function getMerchandiseByName(merchName) {
+    const { rows: [ merchandise ] } = await db.query(`
+        SELECT * FROM merchandise
+        WHERE name LIKE $1;
+    `, [merchName]);
+
+    return merchandise;
+}  
 
     //getMerchandiseById(merchId)
 
+    async function getMerchandiseById(merchId) {
+        const { rows: [ merchandise ] } = await db.query(`
+            SELECT * FROM merchandise
+            WHERE merch_id = $1;
+        `, [merchId]);
+
+        const reviews = db.query(`
+            SELECT * FROM reviews
+            WHERE merchId = $1;
+        `, [merchId])
+
+        merchandise.reviews = reviews;
+        return merchandise;
+
+    }  
     //getMerchandiseByCategory(catId)
 
-    //getAllMerchandise
+    async function getMerchandiseByCategory(catId) {
+        const { rows: [merchandise] } = await db.query(`
+            SELECT * FROM merchandise
+            WHERE cats = $1;
+        `, [catId]);
+
+        return merchandise;
+    }
 
     //getAllMerchandiseReviews(merchId)
 
-    //getMerchandiseReviewByUserId(userId)
+    async function getAllMerchandiseReviews(merchId) {
+        const { rows: [merchandise] } = await db.query(`
+            SELECT * FROM merchandise
+            JOIN reviews ON merchandise.merch_id=reviews."merchId"
+            WHERE merchId = $1;
+        `, [merchId]);
 
+        return merchandise;
+    }
+    //getMerchandiseReviewByUserId(userId)
 
     //updateMerchandiseReview(reviewId, fields={})
 

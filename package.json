@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "start:dev": "nodemon server/index.js",
+    "start": "node src/index.js",
+    "start:dev": "nodemon src/index.js",
     "client": "webpack --watch",
-    "seed": "node server/db/seed.js"
+    "seed": "node src/db/seed.js"
   },
   "keywords": [],
   "author": "",

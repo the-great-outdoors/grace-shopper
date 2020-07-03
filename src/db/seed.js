@@ -21,7 +21,9 @@ async function dropTables(){
     DROP TABLE IF EXISTS orders;
     DROP TABLE IF EXISTS users;
     DROP TABLE IF EXISTS images;
+    DROP TABLE IF EXISTS reviews;
     DROP TABLE IF EXISTS merchandise;
+    DROP TABLE IF EXISTS categories;
     `)
 
     console.log('successfully dropped all tables');
@@ -46,14 +48,27 @@ async function createTables(){
             firstname VARCHAR(255) NOT NULL,
             lastname VARCHAR(255) NOT NULL
         );
-    
+
+        CREATE TABLE IF NOT EXISTS categories(
+                cat_id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL
+            );
+
+        CREATE TABLE IF NOT EXISTS reviews(
+            review_id SERIAL PRIMARY KEY,
+            author INTEGER REFERENCES users(user_id) NOT NULL,
+            merchId INTEGER REFERENCES merchandise(merch_id)NOT NULL,
+            rating INTEGER DEFAULT 5
+        )
+        
         CREATE TABLE IF NOT EXISTS merchandise(
             merch_id SERIAL PRIMARY KEY,
             name VARCHAR(255) UNIQUE NOT NULL,
             description TEXT NOT NULL,
             price MONEY NOT NULL,
             rating INTEGER,
-            reviews TEXT
+            cats INTEGER REFERENCES categories(cat_id)
+            
         );
 
         CREATE TABLE IF NOT EXISTS images(
