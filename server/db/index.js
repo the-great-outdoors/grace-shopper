@@ -1,11 +1,13 @@
-const { client } = require('pg');
+const { Client } = require('pg');
 const chalk = require('chalk');
 
-const connectionString = process.env.DATABASE_URL ||"postgres://localhost:5432//great-outdoors";
+const connectionString = process.env.DATABASE_URL ||"postgres://localhost:5432/great-outdoors";
 
-const db = new client(connectionString);
+const db = new Client(connectionString);
 
 //table: users !!!!!!!
+
+// --- LEVI
 
     //createUser(userName, password)
 
@@ -18,6 +20,9 @@ const db = new client(connectionString);
     //getUserByUsername(userName)
 
 //table: blogs !!!!!!!!!
+
+// --Patricia
+
     //getAllBlogs
     
     //getBlogsByUserId(userId)
@@ -33,6 +38,9 @@ const db = new client(connectionString);
     //deleteBlog(blogId)
 
 //table: merchandise !!!!!!!
+
+// -- Sean 
+
     //gerMerchandiseByName(merchName)
 
     //getMerchandiseById(merchId)
@@ -60,6 +68,8 @@ const db = new client(connectionString);
 
 
 //table: orders !!!!!!!!
+
+// -- Garett
     //addMerchandiseToCart(merchId, userId)
 
     //getUserOrdersByUsername(username)
@@ -70,11 +80,15 @@ const db = new client(connectionString);
 
 //table: wishList !!!!!!!!
 
+// -- Patricia
+
     //updateWishlistByUserId(userId, fields={'merchIds'})
 
     //getWishlistByUserId(userId)
 
 //table: userPreferences !!!!!!!!
+
+// -- Levi
 
     //getPreferencesByUserId(userId)
     
@@ -86,6 +100,8 @@ const db = new client(connectionString);
 
 //table: payments !!!!!!!!
 
+//--Garett
+
     //getPaymentByUserId(userId)
 
     //updatePayment(userId)
@@ -94,6 +110,7 @@ const db = new client(connectionString);
 
     //createPayment(userId)
 
+    module.exports={db}
 
 
 
