@@ -13,13 +13,15 @@ async function dropTables(){
    try {
        console.log('dropping all tables...');
     await db.query(`
-    DROP TABLE IF EXISTS merchandise;
+    DROP TABLE IF EXISTS payments;
     DROP TABLE IF EXISTS blogs;
     DROP TABLE IF EXISTS wishlist;
-    DROP TABLE IF EXISTS orders;
     DROP TABLE IF EXISTS userPreferences;
-    DROP TABLE IF EXISTS payments;
+    DROP TABLE IF EXISTS orderItem;
+    DROP TABLE IF EXISTS orders;
     DROP TABLE IF EXISTS users;
+    DROP TABLE IF EXISTS images;
+    DROP TABLE IF EXISTS merchandise;
     `)
 
     console.log('successfully dropped all tables');
@@ -51,52 +53,55 @@ async function createTables(){
             description TEXT NOT NULL,
             price MONEY NOT NULL,
             rating INTEGER,
-            reviews TEXT,
-            image BLOB
+            reviews TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS images(
+            imageId SERIAL PRIMARY KEY,
+            merch_id SERIAL REFERENCES merchandise(merch_id)
+            
         );
     
     
         CREATE TABLE IF NOT EXISTS blogs(
             blog_id SERIAL PRIMARY KEY,
-            "merchId" REFERENCES merchandise(merch_id),
+            merchId INTEGER REFERENCES merchandise(merch_id),
             title VARCHAR(255) UNIQUE NOT NULL,
             "blogText" TEXT NOT NULL,
-            "authorId" REFERENCES users(user_id)
+            "authorId" INTEGER REFERENCES users(user_id)
         );
     
         CREATE TABLE IF NOT EXISTS wishlist(
             wish_id SERIAL PRIMARY KEY,
-            "merchId" REFERENCES merchandise(merch_id),
+            "merchId" INTEGER REFERENCES merchandise(merch_id),
             title VARCHAR(255) UNIQUE NOT NULL,
-            "userId" REFERENCES users(user_id)
+            "userId" INTEGER REFERENCES users(user_id)
         );
     
         CREATE TABLE IF NOT EXISTS orderItem(
            item_id SERIAL PRIMARY KEY,
-            "merchId" REFERENCES merchandise(merch_id),
+            "merchId" INTEGER REFERENCES merchandise(merch_id),
             quantity INTEGER DEFAULT 1
         );
     
-        CREATE TABLE IF NOT EXISTS order(
-            userId REFERENCES users(user_id)
-    
-           
+        CREATE TABLE IF NOT EXISTS orders(
+            userId INTEGER REFERENCES users(user_id)
         );
     
         CREATE TABLE IF NOT EXISTS userPreferences(
             preference_id SERIAL PRIMARY KEY,
-            "userId" REFERENCES users(user_id),
+            userId INTEGER REFERENCES users(user_id),
             street VARCHAR(255) NOT NULL,
             city TEXT NOT NULL,
             state TEXT NOT NULL,
             zip INTEGER NOT NULL,
             save_pmt BOOLEAN DEFAULT FALSE,
-            shipping VARCHAR(255) DEFAULT UPS
+            shipping VARCHAR(255)
     
         );
     
         CREATE TABLE IF NOT EXISTS payments(
-            "userId" REFERENCES users(user_id),
+            userId INTEGER REFERENCES users(user_id),
             name VARCHAR(255) NOT NULL,
             number INTEGER UNIQUE NOT NULL,
             CID INTEGER NOT NULL,
@@ -105,6 +110,8 @@ async function createTables(){
         );
     
         `)
+
+        console.log('tables successfully built!');
     } catch (error) {
         throw error;
     }
