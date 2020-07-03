@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "start:dev": "nodemon src/index.js",
     "client": "webpack --watch",
-    "seed": "node src/db/seed.js"
+    "seed": "node-dev --respawn src/db/seed.js"
   },
   "keywords": [],
   "author": "",

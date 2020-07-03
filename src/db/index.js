@@ -111,14 +111,41 @@ async function getMerchandiseByName(merchName) {
 
     //createMerchandiseReview(merchId, fields={})
 
-    async function createMerchandise({name, description, price, rating=null, cat}) {
-        const { rows: [reviews] } = await db.query(`
-        UPDATE reviews
-        INSERT VALUES($1, $2, $3, $4, $5 )
-        RETURNING *;
-    `, [name, description, price, rating, cat]);
+    async function addCategory(name) {
+        try {
 
-        return reviews;
+            console.log('entered addCategory with cat: ', name);
+            const { rows: [category]}= await db.query(`
+            INSERT INTO categories(name)
+            VALUES('${name}')
+            RETURNING *;
+            `);
+
+            return category;
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async function createMerchandise({name, description, 
+    price, rating=5, cat}) {
+    
+        try {
+
+            console.log('Entered db createMerchandise');
+            console.log('name:', name);
+            const { rows: [merchandise] } = await db.query(`
+            INSERT INTO merchandise(name, description, price, rating, cats)
+            VALUES($1, $2, $3, $4, $5 )
+            RETURNING *;
+        `, [name, description, price, rating, cat]);
+            console.log('Successfully created merchandise');
+            return merchandise;
+        } catch (error) {
+            throw error;
+        }
+       
     }
 
 
@@ -192,6 +219,7 @@ async function getMerchandiseByName(merchName) {
         getMerchandiseByCategory,
         getMerchandiseById,
         getMerchandiseByName,
+        addCategory
 
     }
 
