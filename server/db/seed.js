@@ -1,7 +1,7 @@
 
 //each teammember please create seed method to test your
 const db = require('./database');
-const { createMerchandise, addCategory } = require('./index');
+const { createMerchandise, addCategory, updateMerchandise, createMerchandiseReview, getAllMerchandise, getMerchandiseById } = require('./index');
 const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers } = require('./users');
 const faker = require('faker');
 const chalk = require('chalk');
@@ -80,7 +80,7 @@ async function createTables() {
                 review_id SERIAL PRIMARY KEY,
                 author INTEGER REFERENCES users(user_id) NOT NULL,
                 "merchId" INTEGER REFERENCES merchandise(merch_id)NOT NULL,
-                rating INTEGER DEFAULT 5,
+                rating INTEGER,
                 description TEXT NOT NULL
             );
         `);
@@ -231,6 +231,8 @@ async function testDB() {
         await initializeMerchandise();
         await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
         await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
+        await getAllMerchandise();
+        // await getMerchandiseById(2);
 
     } catch (error) {
         console.error(chalk.red('There was an error testing the database!', error));
