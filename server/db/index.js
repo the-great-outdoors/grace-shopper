@@ -1,23 +1,6 @@
-const { Client } = require('pg');
+const { db } = require('./database');
+
 const chalk = require('chalk');
-
-const connectionString = process.env.DATABASE_URL ||"postgres://localhost:5432/great-outdoors";
-
-const db = new Client(connectionString);
-
-//table: users !!!!!!!
-
-// --- LEVI
-
-    //createUser(userName, password)
-
-    //updateUserByUserId(userId)
-
-    //deleteAccount(userId)
-
-    //getUserByUserId(userId)
-
-    //getUserByUsername(userName)
 
 //table: blogs !!!!!!!!!
 
@@ -146,7 +129,7 @@ async function getMerchandiseByName(merchName) {
         try {
 
             console.log('entered addCategory with cat: ', name);
-            const { rows: [category]}= await db.query(`
+            const { rows: [category] }= await db.query(`
             INSERT INTO categories(name)
             VALUES('${name}')
             RETURNING *;
@@ -175,7 +158,7 @@ async function getMerchandiseByName(merchName) {
         } catch (error) {
             throw error;
         }
-       
+
     }
 
 
@@ -220,16 +203,6 @@ async function getMerchandiseByName(merchName) {
 
 //table: userPreferences !!!!!!!!
 
-// -- Levi
-
-    //getPreferencesByUserId(userId)
-    
-    //updateUserPreferencesByUserId(userId)
-
-    //createUserPreference(userId)
-
-    //deleteUserPreferenceByUserId(userId)
-
 //table: payments !!!!!!!!
 
 //--Garett
@@ -253,6 +226,8 @@ async function getMerchandiseByName(merchName) {
         updateMerchandise,
         createMerchandiseReview
 
+        // ...require('./users'),
+        // ...require('./userprefs')
     }
 
 
