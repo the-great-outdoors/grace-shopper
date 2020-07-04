@@ -79,8 +79,9 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS reviews(
                 review_id SERIAL PRIMARY KEY,
                 author INTEGER REFERENCES users(user_id) NOT NULL,
-                merchId INTEGER REFERENCES merchandise(merch_id)NOT NULL,
-                rating INTEGER DEFAULT 5
+                "merchId" INTEGER REFERENCES merchandise(merch_id)NOT NULL,
+                rating INTEGER DEFAULT 5,
+                description TEXT NOT NULL
             );
         `);
 
@@ -162,6 +163,14 @@ async function createTables() {
 
 };
 
+async function initializeMerchandise() {
+    for (let index = 0; index < 20; index++) {
+        const merch = await createMerchandise({name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price:faker.commerce.price(),cat: 1});
+        
+    }
+}
+
+
 async function createInitialUsers() {
 
     try {
@@ -212,12 +221,25 @@ async function testDB() {
         console.log('All Users: ', allUsers);
 
         console.log(chalk.yellow('Finished testing the database.'));
+
+        const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+
+        const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+        console.log(newCategory);
+    
+    
+        await initializeMerchandise();
+        await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
+        await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
+
     } catch (error) {
         console.error(chalk.red('There was an error testing the database!', error));
         throw error;
     };
 
-};
+
+
+}
 
 async function startDb() {
     try {
@@ -237,18 +259,3 @@ async function startDb() {
 };
 
 startDb();
-
-
-//Tables:
-
-/*
-    merchandise
-    users
-    blogs
-    wishlist
-    orders
-    userPreferences
-    payments
-
-
-*/
