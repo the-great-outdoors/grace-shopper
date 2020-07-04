@@ -1,7 +1,7 @@
 
 //each teammember please create seed method to test your
 
-const { db, createMerchandise, addCategory } = require('./index');
+const { db, createMerchandise, addCategory, updateMerchandise, createMerchandiseReview } = require('./index');
 const faker = require('faker')
 const chalk = require('chalk');
 
@@ -72,8 +72,9 @@ async function createTables(){
         CREATE TABLE IF NOT EXISTS reviews(
             review_id SERIAL PRIMARY KEY,
             author INTEGER REFERENCES users(user_id) NOT NULL,
-            merchId INTEGER REFERENCES merchandise(merch_id)NOT NULL,
-            rating INTEGER DEFAULT 5
+            "merchId" INTEGER REFERENCES merchandise(merch_id)NOT NULL,
+            rating INTEGER DEFAULT 5,
+            description TEXT NOT NULL
         );`)
         
    
@@ -145,7 +146,23 @@ async function createTables(){
 
 }
 
+async function initializeMerchandise() {
+    for (let index = 0; index < 20; index++) {
+        const merch = await createMerchandise({name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price:faker.commerce.price(),cat: 1});
+        
+    }
+}
+
 async function testDB(){
+    const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+
+    const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+    console.log(newCategory);
+
+
+    await initializeMerchandise();
+    await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
+    await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
     
 
 }
