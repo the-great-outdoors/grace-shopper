@@ -39,6 +39,28 @@ merchRouter.post('/', async(req, res, next)=>{
 
 })
 
+merchRouter.delete('/review/:reviewId', async(req, res, next)=>{
+    const {reviewId} = req.params;
+    try {
+        const review = await deleteMerchandiseReview(reviewId);
+
+        if (review) {
+            res.send({
+                message: 'Successfully deleted review',
+                status: true,
+                review
+            })
+        }else{
+            next({
+                error: 'FailedToDeleteReviewError',
+                message: `Unable to delete review: ${reviewId}`
+            })
+        }
+    } catch ({error, message}) {
+        next({error, message});
+    }
+})
+
 merchRouter.post('/review/:merchId', async(req, res, next)=>{
     const { merchId} = req.params;
     const { userId, rating, description } = req.body;
