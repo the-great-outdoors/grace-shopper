@@ -70,13 +70,13 @@ async function getUserByUserId(userId) {
         const { rows: [ user ] } = await db.query(`
             SELECT user_id, username, firstname, lastname, active
             FROM users
-            WHERE user_id=$1
+            WHERE user_id=$1;
         `, [ userId ]);
 
         const { rows: [ userPreferences ] } = await db.query(`
             SELECT "userId", street, city, state, zip, save_pmt, shipping
             FROM userPreferences
-            WHERE "userId"=$1
+            WHERE "userId"=$1;
         `, [ userId ]);
 
         user.userPreferences = userPreferences
@@ -107,15 +107,20 @@ async function getUserByUsername(username) {
 
 async function getAllUsers() {
 
+    console.log("IN GETALLUSERS", db)
     try {
         const { rows: userIds } = await db.query(`
             SELECT user_id, username, firstname, lastname, active
-            FROM users
+            FROM users;
     `);
+
+    console.log(">>>USERIDS<<<", userIds);
 
     const users = await Promise.all(userIds.map(
         user => getUserByUserId(user.user_id)
     ));
+
+    console.log(">>>USERS<<<", users);
 
         return users;
     } catch (error) {

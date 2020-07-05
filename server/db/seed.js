@@ -1,7 +1,7 @@
 
 //each teammember please create seed method to test your
 const db = require('./database');
-//hello
+
 const { 
     createMerchandise, 
     addCategory, 
@@ -21,9 +21,9 @@ const {
 
 const faker = require('faker');
 const chalk = require('chalk');
+const { seed } = require('faker');
 
 const bcrypt = require('bcrypt');
-const { seed } = require('faker');
 SALT_COUNT = 10;
 
 async function dropTables() {
@@ -346,8 +346,7 @@ async function testDB() {
 
 async function startDb() {
     try {
-        db.connect()
-            .then(() => dropTables())
+        dropTables()
             .then(() => createTables())
             .then(() => createInitialUsers())
             .then(() => createInititialUserPrefs()) 

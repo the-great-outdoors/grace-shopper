@@ -1,0 +1,19 @@
+async function startDb() {
+    try {
+        db.connect()
+            .then(() => dropTables())
+            .then(() => createTables())
+            .then(() => createInitialUsers())
+            .then(() => createInititialUserPrefs()) 
+            .then(() => testDB())
+            .finally(() => db.end()
+            );
+
+    } catch (error) {
+        console.error(chalk.red("Error during startDB"));
+        throw error;
+    };
+
+};
+
+startDb();

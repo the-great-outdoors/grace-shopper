@@ -39,6 +39,14 @@ apiRouter.use((req, res, next) => {
     next();
 });
 
+apiRouter.get('/', (req, res, next) => {
+    res.send({ message: 'This is the base API route!'})
+});
+
+apiRouter.get('/health', (req, res, next) => {
+    res.send({ message: 'Server is healthy!'});
+});
+
 apiRouter.use((error, req, res, next) => {
     res.send(error);
 });

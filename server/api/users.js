@@ -3,7 +3,7 @@ const usersRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers } = require('../db');
+const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers, getAllMerchandise } = require('../db');
 const { requireUser, requireActiveUser } = require('./utils');
 
 usersRouter.use((req, res, next) => {
@@ -12,12 +12,13 @@ usersRouter.use((req, res, next) => {
 });
 
 usersRouter.get('/', async (req, res) => {
-
+    console.log('Get request to users.');
+    console.log(getAllUsers.toString())
     const users = await getAllUsers();
+    console.log(users)
     res.send({
         users
     });
-
 });
 
 usersRouter.post('/register', async (req, res, next) => {
