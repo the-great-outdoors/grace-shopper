@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "start:dev": "nodemon src/index.js",
+    "start:dev": "nodemon server/index.js",
     "client": "webpack --watch",
-    "seed": "node-dev --respawn server/db/seed.js"
+    "seed": "node-dev --respawn server/db/seed.js",
+    "test:watch": "jest --watchAll --maxWorkers=1"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "node-dev": "^4.3.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12"
+   
   },
   "dependencies": {
     "axios": "^0.19.2",

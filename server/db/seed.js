@@ -119,14 +119,19 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orderItem(
                 item_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
-                quantity INTEGER DEFAULT 1
+                quantity INTEGER DEFAULT 1,
+                price NUMERIC NOT NULL
             );
         `);
 
         console.log('Creating orders...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS orders(
-                userId INTEGER REFERENCES users(user_id)
+                "orderId" SERIAL PRIMARY KEY,
+                userId INTEGER REFERENCES users(user_id),
+                "orderItemId" INTEGER REFERENCES orderItem.item_id,
+                status BOOLEAN,
+                price NUMERIC
             );
         `);
 

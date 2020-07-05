@@ -180,3 +180,5 @@ merchRouter.delete('/:merchId', async(req, res, next)=>{
         next({error, message});
     }
 })
+
+module.exports = merchRouter
