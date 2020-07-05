@@ -163,7 +163,9 @@ module.exports = {
     getMerchandiseByName,
     getMerchandiseReviewByUserId,
     createMerchandise,
+    updateMerchandise,
     createMerchandiseReview,
+    addCategory,
     deleteMerchandise,
-    deleteMerchandiseReview
+    // deleteMerchandiseReview
 };

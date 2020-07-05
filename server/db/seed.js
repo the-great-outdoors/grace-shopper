@@ -1,12 +1,14 @@
 
 //each teammember please create seed method to test your
 const db = require('./database');
-const { createMerchandise, addCategory } = require('./index');
+const { createMerchandise, addCategory, updateMerchandise, createMerchandiseReview } = require('./index');
 const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers } = require('./users');
+const { createUserPreference, updateUserPreferences, getPreferencesByUserId } = require('./userprefs');
 const faker = require('faker');
 const chalk = require('chalk');
 
 const bcrypt = require('bcrypt');
+const { seed } = require('faker');
 SALT_COUNT = 10;
 
 async function dropTables() {
@@ -134,11 +136,11 @@ async function createTables() {
         await db.query(`
             CREATE TABLE IF NOT EXISTS userPreferences(
                 preference_id SERIAL PRIMARY KEY,
-                userId INTEGER REFERENCES users(user_id),
+                "userId" INTEGER REFERENCES users(user_id),
                 street VARCHAR(255) NOT NULL,
                 city TEXT NOT NULL,
                 state TEXT NOT NULL,
-                zip INTEGER NOT NULL,
+                zip VARCHAR(255) NOT NULL,
                 save_pmt BOOLEAN DEFAULT FALSE,
                 shipping VARCHAR(255)
             );
@@ -169,7 +171,6 @@ async function initializeMerchandise() {
         
     }
 }
-
 
 async function createInitialUsers() {
 
@@ -211,6 +212,45 @@ async function createInitialUsers() {
 
 };
 
+async function createInititialUserPrefs() {
+
+    try {
+        const seededUserPrefs = [
+            {
+                userId: 1,
+                street: '1234 Somestreet Lane',
+                city: 'Somecity',
+                state: 'CA',
+                zip: 54321,
+                save_pmt: false,
+                shipping: 'FedEx'
+            },
+
+            {
+                userId: 2,
+                street: '1234 Wayne Manor Dr',
+                city: 'Gotham City',
+                state: 'NY',
+                zip: 12345,
+                save_pmt: true,
+                shipping: 'USPS'
+            }
+        ]
+
+        console.log('Seeded User Preferences: ', seededUserPrefs);
+
+        await Promise.all(seededUserPrefs.map(async userPref => {
+            const seededUserPref = await createUserPreference(userPref);
+            return seededUserPref;
+        }));
+
+
+    } catch (error) {
+        console.log(chalk.red('There was an error creating user preferences!', error));
+        throw error;
+    };
+};
+
 async function testDB() {
 
     try {
@@ -220,7 +260,10 @@ async function testDB() {
         const allUsers = await getAllUsers();
         console.log('All Users: ', allUsers);
 
-        console.log(chalk.yellow('Finished testing the database.'));
+        console.log('Calling getUserByUserId with user_id 1');
+        const userOne = await getUserByUserId(1);
+        console.log("User One: ", userOne);
+
 
         const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
 
@@ -232,6 +275,7 @@ async function testDB() {
         await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
         await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
 
+        console.log(chalk.yellow('Finished testing the database.'));
     } catch (error) {
         console.error(chalk.red('There was an error testing the database!', error));
         throw error;
@@ -246,7 +290,8 @@ async function startDb() {
         db.connect()
             .then(() => dropTables())
             .then(() => createTables())
-            .then(() => createInitialUsers()) 
+            .then(() => createInitialUsers())
+            .then(() => createInititialUserPrefs()) 
             .then(() => testDB())
             .finally(() => db.end()
             );

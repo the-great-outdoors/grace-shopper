@@ -1,4 +1,5 @@
 const db = require('./database');
+const { getPreferencesByUserId } = require('./userprefs');
 
 //table: users !!!!!!!
 
@@ -8,12 +9,12 @@ const db = require('./database');
 async function createUser({ username, hashpassword, firstname, lastname }) {
 
     try {
-        const { rows: [user] } = await db.query(`
+        const { rows: [ user ] } = await db.query(`
                 INSERT INTO users(username, hashpassword, firstname, lastname) 
                 VALUES($1, $2, $3, $4) 
                 ON CONFLICT (username) DO NOTHING 
                 RETURNING *;
-            `, [username, hashpassword, firstname, lastname]);
+            `, [ username, hashpassword, firstname, lastname ]);
 
         return user;
     } catch (error) {
@@ -37,7 +38,7 @@ async function updateUser(userId, fields = {}) {
         const { rows: [ user ] } = await db.query(`
             UPDATE users
             SET ${ setString }
-            WHERE id=${ userId }
+            WHERE user_id=${ userId }
             RETURNING *;
         `, Object.values(fields));
 
@@ -67,11 +68,19 @@ async function getUserByUserId(userId) {
 
     try {
         const { rows: [ user ] } = await db.query(`
-            SELECT id, username, firstname, lastname, active
+            SELECT user_id, username, firstname, lastname, active
             FROM users
-            WHERE user_id=${ userId }
-        `);
+            WHERE user_id=$1
+        `, [ userId ]);
 
+        const { rows: [ userPreferences ] } = await db.query(`
+            SELECT "userId", street, city, state, zip, save_pmt, shipping
+            FROM userPreferences
+            WHERE "userId"=$1
+        `, [ userId ]);
+
+        user.userPreferences = userPreferences
+        
         return user;
     } catch (error) {
         throw error;
@@ -84,7 +93,7 @@ async function getUserByUsername(username) {
 
     try {
         const { rows: [ user ] } = await db.query(`
-            SELECT id, username, firstname, lastname, active
+            SELECT user_id, username, firstname, lastname, active
             FROM users
             WHERE username=${ username }
         `);
@@ -99,12 +108,16 @@ async function getUserByUsername(username) {
 async function getAllUsers() {
 
     try {
-        const { rows } = await db.query(`
+        const { rows: userIds } = await db.query(`
             SELECT user_id, username, firstname, lastname, active
             FROM users
     `);
 
-        return rows;
+    const users = await Promise.all(userIds.map(
+        user => getUserByUserId(user.user_id)
+    ));
+
+        return users;
     } catch (error) {
         throw error;
     };
