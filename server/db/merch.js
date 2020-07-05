@@ -1,10 +1,10 @@
 const db = require('./database');
 
 async function getAllMerchandise() {
-    const { rows: [ merchIds ] } = await db.query(`
+    const { rows: merchIds } = await db.query(`
         SELECT merch_id FROM merchandise;
     `)
-
+    console.log(merchIds);
     const merchandise = await Promise.all(merchIds.map((item)=>getMerchandiseById(item.merch_id)))
 
     console.log('new merchandise added: ', merchandise);
@@ -24,18 +24,25 @@ async function getMerchandiseByName(merchName) {
     //getMerchandiseById(merchId)
 
     async function getMerchandiseById(merchId) {
-        const { rows: [ merchandise ] } = await db.query(`
+            console.log('entered db getMerchandiseById');
+        try {
+            const { rows: [ merchandise ] } = await db.query(`
             SELECT * FROM merchandise
             WHERE merch_id = $1;
         `, [merchId]);
 
-        const reviews = db.query(`
+        const {rows: [reviews]} = await db.query(`
             SELECT * FROM reviews
-            WHERE merchId = $1;
+            WHERE "merchId" = $1;
         `, [merchId])
 
         merchandise.reviews = reviews;
+        console.log(merchandise);
         return merchandise;
+        } catch (error) {
+            throw error;
+        }
+
 
     }  
     //getMerchandiseByCategory(catId)
@@ -87,16 +94,21 @@ async function getMerchandiseByName(merchName) {
     //createMerchandiseReview(merchId, userId, rating)
     async function createMerchandiseReview(merchId, userId, rating, description) {
 
-        console.log('Entered bd CreateMerchandiseReview');
+        console.log('Entered bd CreateMerchandiseReview:');
+        try {
+            const {rows: [ review ]} = await db.query(`
+            INSERT INTO reviews("author", "merchId", rating, description)
+            VALUES($1, $2, $3, $4)
+            RETURNING *;
+            `, [userId, merchId, rating, description]);
+    
+            console.log('Created new review: ', review);
+            return review;
+        } catch (error) {
 
-        const {rows: [ review ]} = db.query(`
-        INSERT INTO reviews("author", "merchId", rating, description)
-        VALUES($1, $2, $3, $4)
-        RETURNING *;
-        `, [userId, merchId, rating, description]);
-
-        console.log('Created new review: ', review);
-        return review;
+            throw error;
+        }
+       
     }
 
 
@@ -155,6 +167,14 @@ async function getMerchandiseByName(merchName) {
     }
 
     //deleteMerchandiseReview(reviewId)
+    async function deleteMerchandiseReview(reviewId) {
+        const {rows: [review]} = await db.query(`
+            DELETE FROM reviews
+            WHERE review_id=$1
+            RETURNING *;
+        `, [reviewId])
+    }
+
 module.exports = {
     getAllMerchandise,
     getAllMerchandiseReviews,
@@ -165,5 +185,7 @@ module.exports = {
     createMerchandise,
     createMerchandiseReview,
     deleteMerchandise,
-    deleteMerchandiseReview
+    deleteMerchandiseReview,
+    addCategory,
+    updateMerchandise
 };

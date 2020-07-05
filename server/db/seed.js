@@ -1,8 +1,7 @@
 
 //each teammember please create seed method to test your
 const db = require('./database');
-const { createMerchandise, addCategory, createPayment } = require('./index');
-const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers } = require('./users');
+const { createMerchandise, addCategory, updateMerchandise, createMerchandiseReview, getAllMerchandise, getMerchandiseById, createPayment, createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers  } = require('./index');
 const faker = require('faker');
 const chalk = require('chalk');
 
@@ -80,7 +79,7 @@ async function createTables() {
                 review_id SERIAL PRIMARY KEY,
                 author INTEGER REFERENCES users(user_id) NOT NULL,
                 "merchId" INTEGER REFERENCES merchandise(merch_id)NOT NULL,
-                rating INTEGER DEFAULT 5,
+                rating INTEGER,
                 description TEXT NOT NULL
             );
         `);
@@ -119,14 +118,19 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orderItem(
                 item_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
-                quantity INTEGER DEFAULT 1
+                quantity INTEGER DEFAULT 1,
+                price NUMERIC NOT NULL
             );
         `);
 
         console.log('Creating orders...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS orders(
-                userId INTEGER REFERENCES users(user_id)
+                "orderId" SERIAL PRIMARY KEY,
+                userId INTEGER REFERENCES users(user_id),
+                "orderItemId" INTEGER REFERENCES orderItem.item_id,
+                status BOOLEAN,
+                price NUMERIC
             );
         `);
 
@@ -167,6 +171,7 @@ async function initializeMerchandise() {
     for (let index = 0; index < 20; index++) {
         const merch = await createMerchandise({name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price:faker.commerce.price(),cat: 1});
         
+        const review = await createMerchandiseReview(index+1, 1, 5, faker.hacker.phrase());
     }
 }
 
@@ -270,6 +275,8 @@ async function testDB() {
         await initializeMerchandise();
         await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
         await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
+        await getAllMerchandise();
+        // await getMerchandiseById(2);
 
     } catch (error) {
         console.error(chalk.red('There was an error testing the database!', error));
