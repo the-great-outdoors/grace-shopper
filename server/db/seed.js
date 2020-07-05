@@ -167,6 +167,7 @@ async function initializeMerchandise() {
     for (let index = 0; index < 20; index++) {
         const merch = await createMerchandise({name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price:faker.commerce.price(),cat: 1});
         
+        const review = await createMerchandiseReview(index+1, 1, 5, faker.hacker.phrase());
     }
 }
 
