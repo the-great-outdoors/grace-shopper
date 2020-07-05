@@ -5,7 +5,6 @@ const path = require('path');
 const PORT = process.env.PORT || 3000;
 const server = express();
 
-const apiRouter = require('./index.js/index.js.js.js');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const { buildDB, testDB } = require('./db/seed.js');

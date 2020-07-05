@@ -3,18 +3,20 @@
 const db = require('./database');
 
 const { 
-       createMerchandise, 
-       addCategory, 
-       updateMerchandise, 
-       createMerchandiseReview, 
-       createUser, 
-       updateUser, 
-       getUserByUserId, 
-       getUserByUsername, 
-       getAllUsers, 
-       createUserPreference, 
-       updateUserPreferences, 
-       getPreferencesByUserId 
+    createMerchandise, 
+    addCategory, 
+    updateMerchandise, 
+    createMerchandiseReview,
+    getAllMerchandise,
+    createUser, 
+    updateUser, 
+    getUserByUserId, 
+    getUserByUsername, 
+    getAllUsers, 
+    createUserPreference, 
+    updateUserPreferences, 
+    getPreferencesByUserId,
+    createPayment 
 } = require('./index');
 
 const faker = require('faker');
@@ -33,10 +35,10 @@ async function dropTables() {
             DROP TABLE IF EXISTS blogs;
             DROP TABLE IF EXISTS wishlist;
             DROP TABLE IF EXISTS userPreferences;
-            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
+            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
             DROP TABLE IF EXISTS users;
@@ -143,8 +145,8 @@ async function createTables() {
         await db.query(`
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
-                userId INTEGER REFERENCES users(user_id),
-                "orderItemId" INTEGER REFERENCES orderItem.item_id,
+                "userId" INTEGER REFERENCES users(user_id),
+                "orderItemId" INTEGER REFERENCES orderItem(item_id),
                 status BOOLEAN,
                 price NUMERIC
             );

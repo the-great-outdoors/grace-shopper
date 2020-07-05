@@ -60,7 +60,8 @@ const chalk = require('chalk');
         db,
         ...require('./users'),
         ...require('./userprefs'),
-        ...require('./merch')
+        ...require('./merch'),
+        ...require('./payments')
     }
 
 

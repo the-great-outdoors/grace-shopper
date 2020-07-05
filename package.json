@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node server/index.js",
     "start:dev": "nodemon server/index.js",
     "client": "webpack --watch",
     "seed": "node-dev --respawn server/db/seed.js",
@@ -21,7 +21,6 @@
     "node-dev": "^4.3.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12"
-   
   },
   "dependencies": {
     "axios": "^0.19.2",
