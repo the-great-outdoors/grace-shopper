@@ -1,7 +1,7 @@
 
 //each teammember please create seed method to test your
 const db = require('./database');
-const { createMerchandise, addCategory } = require('./index');
+const { createMerchandise, addCategory, createPayment } = require('./index');
 const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers } = require('./users');
 const faker = require('faker');
 const chalk = require('chalk');
@@ -147,7 +147,7 @@ async function createTables() {
         console.log('Creating payments...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS payments(
-                userId INTEGER REFERENCES users(user_id),
+                "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
                 CID INTEGER NOT NULL,
@@ -211,6 +211,41 @@ async function createInitialUsers() {
 
 };
 
+async function createInitialPayments() {
+    try {
+        console.log('Starting to create payment...');
+
+        const seededPayments = [
+            {
+                userId: 2,
+                name: 'Bruce Wayne',
+                number: 123,
+                cid: 123,
+                expiration: "2020-01-01"
+            },
+
+            {
+                userId: 1,
+                name: 'Ashley Williams',
+                number: 456,
+                cid: 098,
+                expiration: "2020-03-05"
+            },
+        ];
+
+        const createdPayment = await Promise.all(seededPayments.map(async payment => {
+            const singleSeededPayment = await createPayment(payment);
+            return singleSeededPayment;
+        }));
+
+        console.log('Finished creating payments!');
+        return createdPayment
+    } catch (error) {
+        console.error(chalk.red('There was a problem creating payment!', error));
+        throw error;
+    }
+}
+
 async function testDB() {
 
     try {
@@ -219,6 +254,10 @@ async function testDB() {
         console.log('Calling getAllUsers...');
         const allUsers = await getAllUsers();
         console.log('All Users: ', allUsers);
+
+        console.log('Calling creatingInitialPayments...');
+        const createPayment = await createInitialPayments();
+        console.log('Payment: ', createPayment);
 
         console.log(chalk.yellow('Finished testing the database.'));
 
@@ -236,9 +275,6 @@ async function testDB() {
         console.error(chalk.red('There was an error testing the database!', error));
         throw error;
     };
-
-
-
 }
 
 async function startDb() {
