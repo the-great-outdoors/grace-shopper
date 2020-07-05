@@ -11,14 +11,14 @@ const db = require('./database');
 //     shipping VARCHAR(255)
 
 //createUserPreference(userId)
-async function createUserPreference(userId, street, city, state, zip, save_pmt, shipping) {
+async function createUserPreference({userId, street, city, state, zip, save_pmt, shipping}) {
 
     try {
 
-        console.log('Creating user preference...');
+        console.log('Creating user preferences...');
         const { rows: [ userPreferences ] } = await db.query (`
-            INSERT INTO userPreferences(userId street, city, state, zip, save_pmt, shipping)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO userPreferences("userId", street, city, state, zip, save_pmt, shipping)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
         `, [ userId ,street, city, state, zip, save_pmt, shipping ]);
 
         return userPreferences;
@@ -64,6 +64,7 @@ async function getPreferencesByUserId(userId) {
             WHERE userId = $1;
         `, [ userId ]);
 
+        return userPreferences;
     } catch (error) {
         throw error;
     };
@@ -76,7 +77,7 @@ async function deleteUserPreference(userId) {
     try {
         await db.query(`
             DELETE *
-            FROM userPreferenes
+            FROM userPreferences
             WHERE userId=$1;
     `, [ userId ]);
 
