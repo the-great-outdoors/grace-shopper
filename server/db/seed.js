@@ -1,7 +1,7 @@
 
 //each teammember please create seed method to test your
 const db = require('./database');
-
+//hello
 const { 
     createMerchandise, 
     addCategory, 
