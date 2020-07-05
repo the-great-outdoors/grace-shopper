@@ -1,9 +1,22 @@
 
 //each teammember please create seed method to test your
 const db = require('./database');
-const { createMerchandise, addCategory, updateMerchandise, createMerchandiseReview } = require('./index');
-const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers } = require('./users');
-const { createUserPreference, updateUserPreferences, getPreferencesByUserId } = require('./userprefs');
+
+const { 
+       createMerchandise, 
+       addCategory, 
+       updateMerchandise, 
+       createMerchandiseReview, 
+       createUser, 
+       updateUser, 
+       getUserByUserId, 
+       getUserByUsername, 
+       getAllUsers, 
+       createUserPreference, 
+       updateUserPreferences, 
+       getPreferencesByUserId 
+} = require('./index');
+
 const faker = require('faker');
 const chalk = require('chalk');
 
@@ -82,7 +95,7 @@ async function createTables() {
                 review_id SERIAL PRIMARY KEY,
                 author INTEGER REFERENCES users(user_id) NOT NULL,
                 "merchId" INTEGER REFERENCES merchandise(merch_id)NOT NULL,
-                rating INTEGER DEFAULT 5,
+                rating INTEGER,
                 description TEXT NOT NULL
             );
         `);
@@ -121,14 +134,19 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orderItem(
                 item_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
-                quantity INTEGER DEFAULT 1
+                quantity INTEGER DEFAULT 1,
+                price NUMERIC NOT NULL
             );
         `);
 
         console.log('Creating orders...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS orders(
-                userId INTEGER REFERENCES users(user_id)
+                "orderId" SERIAL PRIMARY KEY,
+                userId INTEGER REFERENCES users(user_id),
+                "orderItemId" INTEGER REFERENCES orderItem.item_id,
+                status BOOLEAN,
+                price NUMERIC
             );
         `);
 
@@ -149,7 +167,7 @@ async function createTables() {
         console.log('Creating payments...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS payments(
-                userId INTEGER REFERENCES users(user_id),
+                "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
                 CID INTEGER NOT NULL,
@@ -169,6 +187,7 @@ async function initializeMerchandise() {
     for (let index = 0; index < 20; index++) {
         const merch = await createMerchandise({name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price:faker.commerce.price(),cat: 1});
         
+        const review = await createMerchandiseReview(index+1, 1, 5, faker.hacker.phrase());
     }
 }
 
@@ -251,6 +270,42 @@ async function createInititialUserPrefs() {
     };
 };
 
+async function createInitialPayments() {
+    try {
+        console.log('Starting to create payment...');
+
+        const seededPayments = [
+            {
+                userId: 2,
+                name: 'Bruce Wayne',
+                number: 123,
+                cid: 123,
+                expiration: "2020-01-01"
+            },
+
+            {
+                userId: 1,
+                name: 'Ashley Williams',
+                number: 456,
+                cid: 098,
+                expiration: "2020-03-05"
+            },
+        ];
+
+        const createdPayment = await Promise.all(seededPayments.map(async payment => {
+            const singleSeededPayment = await createPayment(payment);
+            return singleSeededPayment;
+        }));
+
+        console.log('Finished creating payments!');
+        return createdPayment
+    } catch (error) {
+        console.error(chalk.red('There was a problem creating payment!', error));
+        throw error;
+    }
+}
+
+
 async function testDB() {
 
     try {
@@ -264,6 +319,9 @@ async function testDB() {
         const userOne = await getUserByUserId(1);
         console.log("User One: ", userOne);
 
+        console.log('Calling creatingInitialPayments...');
+        const createPayment = await createInitialPayments();
+        console.log('Payment: ', createPayment);
 
         const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
 
@@ -274,15 +332,14 @@ async function testDB() {
         await initializeMerchandise();
         await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
         await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
+        await getAllMerchandise();
+        // await getMerchandiseById(2);
 
         console.log(chalk.yellow('Finished testing the database.'));
     } catch (error) {
         console.error(chalk.red('There was an error testing the database!', error));
         throw error;
     };
-
-
-
 }
 
 async function startDb() {
