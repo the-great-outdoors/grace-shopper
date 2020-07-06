@@ -92,7 +92,7 @@ merchRouter.get('/:merchId', async(req, res, next)=>{
     try {
         const merch = await getMerchandiseById(merchId);
 
-        if (item) {
+        if (merch) {
             res.send({
                 message: 'Successfully retrieved item',
                 status: true,

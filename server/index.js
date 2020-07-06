@@ -20,7 +20,9 @@ server.use(morgan('dev'));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 
-server.use(express.static(path.join(__dirname, '../build')));
+// server.use(express.static(path.join(__dirname, '../build')));
+
+// server.use(express.static(path.join(__dirname, '../public')))
 server.use(express.json());
 
 server.use((req, res, next) => {
@@ -30,5 +32,8 @@ server.use((req, res, next) => {
 
     next();
 });
+
+server.use(express.static(path.join(__dirname, '../dist')))
+
 
 server.use('/api', apiRouter);

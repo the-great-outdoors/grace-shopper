@@ -24,7 +24,7 @@ async function getMerchandiseByName(merchName) {
     //getMerchandiseById(merchId)
 
     async function getMerchandiseById(merchId) {
-            console.log('entered db getMerchandiseById');
+            console.log('entered db getMerchandiseById: ', merchId);
         try {
             const { rows: [ merchandise ] } = await db.query(`
             SELECT * FROM merchandise
