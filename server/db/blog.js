@@ -13,7 +13,7 @@ async function getAllBlogs() {
 }
 
   //getBlogsByUserId(userId)
-async function getBlogByUserID(userId) {
+async function getBlogByUserId(userId) {
     try {
         const user = await getUserByUserId(userId)
 
@@ -30,9 +30,9 @@ async function getBlogByUserID(userId) {
 }
 
     //getBlogByMerchId(merchId)
-async function getBlogByMerchID(MerchId) {
+async function getBlogByMerchId(merchId) {
     try {
-        const user = await getMerchandiseById(MerchId)
+        const user = await getMerchandiseById(merchId)
 
         const { rows } = await db.query(`
         SELECT *
@@ -47,9 +47,9 @@ async function getBlogByMerchID(MerchId) {
 }
 
     //getBlogByCategoryId(categoryId)
-async function getBlogByCategoryId(cat_id) {
+async function getBlogByCategoryId(catId) {
     try {
-        const user= await getMerchandiseByCategory(cat_id)
+        const user= await getMerchandiseByCategory(catId)
 
         const { rows } = await db.query(`
         SELECT *
@@ -87,7 +87,7 @@ async function createBlog({
 }
 
     //updateBlog(blogId)
-async function updateBlog(fields = {}) {
+async function updateBlog(userId, fields = {}) {
     const id = fields.id
     delete fields.id
 
@@ -99,11 +99,11 @@ async function updateBlog(fields = {}) {
     console.log(setString)
     //return early if this is called wihtout fields
     if (setString.length === 0) {
-        return:
-    }
+        return;
+    };
 
     try {
-        const {rows: result} = await db.query(`
+        const {rows: [result]} = await db.query(`
         UPDATE blogs
         SET ${ setString }
         WHERE id=${ id }
@@ -135,8 +135,8 @@ async function deleteBlog(blogId) {
 
 module.exports = {
     getAllBlogs,
-    getBlogByUserID,
-    getBlogByMerchID,
+    getBlogByUserId,
+    getBlogByMerchId,
     getBlogByCategoryId,
     createBlog,
     updateBlog,
