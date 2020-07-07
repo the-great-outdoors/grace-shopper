@@ -344,15 +344,14 @@ async function testDB() {
     };
 }
 
-async function startDb() {
+async function startDb(force) {
     try {
-        dropTables()
-            .then(() => createTables())
-            .then(() => createInitialUsers())
-            .then(() => createInititialUserPrefs()) 
-            .then(() => testDB())
-            .finally(() => db.end()
-            );
+        if (force) {
+            await dropTables()
+        }
+        await createTables()
+        await createInitialUsers()
+        await createInititialUserPrefs()
 
     } catch (error) {
         console.error(chalk.red("Error during startDB"));
@@ -361,4 +360,7 @@ async function startDb() {
 
 };
 
-startDb();
+module.exports = { 
+    startDb, 
+    testDB 
+}

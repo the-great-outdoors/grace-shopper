@@ -10,19 +10,11 @@ const server = express();
 const apiRouter = require('./api');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-// const { buildDB, testDB } = require('./db/seed');
-
-server.listen(PORT, () => {
-    console.log(chalk.yellow('The server is up on port', PORT))
-});
+const { startDb, testDB } = require('./db/seed');
 
 server.use(morgan('dev'));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
-
-// server.use(express.static(path.join(__dirname, '../build')));
-
-// server.use(express.static(path.join(__dirname, '../public')))
 server.use(express.json());
 
 server.use((req, res, next) => {
@@ -37,3 +29,13 @@ server.use(express.static(path.join(__dirname, '../dist')))
 
 
 server.use('/api', apiRouter);
+startDb(true)
+    .then(testDB)
+    .then(() => {
+    server.listen(PORT, () => {
+        console.log(chalk.green(`Server is listening on PORT: ${PORT}`))
+        });
+    })
+    .catch((error) => {
+        console.log(chalk.red("error", error))
+    });
