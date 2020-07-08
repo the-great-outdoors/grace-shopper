@@ -61,7 +61,9 @@ const chalk = require('chalk');
         ...require('./users'),
         ...require('./userprefs'),
         ...require('./merch'),
-        ...require('./payments')
+        ...require('./payments'),
+        ...require('./blog'),
+        ...require('./wishlist')
     }
 
 
