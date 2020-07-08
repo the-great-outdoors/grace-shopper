@@ -37,7 +37,7 @@ async function deletePayment(userId) {
     try {
         const {rows: [paymnets]} = await db.query(`
         DELETE FROM payments
-        WHERE user_id=$1
+        WHERE "userId"=$1
         RETURNING *;
         `, [userId]);
 
@@ -50,7 +50,7 @@ async function deletePayment(userId) {
 
 //updatePayments
 
-async function updatePayments(userId, fields = {}) {
+async function updatePayments(paymentId, fields = {}) {
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
     ).join(', ');
@@ -63,7 +63,7 @@ async function updatePayments(userId, fields = {}) {
         const { rows: [ payment ] } = await client.query(`
             UPDATE payments
             SET ${ setString }
-            WHERE id=${ userId }
+            WHERE id=${ paymentId }
             RETURNING *;
         `, Object.values(fields));
 
