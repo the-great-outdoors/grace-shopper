@@ -16,8 +16,11 @@ const {
     getAllUsers, 
     createUserPreferences, 
     updateUserPreferences, 
+
     getUserPreferencesByUserId,
-    createPayment 
+    createPayment,
+    createBlog, 
+
 } = require('./index');
 
 const faker = require('faker');
@@ -170,6 +173,7 @@ async function createTables() {
         console.log('Creating payments...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS payments(
+                "paymentId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
@@ -324,6 +328,41 @@ async function createInitialPayments() {
     }
 }
 
+async function createInitialBlogs() {
+
+    try {
+        const seededblogs = [
+            {
+                blog_id: 1,
+                merchId: 1,
+                title: 'camping at Big Dalton Canyon Wilderness Park',
+                blogText: 'Big Dalton Canyon Park in Glendora, CA. Steep trails are the Upper Mystic and Wren Meacham trails.  The Big Dalton trail is easier and scenic. It runs parallel to the paved road and creek but is far enough that sounds of traffic are blocked off. Includes bridges over the mostly year-round creek. Campground does not have RV hookups.',
+                authorId: 1,
+            },
+
+            {
+                blog_id: 2,
+                merchId: 2,
+                title: 'hiking at Eaton Canyon',
+                blogText: 'Eaton Canyon is a fairyly easy trail. Recommend that you get there early because of the heat and to avoid crowds. Depending on if it has rained recently you may have to cross the creek a few times. Worth it to reach the waterfall at the end.',
+                authorId: 2,
+            }
+        ]
+
+        console.log('Seeded blogs: ', seededblogs);
+
+        await Promise.all(seededblogs.map(async blog => {
+            const seededblogs = await createBlog(blog);
+            return seededblogs;
+        }));
+
+
+    } catch (e) {
+        console.log(chalk.red('There was an error creating blogs!', e));
+        console.error(e);
+    };
+};
+
 
 async function testDB() {
 
@@ -371,6 +410,8 @@ async function startDb() {
         await createTables()
         await createInitialUsers()
         await createInititialUserPrefs()
+        await createInitialBlogs()
+
     } catch (error) {
         console.error(chalk.red("Error during startDB"));
         throw error;
