@@ -5,6 +5,7 @@ const { getUserByUserId } = require('../db');
 const { JWT_SECRET } = process.env;
 
 apiRouter.use(async (req, res, next) => {
+    console.log('Inside api router, checking authorization!')
     const prefix = 'Bearer ';
     const auth = req.header('Authorization');
 
@@ -14,10 +15,10 @@ apiRouter.use(async (req, res, next) => {
         const token = auth.slice(prefix.length);
 
         try {
-            const { user_id } = jwt.verify(token, JWT_SECRET);
+            const { id } = jwt.verify(token, JWT_SECRET);
 
-            if (user_id) {
-                req.user = await getUserByUserId(user_id);
+            if (id) {
+                req.user = await getUserByUserId(id);
                 console.log(req.user);
                 next();
             }
@@ -47,20 +48,21 @@ apiRouter.get('/health', (req, res, next) => {
     res.send({ message: 'Server is healthy!'});
 });
 
-apiRouter.use((error, req, res, next) => {
-    res.send(error);
-});
-
 const usersRouter = require('./users');
 apiRouter.use('/users', usersRouter);
 
 const merchRouter = require('./merchandise');
 apiRouter.use('/merchandise', merchRouter);
 
+const paymentsRouter = require('./payments');
+apiRouter.use('/payments', paymentsRouter);
+
 const ordersRouter = require('./orders');
 apiRouter.use('/orders', ordersRouter);
 
-const paymentsRouter = require('./payments');
-apiRouter.use('/payments', paymentsRouter);
+apiRouter.use((error, req, res, next) => {
+    res.send(error);
+});
+
 
 module.exports = apiRouter;

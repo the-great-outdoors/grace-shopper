@@ -13,11 +13,13 @@ const {
     getUserByUserId, 
     getUserByUsername, 
     getAllUsers, 
-    createUserPreference, 
+    createUserPreferences, 
     updateUserPreferences, 
-    getPreferencesByUserId,
+
+    getUserPreferencesByUserId,
     createPayment,
     createBlog, 
+
 } = require('./index');
 
 const faker = require('faker');
@@ -213,6 +215,12 @@ async function createInitialUsers() {
                 hashpassword: 'thedarkknight',
                 firstname: 'Bruce',
                 lastname: 'Wayne'
+            },
+            {
+                username: 'turdferguson',
+                hashpassword: 'uraturd99',
+                firstname: 'Thomas',
+                lastname: 'Ferguson'
             }
         ]
     
@@ -257,13 +265,23 @@ async function createInititialUserPrefs() {
                 zip: 12345,
                 save_pmt: true,
                 shipping: 'USPS'
+            },
+            {
+                userId: 3,
+                street: '9876 Boulevard Ave',
+                city: 'Big City',
+                state: 'PA',
+                zip: 67890,
+                save_pmt: true,
+                shipping: 'UPS'
             }
+
         ]
 
         console.log('Seeded User Preferences: ', seededUserPrefs);
 
         await Promise.all(seededUserPrefs.map(async userPref => {
-            const seededUserPref = await createUserPreference(userPref);
+            const seededUserPref = await createUserPreferences(userPref);
             return seededUserPref;
         }));
 
@@ -358,20 +376,24 @@ async function testDB() {
         const userOne = await getUserByUserId(1);
         console.log("User One: ", userOne);
 
+        console.log('Calling getUserByUsername with batman');
+        const batman = await getUserByUsername('batman');
+        console.log('Batman: ', batman);
+
         console.log('Calling creatingInitialPayments...');
         const createPayment = await createInitialPayments();
         console.log('Payment: ', createPayment);
 
-        const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+        // const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
 
-        const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
-        console.log(newCategory);
+        // const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+        // console.log(newCategory);
     
     
-        await initializeMerchandise();
-        await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
-        await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
-        await getAllMerchandise();
+        // await initializeMerchandise();
+        // await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
+        // await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
+        // await getAllMerchandise();
         // await getMerchandiseById(2);
 
         console.log(chalk.yellow('Finished testing the database.'));
