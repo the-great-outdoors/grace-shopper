@@ -107,7 +107,7 @@ async function getUserByUsername(username) {
 
 async function getAllUsers() {
 
-    console.log("IN GETALLUSERS", db)
+    console.log("IN GETALLUSERS")
     try {
         const { rows: userIds } = await db.query(`
             SELECT user_id, username, firstname, lastname, active
