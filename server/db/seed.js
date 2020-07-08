@@ -7,6 +7,7 @@ const {
     addCategory, 
     updateMerchandise, 
     createMerchandiseReview,
+    getMerchandiseById,
     getAllMerchandise,
     createUser, 
     updateUser, 
@@ -384,17 +385,17 @@ async function testDB() {
         const createPayment = await createInitialPayments();
         console.log('Payment: ', createPayment);
 
-        // const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+        const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
 
-        // const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
-        // console.log(newCategory);
+        const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+        console.log(newCategory);
     
     
-        // await initializeMerchandise();
-        // await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
-        // await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
-        // await getAllMerchandise();
-        // await getMerchandiseById(2);
+        await initializeMerchandise();
+        await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
+        await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
+        await getAllMerchandise();
+        await getMerchandiseById(2);
 
         console.log(chalk.yellow('Finished testing the database.'));
     } catch (error) {
@@ -403,15 +404,14 @@ async function testDB() {
     };
 }
 
-async function startDb(force) {
+async function startDb() {
     try {
-        if (force) {
-            await dropTables()
-        }
+        await dropTables()
         await createTables()
         await createInitialUsers()
         await createInititialUserPrefs()
         await createInitialBlogs()
+
     } catch (error) {
         console.error(chalk.red("Error during startDB"));
         throw error;
@@ -419,7 +419,4 @@ async function startDb(force) {
 
 };
 
-module.exports = { 
-    startDb, 
-    testDB 
-}
+startDb();
