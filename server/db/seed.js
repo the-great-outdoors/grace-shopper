@@ -327,7 +327,7 @@ async function createInitialPayments() {
     }
 }
 
-async function createInititialBlogs() {
+async function createInitialBlogs() {
 
     try {
         const seededblogs = [
