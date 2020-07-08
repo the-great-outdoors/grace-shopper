@@ -9,8 +9,8 @@ Garrett: M-F 6:30PM - 10PM (please confirm)
 
 
 NEXT STEPS:
-1. Each teammember create DB methods as assigned (see index.js);
-2. Create Seed methods to test your DB calls
+1. Have all DB methods and routes up and running by class on 07/07
+2. Levi and Patricia have front end code to create users and their preferences and Sean and Garrett will have front page ready by class on 07/09. Will get to products page if time allows. Have it static. Running if possible. 
 3. 
 
 Routes (API ROUTERS):
@@ -45,3 +45,5 @@ Users
     /api/cart/:merchandiseId
     /api/cart/:userId
     
+
+    Meaningless change here. 

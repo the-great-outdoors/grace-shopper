@@ -13,11 +13,13 @@ const {
     getUserByUserId, 
     getUserByUsername, 
     getAllUsers, 
-    createUserPreference, 
+    createUserPreferences, 
     updateUserPreferences, 
-    getPreferencesByUserId,
+
+    getUserPreferencesByUserId,
     createPayment,
     createBlog, 
+
 } = require('./index');
 
 const faker = require('faker');
@@ -170,6 +172,7 @@ async function createTables() {
         console.log('Creating payments...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS payments(
+                "paymentId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
@@ -212,6 +215,12 @@ async function createInitialUsers() {
                 hashpassword: 'thedarkknight',
                 firstname: 'Bruce',
                 lastname: 'Wayne'
+            },
+            {
+                username: 'turdferguson',
+                hashpassword: 'uraturd99',
+                firstname: 'Thomas',
+                lastname: 'Ferguson'
             }
         ]
     
@@ -256,13 +265,23 @@ async function createInititialUserPrefs() {
                 zip: 12345,
                 save_pmt: true,
                 shipping: 'USPS'
+            },
+            {
+                userId: 3,
+                street: '9876 Boulevard Ave',
+                city: 'Big City',
+                state: 'PA',
+                zip: 67890,
+                save_pmt: true,
+                shipping: 'UPS'
             }
+
         ]
 
         console.log('Seeded User Preferences: ', seededUserPrefs);
 
         await Promise.all(seededUserPrefs.map(async userPref => {
-            const seededUserPref = await createUserPreference(userPref);
+            const seededUserPref = await createUserPreferences(userPref);
             return seededUserPref;
         }));
 
@@ -308,7 +327,7 @@ async function createInitialPayments() {
     }
 }
 
-async function createInititialBlogs() {
+async function createInitialBlogs() {
 
     try {
         const seededblogs = [
@@ -357,20 +376,24 @@ async function testDB() {
         const userOne = await getUserByUserId(1);
         console.log("User One: ", userOne);
 
+        console.log('Calling getUserByUsername with batman');
+        const batman = await getUserByUsername('batman');
+        console.log('Batman: ', batman);
+
         console.log('Calling creatingInitialPayments...');
         const createPayment = await createInitialPayments();
         console.log('Payment: ', createPayment);
 
-        const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+        // const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
 
-        const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
-        console.log(newCategory);
+        // const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+        // console.log(newCategory);
     
     
-        await initializeMerchandise();
-        await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
-        await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
-        await getAllMerchandise();
+        // await initializeMerchandise();
+        // await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
+        // await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
+        // await getAllMerchandise();
         // await getMerchandiseById(2);
 
         console.log(chalk.yellow('Finished testing the database.'));
@@ -380,17 +403,15 @@ async function testDB() {
     };
 }
 
-async function startDb() {
+async function startDb(force) {
     try {
-        dropTables()
-            .then(() => createTables())
-            .then(() => createInitialUsers())
-            .then(() => createInititialUserPrefs()) 
-            .then(() => createInititialBlogs())
-            .then(() => testDB())
-            .finally(() => db.end()
-            );
-
+        if (force) {
+            await dropTables()
+        }
+        await createTables()
+        await createInitialUsers()
+        await createInititialUserPrefs()
+        await createInitialBlogs()
     } catch (error) {
         console.error(chalk.red("Error during startDB"));
         throw error;
@@ -398,4 +419,7 @@ async function startDb() {
 
 };
 
-startDb();
+module.exports = { 
+    startDb, 
+    testDB 
+}

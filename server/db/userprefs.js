@@ -11,16 +11,19 @@ const db = require('./database');
 //     shipping VARCHAR(255)
 
 //createUserPreference(userId)
-async function createUserPreference({userId, street, city, state, zip, save_pmt, shipping}) {
+async function createUserPreferences({ userId, street, city, state, zip, save_pmt, shipping }) {
 
     try {
 
         console.log('Creating user preferences...');
+        console.log(userId, street, city, state, zip, save_pmt, shipping)
         const { rows: [ userPreferences ] } = await db.query (`
             INSERT INTO userPreferences("userId", street, city, state, zip, save_pmt, shipping)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING *
         `, [ userId ,street, city, state, zip, save_pmt, shipping ]);
 
+        console.log('UP!!', userPreferences);
         return userPreferences;
     } catch (error) {
         throw error;
@@ -55,7 +58,7 @@ async function updateUserPreferences(userId) {
 };
 
 //getPreferencesByUserId(userId)
-async function getPreferencesByUserId(userId) {
+async function getUserPreferencesByUserId(userId) {
 
     try {
         const { rows: [ userPreferences ] } = await db.query(`
@@ -72,7 +75,7 @@ async function getPreferencesByUserId(userId) {
 };
 
 //deleteUserPreferenceByUserId(userId)
-async function deleteUserPreference(userId) {
+async function deleteUserPreferences(userId) {
 
     try {
         await db.query(`
@@ -88,8 +91,8 @@ async function deleteUserPreference(userId) {
 };
 
 module.exports = {
-    createUserPreference,
+    createUserPreferences,
     updateUserPreferences,
-    getPreferencesByUserId,
-    deleteUserPreference
+    getUserPreferencesByUserId,
+    deleteUserPreferences
 };

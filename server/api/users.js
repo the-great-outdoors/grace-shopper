@@ -3,7 +3,7 @@ const usersRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers, getAllMerchandise } = require('../db');
+const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers, getAllMerchandise, getUserPreferencesByUserId, createUserPreferences } = require('../db');
 const { requireUser, requireActiveUser } = require('./utils');
 
 usersRouter.use((req, res, next) => {
@@ -12,17 +12,30 @@ usersRouter.use((req, res, next) => {
 });
 
 usersRouter.get('/', async (req, res) => {
-    console.log('Get request to users.');
-    console.log(getAllUsers.toString())
+
     const users = await getAllUsers();
-    console.log(users)
     res.send({
         users
     });
+
 });
 
 usersRouter.post('/register', async (req, res, next) => {
-    const { username, password, firstname, lastname } = req.body;
+    const { 
+        username, 
+        hashpassword, 
+        firstname, 
+        lastname, 
+        street, 
+        city, 
+        state, 
+        zip, 
+        save_pmt, 
+        shipping 
+    } = req.body;
+
+    console.log('Req.body: ', req.body);
+
     const SALT_COUNT = 10;
 
     try {
@@ -35,14 +48,16 @@ usersRouter.post('/register', async (req, res, next) => {
             });
         };
 
-        if (password.length < 8) {
+        if (hashpassword.length < 8) {
             next({
                 name: 'PasswordTooShort',
                 message: 'Password must be at least 8 characters'
             })
         };
 
-        bcrypt.hash(password, SALT_COUNT, async function (err, hashedPassword) {
+        
+
+        bcrypt.hash(hashpassword, SALT_COUNT, async function (err, hashedPassword) {
             const user = await createUser({
                 username,
                 hashpassword: hashedPassword,
@@ -57,8 +72,27 @@ usersRouter.post('/register', async (req, res, next) => {
                 expiresIn: '1d'
             });
 
+            console.log('Create user preferences values: ', { userId: user.user_id, street, city, state, zip, save_pmt, shipping })
+
+            const userPreferences = await createUserPreferences({
+                userId: user.user_id,
+                street,
+                city,
+                state,
+                zip,
+                save_pmt,
+                shipping
+            });
+
+            console.log('New User Preference: ', userPreferences);
+
+            user.userPreferences = userPreferences;
+
+            console.log('New User: ', user)
+
             res.send({
                 message: "Thank you for signing up!",
+                user,
                 token
             });
         });
@@ -79,11 +113,12 @@ usersRouter.post('/login', async (req, res, next) => {
 
     try {
         const user = await getUserByUsername(username);
+        console.log('USER: ', user);
         const hashedPassword = user.hashpassword;
 
-        console.log(hashedPassword)
-        console.log(hashpassword)
-
+        console.log('HASHEDPASSWORD: ', hashedPassword);
+        console.log('HASHPASSWORD', hashpassword);
+        console.log('<><>', hashedPassword == hashedPassword);
 
         bcrypt.compare(hashpassword, hashedPassword, function (err, passwordsMatch) {
             if (passwordsMatch) {
@@ -104,28 +139,35 @@ usersRouter.post('/login', async (req, res, next) => {
     }
 });
 
-usersRouter.delete('/:userId', requireActiveUser, async (req, res, next) => {
+usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
+    console.log('Entered user patch route to update user...')
     const { userId } = req.params;
+    const { firstname, lastname } = req.body
     const user = req.user;
+    console.log("UserId: ", userId)
+    console.log('Req.user: ', req.user)
+    console.log("Req.user.id: ", req.user.user_id)
+
     try {
         if (user && user.user_id === Number(userId)) {
-            const deactivatedUser = await updateUser(user.user_id, {
-                active: false
-            });
-            res.send({ deactivatedUser });
-            console.log("Deactivated User: ", deactivatedUser);
+        const updatedUser = await updateUser(user.user_id, {
+            firstname,
+            lastname
+        });
+        res.send({ updatedUser });
+        console.log("Updated User: ", updatedUser);
         } else {
             next({
-                name: "DeleteUserError",
-                message: "You cannot delete a username that is not yours"
+                name: "UpdateUserError",
+                message: "Their was an error updating the user!"
             })
         };
     } catch ({ name, message }) {
         next({ name, message });
     };
-});
+});  
 
-usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
+usersRouter.patch('/:userId/activate', requireUser, async (req, res, next) => {
     const { userId } = req.params;
     const user = req.user;
     console.log("UserId: ", userId)
@@ -147,6 +189,31 @@ usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
     } catch ({ name, message }) {
         next({ name, message });
     };
+});
+
+usersRouter.delete('/:userId/deactivate', requireActiveUser, async (req, res, next) => {
+    const { userId } = req.params;
+    const user = req.user;
+    try {
+        if (user && user.user_id === Number(userId)) {
+            const deactivatedUser = await updateUser(user.user_id, {
+                active: false
+            });
+            res.send({ deactivatedUser });
+            console.log("Deactivated User: ", deactivatedUser);
+        } else {
+            next({
+                name: "DeleteUserError",
+                message: "You cannot delete a username that is not yours"
+            })
+        };
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
+usersRouter.use((error, req, res, next) => {
+    res.send(error);
 });
 
 module.exports = usersRouter;
