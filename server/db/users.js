@@ -55,8 +55,8 @@ async function updateUser(userId, fields = {}) {
 //         await db.query(`
 //             DELETE *
 //             FROM users
-//             WHERE user_id=${ userId };
-//         `);
+//             WHERE user_id=$1;
+//         `, [ userId ]);
 
 //     } catch (error) {
 //         throw error;
@@ -74,7 +74,7 @@ async function getUserByUserId(userId) {
         `, [ userId ]);
 
         const { rows: [ userPreferences ] } = await db.query(`
-            SELECT "userId", street, city, state, zip, save_pmt, shipping
+            SELECT *
             FROM userPreferences
             WHERE "userId"=$1;
         `, [ userId ]);
@@ -93,10 +93,10 @@ async function getUserByUsername(username) {
 
     try {
         const { rows: [ user ] } = await db.query(`
-            SELECT user_id, username, firstname, lastname, active
+            SELECT *
             FROM users
-            WHERE username=${ username }
-        `);
+            WHERE username=$1
+        `, [ username ]);
 
         return user;
     } catch (error) {
