@@ -12,9 +12,7 @@ module.exports={
         rules:[
             {
                 use:
-                    [{loader:'babel-loader',
-                     css:'style-loader', 
-                     css:'css-loader'}],
+                    [{loader:'babel-loader'}],
                 
                 exclude: /node_modules/,
             },

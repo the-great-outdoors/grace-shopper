@@ -13,7 +13,7 @@ const Hero = (props)=>{
 
 
     return(
-        <Jumbotron fluid>
+        <Container fluid>
         <Container style={{
             background:'purple',
             height: '800px',
@@ -22,9 +22,9 @@ const Hero = (props)=>{
         >
             <NavBar/>
             <Header inverted color='orange' textAlign='right' style={{fontFamily: 'Ultra', fontSize:'6rem', paddingRight:'50px', paddingTop: '50px'}}>The Great Outdoors</Header>
-            <Header inverted textAlign='right' style={{fontSize:'6rem', paddingRight:'50px', paddingTop:'25px'}}>Explore your world</Header>
+            <Header inverted textAlign='right' style={{fontSize:'6rem', paddingRight:'50px', paddingTop:'25px', fontFamily:'Calligraffitti'}}>Adventure awaits</Header>
         </Container>
-      </Jumbotron>
+      </Container>
 
     )
 
