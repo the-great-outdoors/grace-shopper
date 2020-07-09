@@ -118,7 +118,7 @@ async function createTables() {
         await db.query(` 
             CREATE TABLE IF NOT EXISTS blogs(
                 blog_id SERIAL PRIMARY KEY,
-                merchId INTEGER REFERENCES merchandise(merch_id),
+                "merchId" INTEGER REFERENCES merchandise(merch_id),
                 title VARCHAR(255) UNIQUE NOT NULL,
                 "blogText" TEXT NOT NULL,
                 "authorId" INTEGER REFERENCES users(user_id)
@@ -363,6 +363,18 @@ async function createInitialBlogs() {
     };
 };
 
+async function initializeSeansStuff(){
+
+    await createInitialUsers();
+
+    const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+
+    const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+    console.log(newCategory);
+
+
+    await initializeMerchandise();
+}
 
 async function testDB() {
 
@@ -408,9 +420,11 @@ async function startDb() {
     try {
         await dropTables()
         await createTables()
-        await createInitialUsers()
-        await createInititialUserPrefs()
-        await createInitialBlogs()
+        // await testDB()
+        // await createInitialUsers()
+        // await createInititialUserPrefs()
+        // await createInitialBlogs()
+        await initializeSeansStuff();
 
     } catch (error) {
         console.error(chalk.red("Error during startDB"));

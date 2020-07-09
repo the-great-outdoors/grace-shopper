@@ -11,9 +11,11 @@ module.exports={
     module:{
         rules:[
             {
-                use:{
-                    loader:'babel-loader',
-                },
+                use:
+                    [{loader:'babel-loader',
+                     css:'style-loader', 
+                     css:'css-loader'}],
+                
                 exclude: /node_modules/,
             },
         ],
