@@ -32,7 +32,10 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
       {merchandise.map((item) => {
         return (
           <Card key={item.merch_id}>
-            <Image src='https://media.self.com/photos/5b048339fb856d7d3d02375d/4:3/w_2560%2Cc_limit/first-backpacking-trip.jpg' size='mini' wrapped ui={false} />
+            <Image src='/resources/sesameStreet.jpg' style={{
+              maxHeight: '100px',
+              maxWidth:'100px'
+            }}/>
             <Card.Content>
               <Card.Header>{item.name}</Card.Header>
               <Card.Meta>
