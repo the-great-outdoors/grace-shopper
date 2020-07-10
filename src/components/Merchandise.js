@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Icon, Item, Image } from "semantic-ui-react";
+import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
 import faker from "faker";
 import axios from "axios";
 
@@ -19,34 +19,25 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
 
   }, [])
 
-  const extra = (
-    <a>
-      <Icon name='user' />
-          16 Friends
-    </a>
-  )
 
 
   return (
-    <Card.Group itemsPerRow={6}>
+    <Card.Group itemsPerRow={4} style={{marginTop:'1em'}}>
       {merchandise.map((item) => {
         return (
           <Card key={item.merch_id}>
-            <Image src='https://media.self.com/photos/5b048339fb856d7d3d02375d/4:3/w_2560%2Cc_limit/first-backpacking-trip.jpg' size='mini' wrapped ui={false} />
+            <Image src='/resources/sesameStreet.jpg' wrapped ui={false}/>
             <Card.Content>
               <Card.Header>{item.name}</Card.Header>
               <Card.Meta>
                 {item.price}
               </Card.Meta>
               <Card.Description>
-                {item.description}
+                {item.description} 
               </Card.Description>
             </Card.Content>
             <Card.Content extra>
-              <a>
-                <Icon name='user' />
-                {item.rating}
-              </a>
+            <Rating icon='star' defaultRating={3} maxRating={4} />
             </Card.Content>
           </Card>
         )

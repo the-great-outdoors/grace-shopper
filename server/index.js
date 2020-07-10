@@ -27,6 +27,8 @@ server.use((req, res, next) => {
 
 server.use(express.static(path.join(__dirname, '../dist')))
 
+server.use("/resources",express.static(path.join(__dirname, '../resources')))
+
 server.listen(PORT, () => {
     console.log(chalk.green(`Server is listening on PORT: ${PORT}`))
     })
