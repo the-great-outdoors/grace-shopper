@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Header.css';
 
 const Header = ({
 
@@ -7,7 +8,7 @@ const Header = ({
 
     return (
         <header>
-
+            <h1> IM a header!</h1>
         </header>
     );
 
