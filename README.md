@@ -9,9 +9,10 @@ Garrett: M-F 6:30PM - 10PM (please confirm)
 
 
 NEXT STEPS:
-1. Have all DB methods and routes up and running by class on 07/07
-2. Levi and Patricia have front end code to create users and their preferences and Sean and Garrett will have front page ready by class on 07/09. Will get to products page if time allows. Have it static. Running if possible. 
-3. 
+1. Sean is working on searchbar. Hoping to work by Saturday, July 11th.
+2. Sean and Garrett will work on more front page gui stuff.  Figure out how to add products to cart!!!!
+3. Patricia and Levi to wire up Modal. register a user and update user prefs.
+4. Patricia finish writing update and delete blogs in DB. GUI!!!!
 
 Routes (API ROUTERS):
 
