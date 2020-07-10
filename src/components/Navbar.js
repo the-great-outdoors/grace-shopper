@@ -2,8 +2,10 @@ import React, {Component, useState, useEffect} from "react";
 
 import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
 
+import {SearchBar} from './SearchBar';
 
-const NavBar = (props)=>{
+
+const NavBar = ({results, setResults})=>{
     const [state, setState] = useState({activeItem:'home'});
     const [login, setLogin] = useState(false)
 
@@ -70,53 +72,43 @@ console.log('Entered navbar.js component');
             </Menu.Item>
           </Container>
         </Menu>
-        <Menu
-              fixed
-              inverted
-              pointing
-              secondary
-              size='large'
-            >
-              <Container>
-         <Menu.Item>
-
-  <Input type='text' placeholder='Search...' action style={{minWidth: '250px'}}>
-    <input />
-    <Select options={options} defaultValue='camping' style={{paddingRight:'0', margin:'none'}} />
-    <Button type='submit'>Search</Button>
-  </Input>   
-        </Menu.Item>       
-        <Menu.Item position='right'>
-          {!login?
-         <Button as='a' inverted animated primary>
-           <Button.Content visible>Log In</Button.Content>
-           <Button.Content hidden><Icon name='user circle'/></Button.Content>
-         </Button>:
-         <Button as='a' inverted>
-           Log Out
-         </Button>
-         }
+        <Menu fixed inverted pointing secondary size='large'>
+            <Menu.Item>
+              <SearchBar
+              results={results}
+              setResults={setResults}/>
+            </Menu.Item>       
+            <Menu.Item position='right'>
+            {!login?
+            <Button as='a' inverted animated primary>
+            <Button.Content visible>Log In</Button.Content>
+            <Button.Content hidden><Icon name='user circle'/></Button.Content>
+            </Button>:
+            <Button as='a' inverted>
+            Log Out
+            </Button>
+            }
 
 
-         <Button as='a' animated inverted style={{ marginLeft: '0.5em' }}>
-           <Button.Content visible><Icon name='signup'/></Button.Content>
-           <Button.Content hidden>Sign Up</Button.Content>
-         </Button>
-         <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
+            <Button as='a' animated inverted style={{ marginLeft: '0.5em' }}>
+            <Button.Content visible><Icon name='signup'/></Button.Content>
+            <Button.Content hidden>Sign Up</Button.Content>
+            </Button>
+            <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
             <Button.Content hidden>Wishlist</Button.Content>
             <Button.Content visible><Icon name='gift'/></Button.Content>
-          </Button>
-          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
-      <Button.Content hidden>Shop</Button.Content>
-      <Button.Content visible>
-        <Icon name='shop' />
-      </Button.Content>
-    </Button>
-       </Menu.Item>
-       </Container>
+            </Button>
+            <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
+            <Button.Content hidden>Shop</Button.Content>
+            <Button.Content visible>
+            <Icon name='shop' />
+            </Button.Content>
+            </Button>
+            </Menu.Item>
+
        </Menu>
 
-        </Segment>
+    </Segment>
 
         
     )
