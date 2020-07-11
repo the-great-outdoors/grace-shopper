@@ -19,8 +19,6 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
 
   }, [])
 
-
-
   return (
     <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
       {merchandise.map((item) => {
@@ -44,12 +42,8 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
       })}
     </Card.Group>
 
-
-
-
   )
 
 }
 
 export { Merchandise }
-
