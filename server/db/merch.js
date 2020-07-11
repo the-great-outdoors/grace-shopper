@@ -7,7 +7,6 @@ async function getAllMerchandise() {
     console.log(merchIds);
     const merchandise = await Promise.all(merchIds.map((item)=>getMerchandiseById(item.merch_id)))
 
-    console.log('new merchandise added: ', merchandise);
     return merchandise;
 }
 
@@ -19,7 +18,35 @@ async function getMerchandiseByName(merchName) {
     `, [merchName]);
 
     return merchandise;
-}  
+}
+
+async function searchMerchandise(params={}, category='') {
+        console.log('Entered db.searchMerchandise');
+    try {
+        const queryString = Object.keys(params).map((key, index)=>{
+            return `${key} LIKE ($${index+1})`
+        }).join('OR');
+        
+        console.log('querty string:', queryString);
+        console.log('Object.values:', Object.values(params));
+        const strictSearch = category.length? `AND "Catname" = '${category}'`:'';
+    
+        const { rows: [merchandise] } = await db.query(`
+            SELECT * FROM merchandise
+            JOIN categories ON merchandise.cats=categories.cat_id
+            WHERE ${queryString}
+            ${strictSearch?strictSearch:''};
+        `, Object.values(params));
+
+        console.log('Successfully retrieved search!', merchandise);
+
+        return merchandise;
+        
+    } catch (error) {
+        throw error;
+    }
+
+}
 
     //getMerchandiseById(merchId)
 
@@ -37,7 +64,7 @@ async function getMerchandiseByName(merchName) {
         `, [merchId])
 
         merchandise.reviews = reviews;
-        console.log(merchandise);
+
         return merchandise;
         } catch (error) {
             throw error;
@@ -102,7 +129,6 @@ async function getMerchandiseByName(merchName) {
             RETURNING *;
             `, [userId, merchId, rating, description]);
     
-            console.log('Created new review: ', review);
             return review;
         } catch (error) {
 
@@ -117,7 +143,7 @@ async function getMerchandiseByName(merchName) {
 
             console.log('entered addCategory with cat: ', name);
             const { rows: [category] }= await db.query(`
-            INSERT INTO categories(name)
+            INSERT INTO categories("Catname")
             VALUES('${name}')
             RETURNING *;
             `);
@@ -189,5 +215,6 @@ module.exports = {
     deleteMerchandise,
     deleteMerchandiseReview,
     addCategory,
-    updateMerchandise
+    updateMerchandise,
+    searchMerchandise
 };

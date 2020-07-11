@@ -13,7 +13,7 @@ import {SearchBar} from './components/SearchBar';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Jumbotron } from "react-bootstrap";
 import Header from './components/Header';
-import { CreateUserModal } from "./components";
+import CreateUserModal from './components/CreateUserModal';
 
 const App =()=>{
 
