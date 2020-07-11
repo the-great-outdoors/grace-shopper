@@ -6,14 +6,11 @@ import axios from "axios";
 
 const Merchandise = ({ merchandise, setMerchandise }) => {
 
-  console.log('Entered Component Merchandise: ', merchandise);
-
   useEffect(() => {
     axios.get('/api/merchandise')
       .then((res) => {
 
         const merch = res.data.merch;
-        console.log('getallmerchandise:', merch);
         return setMerchandise(merch)
       })
 
