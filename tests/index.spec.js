@@ -16,6 +16,14 @@ describe('Booleans', ()=>{
 
             expect(res.data.status).toEqual(true);
         })
+
+        it('tests GET /search', async ()=>{
+            const res = await axios.get('/api/mearchandise/search', {name:'quantifying', category:'tents'});
+
+            console.log(res);
+
+            expect(res.data.status).toEqual(true);
+        })
     })
 
 })
