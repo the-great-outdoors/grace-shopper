@@ -2,6 +2,32 @@ const db = require('./database');
 
 const { getUserByUserId } = require('./users');
 
+async function createWishListByUserId(fields = {}){
+    
+    const id = fields.id
+    delete fields.id
+    
+    const user = await getUserByUserId(userId)
+
+        const setString = Object.keys(fields).map(
+            (key, index) => `"${ key }"$${ index + 2}`
+        ).join(', ');
+        console.log(fields)
+    try{
+        const {rows: result} = await db.query(`
+        INSERT INTO wishlist
+        VALUES ${ setString }
+        WHERE id= $1
+        RETURNING *;
+        `, [id, ...Object.values(fields)]);
+
+        return result;
+
+    }  catch(e) {
+        console.log("User must be logged in to create wishlist", e);
+    }
+}
+
   //updateWishlistByUserId(userId, fields={'merchIds'})
 async function updateWishListByUserId(fields = {}){
     
@@ -58,7 +84,27 @@ async function getWishListByUserId(userId) {
     }
 }
 
+async function deleteWishListByUserId(userId, wishId){
+    
+    const user = await getUserByUserId(userId)
+
+    try{
+        const {rows: result} = await db.query(`
+        DELETE FROM wishlist
+        WHERE "wish_id" = ${ wishId }
+        RETURNING *;
+        `);
+
+        return result;
+
+    }  catch(e) {
+        console.error("must be logged in to remove wishlist", e);
+    }
+}
+
 module.exports = {
+    createWishListByUserId,
     updateWishListByUserId,
     getWishListByUserId,
+    deleteWishListByUserId,
 }
