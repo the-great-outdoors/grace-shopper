@@ -79,7 +79,7 @@ async function createTables() {
         await db.query(`
             CREATE TABLE IF NOT EXISTS categories(
                 cat_id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL
+                "Catname" VARCHAR(255) NOT NULL
             );
         `);
 
