@@ -1,6 +1,7 @@
 import React, {Component, useState} from 'react';
+import axios from 'axios';
 
-import {Input, Icon, Container, Dropdown, Button } from 'semantic-ui-react';
+import {Input, Icon, Container, Dropdown, Button, Search } from 'semantic-ui-react';
 
 const SearchBar = ({results, setResults})=>{
 
@@ -13,6 +14,16 @@ const SearchBar = ({results, setResults})=>{
         { key: 'camping', text: 'camping', value: 'camping' },
       ]
 
+const handleInputChange= async(e)=>{
+
+  const value = e.target.value;
+
+  const data = {name:`${value}`, category:'tents'};
+  const search = await axios.post('/api/merchandise/search', data);
+
+  console.log('your search: ',search.data.data);
+
+}
 
 return (
 
@@ -20,6 +31,7 @@ return (
     label={<Dropdown defaultValue='all' options={options} />}
     labelPosition='right'
     placeholder='Search...'
+    onChange={handleInputChange}
   />
 
 )

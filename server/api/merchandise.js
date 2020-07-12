@@ -1,9 +1,8 @@
 const merchRouter = require('express').Router();
 
-const { getAllMerchandise, getMerchandiseByCategory, getMerchandiseById, getMerchandiseByName, getMerchandiseReviewByUserId, createMerchandise, deleteMerchandise, deleteMerchandiseReview, addCategory, updateMerchandise, createMerchandiseReview } = require('../db')
+const { getAllMerchandise, getMerchandiseByCategory, getMerchandiseById, getMerchandiseByName, getMerchandiseReviewByUserId, createMerchandise, deleteMerchandise, deleteMerchandiseReview, addCategory, updateMerchandise, createMerchandiseReview, searchMerchandise } = require('../db')
 
 merchRouter.get('/', async (req, res, next)=>{
-    console.log('Entered GET /merchandise');
 
     const merch = await getAllMerchandise();
 
@@ -86,7 +85,50 @@ merchRouter.post('/review/:merchId', async(req, res, next)=>{
 
 })
 
-merchRouter.get('/:merchId', async(req, res, next)=>{
+merchRouter.post('/search', async(req, res, next)=>{
+    console.log('Entered GET /search');
+    const {name, description, price, rating, category} = req.body;
+
+    console.log('req.body:', req.body);
+
+    let params={};
+    if(name){
+        params.name=name;
+    }
+    if(description){
+        params.description;
+    }
+    if (price) {
+        params.price
+    }
+    if (rating) {
+        params.rating
+    }
+
+    
+    try {
+        let resp;
+        category? resp = await searchMerchandise(params,category):
+
+        resp=await searchMerchandise(params);
+
+        if (resp) {
+            res.send({
+                message:'Successfull search',
+                status:true,
+                data: resp
+            })
+        }else{
+            next({error:'UnableToRetrieveSearchResultsError', message: 'Unable to retrieve search results. Please refine your search'})
+        }
+
+    } catch ({error, message}) {
+        next({error, message})
+    }
+
+})
+
+merchRouter.get('search/:merchId', async(req, res, next)=>{
     const { merchId } = req.params;
 
     try {
@@ -180,6 +222,9 @@ merchRouter.delete('/:merchId', async(req, res, next)=>{
         next({error, message});
     }
 })
+
+
+
 
 merchRouter.use((error, req, res, next) => {
     res.send(error);
