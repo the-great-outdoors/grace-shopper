@@ -20,23 +20,20 @@ async function getMerchandiseByName(merchName) {
     return merchandise;
 }
 
-async function searchMerchandise(params={}, category='') {
-        console.log('Entered db.searchMerchandise');
-    try {
-        const queryString = Object.keys(params).map((key, index)=>{
-            return `${key} LIKE ($${index+1})`
-        }).join('OR');
-        
-        console.log('querty string:', queryString);
-        console.log('Object.values:', Object.values(params));
-        const strictSearch = category.length? `AND "Catname" = '${category}'`:'';
+async function searchMerchandise(searchTerm,category='tents') {
+        console.log('Entered db.searchMerchandise', searchTerm);
+
+        const catSearch = category.length?`AND "Catname"='${category}'`:'';
+
+        console.log('category:', catSearch);
+        try {
     
-        const { rows: [merchandise] } = await db.query(`
+        const { rows: merchandise } = await db.query(`
             SELECT * FROM merchandise
             JOIN categories ON merchandise.cats=categories.cat_id
-            WHERE ${queryString}
-            ${strictSearch?strictSearch:''};
-        `, Object.values(params));
+            WHERE name LIKE '${searchTerm}' OR description LIKE '${searchTerm}'
+            ${catSearch};
+        `);
 
         console.log('Successfully retrieved search!', merchandise);
 

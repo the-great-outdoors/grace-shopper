@@ -1,9 +1,9 @@
 import React, {Component, useState} from 'react';
 import axios from 'axios';
 
-import {Input, Icon, Container, Dropdown, Button, Search } from 'semantic-ui-react';
+import {Input, Dropdown} from 'semantic-ui-react';
 
-const SearchBar = ({results, setResults})=>{
+const SearchBar = ({setMerchandise})=>{
 
     const options = [
         { key: 'all', text: 'All', value: 'all' },
@@ -14,21 +14,31 @@ const SearchBar = ({results, setResults})=>{
         { key: 'camping', text: 'camping', value: 'camping' },
       ]
 
-const handleInputChange= async(e)=>{
+let category='';
 
-  const value = e.target.value;
+const handleInputChange= async(e, data)=>{
+  console.log(data.value);
 
-  const data = {name:`${value}`, category:'tents'};
-  const search = await axios.post('/api/merchandise/search', data);
+  const search = await axios.post('/api/merchandise/search',{data});
+  
+  const results = search.data.data;
 
-  console.log('your search: ',search.data.data);
+  if (search.data.data) {
+    console.log('Entered SearchBar -search:',search.data.data);
+    setMerchandise(results);
+  }
+  
+}
 
+const handleOptionSelect = (e, data)=>{
+  console.log('Entered handleOptionChange',data.value );
+  category= data.value;
 }
 
 return (
 
     <Input style={{minWidth:'400px'}}
-    label={<Dropdown defaultValue='all' options={options} />}
+    label={<Dropdown defaultValue='all' options={options} onChange={handleOptionSelect}/>}
     labelPosition='right'
     placeholder='Search...'
     onChange={handleInputChange}

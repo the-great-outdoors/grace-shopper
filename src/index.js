@@ -20,7 +20,8 @@ const App = () => {
         <Router>
             <Hero
                 results={results}
-                setResults={setResults} />
+                setResults={setResults}
+                setMerchandise={setMerchandise} />
             <Merchandise
                 merchandise={merchandise}
                 setMerchandise={setMerchandise} />

@@ -1,14 +1,13 @@
 import React, { Component, useState, useEffect } from "react";
 
-import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
+import { Menu, Segment, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
 
 import { SearchBar } from './SearchBar';
 import CreateUserModal from './CreateUserModal';
 
 
 const NavBar = ({
-  results,
-  setResults,
+  setMerchandise
 }) => {
 
   const [state, setState] = useState({ activeItem: 'home' });
@@ -85,8 +84,7 @@ const NavBar = ({
       <Menu fixed inverted pointing secondary size='large'>
         <Menu.Item>
           <SearchBar
-            results={results}
-            setResults={setResults} />
+            setMerchandise={setMerchandise}/>
         </Menu.Item>
         <Menu.Item position='right'>
           {!login ?
@@ -98,9 +96,6 @@ const NavBar = ({
               Log Out
             </Button>
           }
-
-          {/* <CreateUserModal
-            show={show} */}
           {show ?
             <CreateUserModal
               show={show}

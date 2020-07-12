@@ -10,10 +10,9 @@ import { NavBar } from './Navbar';
 
 
 const Hero = ({ 
-    results, 
-    setResults, 
     show, 
-    setShow 
+    setShow, 
+    setMerchandise
 }) => {
 
     return (
@@ -25,8 +24,7 @@ const Hero = ({
             }}
             >
                 <NavBar
-                    results={results}
-                    setResults={setResults}
+                    setMerchandise={setMerchandise}
                     show={show}
                     setShow={setShow} />
                 <Header inverted color='orange' textAlign='right' style={{ fontFamily: 'Ultra', fontSize: '6rem', paddingRight: '50px', paddingTop: '50px' }}>The Great Outdoors</Header>

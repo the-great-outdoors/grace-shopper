@@ -86,33 +86,16 @@ merchRouter.post('/review/:merchId', async(req, res, next)=>{
 })
 
 merchRouter.post('/search', async(req, res, next)=>{
-    console.log('Entered GET /search');
-    const {name, description, price, rating, category} = req.body;
+    console.log('Entered POST /search');
 
-    console.log('req.body:', req.body);
-
-    let params={};
-    if(name){
-        params.name=name;
-    }
-    if(description){
-        params.description;
-    }
-    if (price) {
-        params.price
-    }
-    if (rating) {
-        params.rating
-    }
-
+    const {value} = req.body;
+    console.log('From /Search:', value);
     
     try {
-        let resp;
-        category? resp = await searchMerchandise(params,category):
+        const resp= await searchMerchandise(value, 'tents');
+        console.log('/Search results:',resp);
 
-        resp=await searchMerchandise(params);
-
-        if (resp) {
+        if (resp.length) {
             res.send({
                 message:'Successfull search',
                 status:true,
