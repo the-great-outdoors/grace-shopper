@@ -7,7 +7,7 @@ import CreateUserModal from './CreateUserModal';
 
 
 const NavBar = ({
-  setMerchandise
+  setSearchTerm
 }) => {
 
   const [state, setState] = useState({ activeItem: 'home' });
@@ -84,7 +84,7 @@ const NavBar = ({
       <Menu fixed inverted pointing secondary size='large'>
         <Menu.Item>
           <SearchBar
-            setMerchandise={setMerchandise}/>
+            setSearchTerm={setSearchTerm}/>
         </Menu.Item>
         <Menu.Item position='right'>
           {!login ?

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import {Input, Dropdown} from 'semantic-ui-react';
 
-const SearchBar = ({setMerchandise})=>{
+const SearchBar = ({setSearchTerm})=>{
 
     const options = [
         { key: 'all', text: 'All', value: 'all' },
@@ -17,16 +17,28 @@ const SearchBar = ({setMerchandise})=>{
 let category='';
 
 const handleInputChange= async(e, data)=>{
-  console.log(data.value);
+  const value=e.target.value;
 
-  const search = await axios.post('/api/merchandise/search',{data});
-  
-  const results = search.data.data;
+  console.log('searchTerm:',value);
 
-  if (search.data.data) {
-    console.log('Entered SearchBar -search:',search.data.data);
-    setMerchandise(results);
+  let srch={};
+  srch.value=value;
+
+  if (category.length) {
+    console.log('Category?:', category);
+    srch.category=category;
   }
+
+  setSearchTerm(srch)
+
+  // const search = await axios.post('/api/merchandise/search',srch);
+  
+  // const results = search.data.data;
+
+  // if (search.data.data) {
+  //   console.log('Entered SearchBar -search:',search.data.data, 'category:',category);
+  //   setMerchandise(results);
+  // }
   
 }
 

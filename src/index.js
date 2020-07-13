@@ -14,15 +14,14 @@ import { SearchBar } from './components/SearchBar';
 const App = () => {
 
     const [merchandise, setMerchandise] = useState([]);
-    const [results, setResults] = useState([]);
+    const [searchTerm, setSearchTerm] = useState({value:'',category:''});
 
     return (
         <Router>
             <Hero
-                results={results}
-                setResults={setResults}
-                setMerchandise={setMerchandise} />
+                setSearchTerm={setSearchTerm}/>
             <Merchandise
+                searchTerm={searchTerm}
                 merchandise={merchandise}
                 setMerchandise={setMerchandise} />
         </Router>

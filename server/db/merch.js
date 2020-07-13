@@ -21,7 +21,7 @@ async function getMerchandiseByName(merchName) {
 }
 
 async function searchMerchandise(searchTerm,category='tents') {
-        console.log('Entered db.searchMerchandise', searchTerm);
+        console.log('Entered db.searchMerchandise', searchTerm, category);
 
         const catSearch = category.length?`AND "Catname"='${category}'`:'';
 
@@ -31,7 +31,7 @@ async function searchMerchandise(searchTerm,category='tents') {
         const { rows: merchandise } = await db.query(`
             SELECT * FROM merchandise
             JOIN categories ON merchandise.cats=categories.cat_id
-            WHERE name LIKE '${searchTerm}' OR description LIKE '${searchTerm}'
+            WHERE name LIKE '%${searchTerm}%' OR description LIKE '%${searchTerm}%'
             ${catSearch};
         `);
 
@@ -48,7 +48,6 @@ async function searchMerchandise(searchTerm,category='tents') {
     //getMerchandiseById(merchId)
 
     async function getMerchandiseById(merchId) {
-            console.log('entered db getMerchandiseById: ', merchId);
         try {
             const { rows: [ merchandise ] } = await db.query(`
             SELECT * FROM merchandise

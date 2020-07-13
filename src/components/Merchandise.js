@@ -4,17 +4,44 @@ import faker from "faker";
 import axios from "axios";
 
 
-const Merchandise = ({ merchandise, setMerchandise }) => {
+const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
+
+  console.log('searchTerm:', searchTerm.value.length);
 
   useEffect(() => {
-    axios.get('/api/merchandise')
+
+    if (searchTerm.value.length) {
+      console.log('entered component Merch searchTerm');
+      try {
+        axios.post('/api/merchandise/search', searchTerm)
+        .then((res)=>{
+          const results = res.data.data;
+          if (results) {
+            setMerchandise(results);
+          }
+        })
+       
+        
+      } catch (error) {
+        throw error;
+      }
+    
+    }else{
+      console.log('Entered comp Merch getAll');
+      try {
+        axios.get('/api/merchandise')
       .then((res) => {
 
         const merch = res.data.merch;
         return setMerchandise(merch)
       })
+      } catch (error) {
+        throw error;
+      }
+      
+    }
 
-  }, [])
+  }, [searchTerm])
 
   return (
     <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>

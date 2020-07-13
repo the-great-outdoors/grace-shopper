@@ -88,11 +88,11 @@ merchRouter.post('/review/:merchId', async(req, res, next)=>{
 merchRouter.post('/search', async(req, res, next)=>{
     console.log('Entered POST /search');
 
-    const {value} = req.body;
-    console.log('From /Search:', value);
+    const {value, category} = req.body;
+    console.log('From /Search:', value, category);
     
     try {
-        const resp= await searchMerchandise(value, 'tents');
+        const resp= await searchMerchandise(value, category);
         console.log('/Search results:',resp);
 
         if (resp.length) {
