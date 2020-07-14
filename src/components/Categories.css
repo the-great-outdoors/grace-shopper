@@ -1,0 +1,9 @@
+.category{
+    height: 400px;
+    background-size: cover;
+}
+
+.ui.header.catHeader{
+    padding-top: 60%;
+    font-size: 4rem;
+}

@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
-
-import { Menu, Segment, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
+import { BrowserRouter as Router, Route, Link, Switch, useHistory } from "react-router-dom";
+import { Menu, Segment, Icon, Button, Container, Item, Select } from 'semantic-ui-react';
 
 import { SearchBar } from './SearchBar';
 import CreateUserModal from './CreateUserModal';
@@ -13,6 +13,7 @@ const NavBar = ({
   const [state, setState] = useState({ activeItem: 'home' });
   const [login, setLogin] = useState(false);
   const [show, setShow] = useState(false);
+  const history = useHistory();
 
   const options = [
     { key: 'all', text: 'All', value: 'all' },
@@ -24,7 +25,14 @@ const NavBar = ({
   ]
 
 
-  const handleItemClick = (e, { name }) => setState({ activeItem: name });
+  const handleItemClick = (e, { name }) => {
+    console.log('In Navbar link: ', name);
+    setState({ activeItem: name });
+    let path=`/${name}`;
+    history.push(path);
+
+  }
+
   const registerButtonClick = (e, data) => {
     console.log("Entered Register Button Click Handler!");
     setShow(true);
@@ -33,7 +41,6 @@ const NavBar = ({
   console.log('Entered navbar.js component');
 
   return (
-
     <Segment inverted>
       <Menu inverted pointing secondary>
         <Menu.Item

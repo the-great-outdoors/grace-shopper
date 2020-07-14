@@ -31,8 +31,9 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
       try {
         axios.get('/api/merchandise')
       .then((res) => {
-
+        console.log(res);
         const merch = res.data.merch;
+        console.log('Merch com hook: ', merch);
         return setMerchandise(merch)
       })
       } catch (error) {
