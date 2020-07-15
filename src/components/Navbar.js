@@ -1,18 +1,28 @@
 import React, { Component, useState, useEffect } from "react";
+import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
 
-import { Menu, Segment, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
-
-import { SearchBar } from './SearchBar';
-import CreateUserModal from './CreateUserModal';
-
+import {
+  CreateUserModal,
+  LoginModal,
+  SearchBar
+} from '../components';
 
 const NavBar = ({
+  results,
+  setResults,
+  login,
+  setLogin,
+  setUser,
+  token,
+  setToken,
   setSearchTerm
 }) => {
 
+  console.log('Entered navbar.js component');
+
   const [state, setState] = useState({ activeItem: 'home' });
-  const [login, setLogin] = useState(false);
-  const [show, setShow] = useState(false);
+  const [registerShow, registerSetShow] = useState(false);
+  const [loginShow, loginSetShow] = useState(false);
 
   const options = [
     { key: 'all', text: 'All', value: 'all' },
@@ -25,12 +35,22 @@ const NavBar = ({
 
 
   const handleItemClick = (e, { name }) => setState({ activeItem: name });
+
   const registerButtonClick = (e, data) => {
-    console.log("Entered Register Button Click Handler!");
-    setShow(true);
+    console.log('Entered Register Button Click Handler!');
+    registerSetShow(true);
   };
 
-  console.log('Entered navbar.js component');
+  const loginButtonClick = (e, data) => {
+    console.log('Entered Login Button Click Handler!');
+    loginSetShow(true);
+  };
+
+  const logoutButtonClick = (e, data) => {
+    console.log('Entered Logout Button Click Handler!');
+    setLogin(false);
+    setUser({});
+  };
 
   return (
 
@@ -40,31 +60,26 @@ const NavBar = ({
           name='home'
           active={state.activeItem === 'home'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='categories'
           active={state.activeItem === 'categories'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='stories'
           active={state.activeItem === 'stories'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='about'
           active={state.activeItem === 'about'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='contact us'
           active={state.activeItem === 'contact us'}
           onClick={handleItemClick}
-
         />
         <Container>
           <Menu.Item position='right'>
@@ -87,23 +102,58 @@ const NavBar = ({
             setSearchTerm={setSearchTerm}/>
         </Menu.Item>
         <Menu.Item position='right'>
+
+          {loginShow ?
+            <LoginModal
+              loginShow={loginShow}
+              loginSetShow={loginSetShow}
+              login={login}
+              setLogin={setLogin}
+              setUser={setUser}
+              token={token}
+              setToken={setToken} />
+            : ''
+          }
+
           {!login ?
-            <Button as='a' inverted animated primary>
+            <Button
+              as='a'
+              inverted
+              animated
+              primary
+              onClick={loginButtonClick}
+            >
               <Button.Content visible>Log In</Button.Content>
               <Button.Content hidden><Icon name='user circle' /></Button.Content>
             </Button> :
-            <Button as='a' inverted>
+            <Button
+              as='a'
+              inverted
+              onClick={logoutButtonClick}
+            >
               Log Out
             </Button>
           }
-          {show ?
-            <CreateUserModal
-              show={show}
-              setShow={setShow} />
-            : ''
-            }
 
-          <Button as='a' animated inverted style={{ marginLeft: '0.5em' }} onClick={registerButtonClick}>
+          {registerShow ?
+
+            <CreateUserModal
+              registerShow={registerShow}
+              registerSetShow={registerSetShow}
+              setLogin={setLogin}
+              setUser={setUser}
+              token={token}
+              setToken={setToken} />
+            : ''
+          }
+
+          <Button
+            as='a'
+            animated
+            inverted
+            style={{ marginLeft: '0.5em' }}
+            onClick={registerButtonClick}
+          >
             <Button.Content visible><Icon name='signup' /></Button.Content>
             <Button.Content hidden>Sign Up</Button.Content>
           </Button>
@@ -118,13 +168,11 @@ const NavBar = ({
             </Button.Content>
           </Button>
         </Menu.Item>
-
       </Menu>
-
     </Segment>
 
   )
 
 }
 
-export { NavBar };
+export default NavBar;

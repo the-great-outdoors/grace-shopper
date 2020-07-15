@@ -16,7 +16,8 @@ async function createUserPreferences({ userId, street, city, state, zip, save_pm
     try {
 
         console.log('Creating user preferences...');
-        console.log(userId, street, city, state, zip, save_pmt, shipping)
+        console.log(userId, street, city, state, zip, save_pmt, shipping);
+        save_pmt = typeof(save_pmt) === 'boolean' ? save_pmt : false;
         const { rows: [ userPreferences ] } = await db.query (`
             INSERT INTO userPreferences("userId", street, city, state, zip, save_pmt, shipping)
             VALUES ($1, $2, $3, $4, $5, $6, $7)

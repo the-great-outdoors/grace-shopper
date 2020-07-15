@@ -1,4 +1,5 @@
-import React, { useState, useEffect, Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
     Form,
     Input,
@@ -11,17 +12,82 @@ import {
 import './CreateUserModal.css';
 
 const CreateUserModal = ({
-    show,
-    setShow
+    registerShow,
+    registerSetShow,
+    // username,
+    // setUsername,
+    // hashpassword,
+    // setHashpassword,
+    login,
+    setLogin,
+    user,
+    setUser,
+    token,
+    setToken
 }) => {
 
-    const [value, setValue] = useState('USPS');
-    const handleChange = (e, { value }) => setValue({ value });
-    const handleClose = () => {setShow(false)};
+    const [username, setUsername] = useState("");
+    const [hashpassword, setHashpassword] = useState("");
+    const [confirmHashpassword, setConfirmHashpassword] = useState("");
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [streetAddress, setStreetAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [zip, setZip] = useState("");
+    const [shipping, setShipping] = useState('USPS');
+
+    const handleChange = (e, param) => {
+        console.log('Handle Change', param.value)
+        setShipping(param.value)
+    };
+    const handleClose = () => { registerSetShow(false) };
+    console.log('Shipping: ', shipping);
+
+    const registerUser = () => {
+        console.log('In register user!!')
+
+        if (!username || !hashpassword || !confirmHashpassword || !firstname || !lastname || !streetAddress || !city || !state || !zip) {
+            return;
+        }
+
+        if (hashpassword !== confirmHashpassword) return;
+
+        console.log('Register User is being called!');
+        axios.post('/api/users/register', { username, hashpassword, firstname, lastname, street: streetAddress, city, state, zip, shipping })
+            .then(res => {
+                console.log('New User: ', res.data);
+                console.log('Token: ', res.data.token)
+                setUser(res.data.user);
+                localStorage.setItem('token', res.data.token);
+                console.log(localStorage.getItem('token'));
+                // setToken(res.data.token);
+            })
+            .then(() => {
+                setLogin(true);
+            })
+            .catch(error => {
+                console.error('Error registering user!', error);
+            })
+
+    };
+
+
+    const clearForm = () => {
+        setUsername("");
+        setHashpassword("");
+        setConfirmHashpassword("");
+        setFirstname("");
+        setLastname("");
+        setStreetAddress("");
+        setCity("");
+        setState("");
+        setZip("");
+    };
 
     return (
         <div>
-            <Modal open={show} size='small'>
+            <Modal open={registerShow} size='small'>
                 <Modal.Header className='create-user-header'
                     style={{
                         backgroundColor: 'olivedrab',
@@ -52,6 +118,8 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
+                                onChange={event => setUsername(event.target.value)}
+                                value={username}
                             />
                         </Form.Field>
                         <Form.Field required>
@@ -63,6 +131,8 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
+                                onChange={event => setHashpassword(event.target.value)}
+                                value={hashpassword}
                             />
                         </Form.Field>
                         <Form.Field required>
@@ -74,8 +144,38 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
+                                onChange={event => setConfirmHashpassword(event.target.value)}
+                                value={confirmHashpassword}
                             />
                         </Form.Field>
+                        <Form.Group widths='equal'>
+                            <Form.Field required>
+                                <label>First Name:</label>
+                                <Input
+                                    type='text'
+                                    placeholder='First Name'
+                                    style={{
+                                        border: '1px solid black',
+                                        borderRadius: '5px'
+                                    }}
+                                    onChange={event => setFirstname(event.target.value)}
+                                    value={firstname}
+                                />
+                            </Form.Field>
+                            <Form.Field required>
+                                <label>Last Name:</label>
+                                <Input
+                                    type='text'
+                                    placeholder='Last Name'
+                                    style={{
+                                        border: '1px solid black',
+                                        borderRadius: '5px'
+                                    }}
+                                    onChange={event => setLastname(event.target.value)}
+                                    value={lastname}
+                                />
+                            </Form.Field>
+                        </Form.Group>
                         <Form.Field required>
                             <label>Street Address:</label>
                             <Input
@@ -85,6 +185,8 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
+                                onChange={event => setStreetAddress(event.target.value)}
+                                value={streetAddress}
                             />
                         </Form.Field>
                         <Form.Group widths='equal'>
@@ -97,6 +199,8 @@ const CreateUserModal = ({
                                         border: '1px solid black',
                                         borderRadius: '5px'
                                     }}
+                                    onChange={event => setCity(event.target.value)}
+                                    value={city}
                                 />
                             </Form.Field>
                             <Form.Field required>
@@ -108,6 +212,8 @@ const CreateUserModal = ({
                                         border: '1px solid black',
                                         borderRadius: '5px'
                                     }}
+                                    onChange={event => setState(event.target.value)}
+                                    value={state}
                                 />
                             </Form.Field>
                             <Form.Field required>
@@ -118,11 +224,13 @@ const CreateUserModal = ({
                                     name='zip'
                                     type='text'
                                     inputMode='numeric'
-                                    pattern='^(?(^00000(|-0000))|(\d{5}(|-\d{4})))$'
+                                    // pattern='^(?(^00000(|-0000))|(\d{5}(|-\d{4})))$'
                                     style={{
                                         border: '1px solid black',
                                         borderRadius: '5px'
                                     }}
+                                    onChange={event => setZip(event.target.value)}
+                                    value={zip}
                                 />
                             </Form.Field>
                         </Form.Group>
@@ -130,23 +238,23 @@ const CreateUserModal = ({
                             <label>Shipping Preference:</label>
                             <Radio
                                 label='USPS'
-                                value='usps'
-                                checked={value === 'usps'}
-                                onChange={handleChange}
+                                value='USPS'
+                                checked={shipping === 'USPS'}
+                                onClick={handleChange}
                                 style={{ padding: '0 5px' }}
                             />
                             <Radio
                                 label='UPS'
-                                value='ups'
-                                checked={value === 'ups'}
-                                onChange={handleChange}
+                                value='UPS'
+                                checked={shipping === 'UPS'}
+                                onClick={handleChange}
                                 style={{ padding: '0 5px' }}
                             />
                             <Radio
                                 label='FedEx'
-                                value='fedex'
-                                checked={value === 'fedex'}
-                                onChange={handleChange}
+                                value='FedEx'
+                                checked={shipping === 'FedEx'}
+                                onClick={handleChange}
                                 style={{ padding: '0 5px' }}
                             />
                         </Form.Group>
@@ -157,15 +265,20 @@ const CreateUserModal = ({
                         backgroundColor: 'darkgrey',
                         color: 'white',
                         borderTop: '2px solid black'
-
                     }}>
                     <Button negative
                         style={{
                             boxShadow: '3px 3px 5px black'
                         }}
-                        onClick={handleClose}>
+                        onClick={
+                            function (event) {
+                                clearForm();
+                                handleClose();
+                            }
+                        }
+                    >
                         Cancel
-                        </Button>
+                    </Button>
                     <Button
                         positive
                         icon='checkmark'
@@ -175,6 +288,14 @@ const CreateUserModal = ({
                             backgroundColor: 'olivedrab',
                             boxShadow: '3px 3px 5px black'
                         }}
+                        onClick={
+                            (event) => {
+                                // event.preventDefault();
+                                registerUser();
+                                handleClose();
+                                clearForm();
+                            }
+                        }
                     />
                 </Modal.Actions>
             </Modal>
