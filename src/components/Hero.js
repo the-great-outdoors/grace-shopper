@@ -15,27 +15,18 @@ const Hero = ({
     show, 
     setShow 
 }) => {
-
     return (
         <Container fluid>
             <Container style={{
                 background: 'purple',
                 height: '800px',
                 backgroundImage: `url('/resources/rock_climbing_hanging_crop.jpeg')`, backgroundSize: 'cover'
-            }}
-            >
-                <NavBar
-                    results={results}
-                    setResults={setResults}
-                    show={show}
-                    setShow={setShow} />
+                }}>
                 <Header inverted color='orange' textAlign='right' style={{ fontFamily: 'Ultra', fontSize: '6rem', paddingRight: '50px', paddingTop: '50px' }}>The Great Outdoors</Header>
                 <Header inverted textAlign='right' style={{ fontSize: '6rem', paddingRight: '50px', paddingTop: '25px', fontFamily: 'Calligraffitti' }}>Adventure awaits</Header>
             </Container>
         </Container>
-
     )
-
 }
 
 export { Hero }

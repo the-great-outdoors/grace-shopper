@@ -6,6 +6,13 @@ import axios from "axios";
 
 const Merchandise = ({ merchandise, setMerchandise }) => {
 
+  const handleSelect = async (e, data) => {
+    console.log('entered handle select', data.id);
+    const merchId = data.id;
+    const merchItem = await axios.get(`/api/merchandise/search/${merchId}`);
+    console.log(merchItem);
+  }
+
   useEffect(() => {
     axios.get('/api/merchandise')
       .then((res) => {
@@ -20,7 +27,7 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
     <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
       {merchandise.map((item) => {
         return (
-          <Card key={item.merch_id}>
+          <Card onClick={handleSelect} key={item.merch_id} id={item.merch_id}>
             <Image src='http://placeimg.com/300/300/nature' wrapped ui={false} />
             <Card.Content>
               <Card.Header>{item.name}</Card.Header>

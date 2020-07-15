@@ -35,39 +35,33 @@ const NavBar = ({
 
   return (
 
-    <Segment inverted>
-      <Menu inverted pointing secondary>
+    <Segment inverted style={{ marginBottom: '-1em' }}>
+      <Menu fixed inverted pointing secondary size='large'>        
         <Menu.Item
           name='home'
           active={state.activeItem === 'home'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='categories'
           active={state.activeItem === 'categories'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='stories'
           active={state.activeItem === 'stories'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='about'
           active={state.activeItem === 'about'}
           onClick={handleItemClick}
-
         />
         <Menu.Item
           name='contact us'
           active={state.activeItem === 'contact us'}
           onClick={handleItemClick}
-
         />
-        <Container>
           <Menu.Item position='right'>
             <Icon inverted color='teal' name='facebook f' />
           </Menu.Item>
@@ -80,7 +74,6 @@ const NavBar = ({
           <Menu.Item >
             <Icon inverted color='teal' name='snapchat ghost' />
           </Menu.Item>
-        </Container>
       </Menu>
       <Menu fixed inverted pointing secondary size='large'>
         <Menu.Item>
@@ -107,7 +100,6 @@ const NavBar = ({
               setShow={setShow} />
             : ''
             }
-
           <Button as='a' animated inverted style={{ marginLeft: '0.5em' }} onClick={registerButtonClick}>
             <Button.Content visible><Icon name='signup' /></Button.Content>
             <Button.Content hidden>Sign Up</Button.Content>
@@ -123,11 +115,8 @@ const NavBar = ({
             </Button.Content>
           </Button>
         </Menu.Item>
-
       </Menu>
-
     </Segment>
-
   )
 
 }
