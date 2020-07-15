@@ -2,8 +2,8 @@ import React, { useState} from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-
 import { ProductPage } from "./components/ProductPage";
+
 import Categories from './components/Categories'
 import {Sticky} from 'semantic-ui-react';
 
@@ -28,9 +28,14 @@ const App = () => {
     return (
         <Router>
             <div><Link to="/productpage">Product Page</Link></div>
-            <NavBar
-                    results={results}
-                    setResults={setResults} />
+            <Sticky>
+              <NavBar 
+                setSearchTerm={setSearchTerm}
+                setLogin={setLogin}
+                login={login}
+                user={user}
+                setUser={setUser}/>
+            </Sticky>
             <Switch>
                 <Route path="/productpage">    
                     <ProductPage />  
@@ -44,36 +49,12 @@ const App = () => {
                         setMerchandise={setMerchandise} />
                 </Route>
             </Switch>  
-            <Sticky>
-              <NavBar 
-                setSearchTerm={setSearchTerm}
-                setLogin={setLogin}
-                login={login}
-                user={user}
-                setUser={setUser}/>
-            </Sticky>
+            
             <Switch>
                 <Route path='/categories'>
                     <Categories/>
-                </Route>
-                <Route exact path='/'>
-                <Hero
-                    setSearchTerm={setSearchTerm}/>
-                
-                <Merchandise
-                    searchTerm={searchTerm}
-                    merchandise={merchandise}
-                    setMerchandise={setMerchandise} />
-                </Route>
                 <Redirect from='/home' to='/'/>
-            </Switch>
-            <Hero
-                results={results}
-                setResults={setResults} />
-            <Merchandise
-                searchTerm={searchTerm}
-                merchandise={merchandise}
-                setMerchandise={setMerchandise} />
+                </Switch>
         </Router>
     )
 }

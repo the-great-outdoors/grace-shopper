@@ -4,8 +4,6 @@ import { Input, Icon, Container, Dropdown, Button, Search } from 'semantic-ui-re
 
 const SearchBar = ({ results, setResults, setSearchTerm }) => {
 
-
-const SearchBar = ({setSearchTerm})=>{
   
   const [optionsValue, setOptionsValue] = useState('all');
 
@@ -18,19 +16,6 @@ const SearchBar = ({setSearchTerm})=>{
         { key: 'camping', text: 'camping', value: 'camping' },
       ]
 
-  const handleInputChange = async (e) => {
-
-    const value = e.target.value;
-
-    const data = { name: `${value}`, category: 'tents' };
-    const search = await axios.post('/api/merchandise/search', data);
-
-    console.log('your search: ', search.data.data);
-
-  }
-
-  return (
-let category='';
 
 const handleInputChange= async(e, data)=>{
   const value=e.target.value;
@@ -50,8 +35,8 @@ const handleInputChange= async(e, data)=>{
     srch.category=category;
   }
 
+
   setSearchTerm(srch)
-  
 }
 
 const handleOptionSelect = (e, data)=>{
@@ -60,25 +45,17 @@ const handleOptionSelect = (e, data)=>{
   setOptionsValue(data.value);
 }
 
+return (
+
     <Input style={{ minWidth: '400px' }}
       label={<Dropdown defaultValue='all' options={options} />}
       labelPosition='right'
       placeholder='Search...'
       onChange={handleInputChange}
     />
-  )
-
-    <Input style={{minWidth:'400px'}}
-    label={ <Dropdown options={options} value={optionsValue} onChange={handleOptionSelect}/>}
-    labelPosition='right'
-    placeholder='Search...'
-    onChange={handleInputChange}
-  />
  
-)
-
+  )
 }
-
 
 
 export default SearchBar;
