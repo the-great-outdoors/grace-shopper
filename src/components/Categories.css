@@ -4,6 +4,10 @@
 }
 
 .ui.header.catHeader{
-    padding-top: 60%;
+    position: absolute;
+    bottom: 0;
+    padding-left: 30%;
+    padding-bottom: 20%;
     font-size: 4rem;
+    
 }

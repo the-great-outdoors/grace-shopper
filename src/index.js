@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
-
-import {
-    CreateUserModal
-} from './components';
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { Merchandise } from "./components/Merchandise";
 import { NavBar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
-import { SearchBar } from './components/SearchBar';
 import Categories from './components/Categories'
+import {Sticky} from 'semantic-ui-react';
 
 
 const App = () => {
@@ -19,7 +15,9 @@ const App = () => {
 
     return (
         <Router>
-            
+            <Sticky>
+            <NavBar setSearchTerm={setSearchTerm}/>
+            </Sticky>
             <Switch>
                 <Route path='/categories'>
                     <Categories/>
