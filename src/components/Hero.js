@@ -5,15 +5,19 @@ import faker from "faker";
 import axios from "axios";
 import { Jumbotron, Container } from "react-bootstrap";
 import css from './Hero.css';
-import { NavBar } from './Navbar';
+import { NavBar } from '../components';
 
 
-
-const Hero = ({ 
-    results, 
-    setResults, 
-    show, 
-    setShow 
+const Hero = ({
+    results,
+    setResults,
+    show,
+    setShow,
+    setLogin,
+    login,
+    setUser,
+    token,
+    setToken
 }) => {
 
     return (
@@ -28,7 +32,12 @@ const Hero = ({
                     results={results}
                     setResults={setResults}
                     show={show}
-                    setShow={setShow} />
+                    setShow={setShow}
+                    setLogin={setLogin}
+                    login={login}
+                    setUser={setUser}
+                    token={token}
+                    setToken={setToken} />
                 <Header inverted color='orange' textAlign='right' style={{ fontFamily: 'Ultra', fontSize: '6rem', paddingRight: '50px', paddingTop: '50px' }}>The Great Outdoors</Header>
                 <Header inverted textAlign='right' style={{ fontSize: '6rem', paddingRight: '50px', paddingTop: '25px', fontFamily: 'Calligraffitti' }}>Adventure awaits</Header>
             </Container>
@@ -38,4 +47,4 @@ const Hero = ({
 
 }
 
-export { Hero }
+export default Hero;

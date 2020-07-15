@@ -43,4 +43,4 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
 
 }
 
-export { Merchandise }
+export default Merchandise;

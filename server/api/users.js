@@ -69,9 +69,10 @@ usersRouter.post('/register', async (req, res, next) => {
                 id: user.user_id,
                 username
             }, process.env.JWT_SECRET, {
-                expiresIn: '1d'
+                expiresIn: '1w'
             });
 
+            console.log("TOKEN", token);
             console.log('Create user preferences values: ', { userId: user.user_id, street, city, state, zip, save_pmt, shipping })
 
             const userPreferences = await createUserPreferences({
@@ -88,7 +89,9 @@ usersRouter.post('/register', async (req, res, next) => {
 
             user.userPreferences = userPreferences;
 
-            console.log('New User: ', user)
+            delete user.hashpassword
+
+            console.log('New User: ', user);
 
             res.send({
                 message: "Thank you for signing up!",
@@ -123,7 +126,14 @@ usersRouter.post('/login', async (req, res, next) => {
         bcrypt.compare(hashpassword, hashedPassword, function (err, passwordsMatch) {
             if (passwordsMatch) {
                 const token = jwt.sign({ id: user.user_id, username: user.username }, process.env.JWT_SECRET)
-                res.send({ message: "you're logged in!", token: `${token}` });
+
+                delete user.hashpassword;
+
+                res.send({
+                message: "you're logged in!",
+                user, 
+                token: `${token}` 
+            });
 
                 return token;
             } else {
