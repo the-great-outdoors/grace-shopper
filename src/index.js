@@ -2,9 +2,8 @@ import React, { useState} from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import { Merchandise } from "./components/Merchandise";
-import { NavBar } from "./components/Navbar";
-import { Hero } from "./components/Hero";
+
+import { ProductPage } from "./components/ProductPage";
 import Categories from './components/Categories'
 import {Sticky} from 'semantic-ui-react';
 
@@ -24,12 +23,27 @@ const App = () => {
     const [user, setUser] = useState({});
     const [login, setLogin] = useState(false);
     const [token, setToken] = useState('');
-
-    // const loggedIn = JSON.parse(localStorage.getItem('token'));
     const [searchTerm, setSearchTerm] = useState({value:'',category:''});
 
     return (
         <Router>
+            <div><Link to="/productpage">Product Page</Link></div>
+            <NavBar
+                    results={results}
+                    setResults={setResults} />
+            <Switch>
+                <Route path="/productpage">    
+                    <ProductPage />  
+                </Route>
+                <Route path='/'>
+                    <Hero
+                        results={results}
+                        setResults={setResults} />
+                    <Merchandise
+                        merchandise={merchandise}
+                        setMerchandise={setMerchandise} />
+                </Route>
+            </Switch>  
             <Sticky>
               <NavBar 
                 setSearchTerm={setSearchTerm}
@@ -61,7 +75,6 @@ const App = () => {
                 merchandise={merchandise}
                 setMerchandise={setMerchandise} />
         </Router>
-
     )
 }
 

@@ -19,7 +19,6 @@ const Hero = ({
     setToken,
     setSearchTerm
 }) => {
-
     return (
         <Container fluid>
             <Container style={{
@@ -32,9 +31,7 @@ const Hero = ({
                 <Header inverted textAlign='right' style={{ fontSize: '6rem', paddingRight: '50px', paddingTop: '25px', fontFamily: 'Calligraffitti' }}>Adventure awaits</Header>
             </Container>
         </Container>
-
     )
-
 }
 
 export default Hero;

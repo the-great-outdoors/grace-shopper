@@ -61,6 +61,7 @@ const NavBar = ({
     setUser({});
   };
 
+
   return (
     <Segment inverted>
       <Menu inverted pointing secondary>
@@ -89,7 +90,6 @@ const NavBar = ({
           active={state.activeItem === 'contact us'}
           onClick={handleItemClick}
         />
-        <Container>
           <Menu.Item position='right'>
             <Icon inverted color='teal' name='facebook f' />
           </Menu.Item>
@@ -102,7 +102,6 @@ const NavBar = ({
           <Menu.Item >
             <Icon inverted color='teal' name='snapchat ghost' />
           </Menu.Item>
-        </Container>
       </Menu>
       <Menu fixed inverted pointing secondary size='large'>
         <Menu.Item>
@@ -154,7 +153,7 @@ const NavBar = ({
               setToken={setToken} />
             : ''
           }
-
+    
           <Button
             as='a'
             animated
@@ -162,6 +161,7 @@ const NavBar = ({
             style={{ marginLeft: '0.5em' }}
             onClick={registerButtonClick}
           >
+
             <Button.Content visible><Icon name='signup' /></Button.Content>
             <Button.Content hidden>Sign Up</Button.Content>
           </Button>
@@ -178,7 +178,6 @@ const NavBar = ({
         </Menu.Item>
       </Menu>
     </Segment>
-
   )
 
 }
