@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import { ProductPage } from "./components/ProductPage";
-
-import Categories from './components/Categories'
 import {Sticky} from 'semantic-ui-react';
 import axios from 'axios';
+
 import {
     CreateUserModal,
     Hero,
     LoginModal,
     Merchandise,
     NavBar,
-    SearchBar
+    SearchBar,
+    ProductPage,
+    Categories
 } from './components';
 
 const App = () => {

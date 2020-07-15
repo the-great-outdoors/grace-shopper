@@ -4,3 +4,5 @@ export { default as LoginModal } from './LoginModal';
 export { default as Merchandise } from './Merchandise';
 export { default as NavBar } from './NavBar';
 export { default as SearchBar } from './SearchBar';
+export { default as ProductPage } from './ProductPage';
+export { default as Categories } from './Categories';
