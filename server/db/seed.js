@@ -2,24 +2,24 @@
 //each teammember please create seed method to test your
 const db = require('./database');
 
-const { 
-    createMerchandise, 
-    addCategory, 
-    updateMerchandise, 
+const {
+    createMerchandise,
+    addCategory,
+    updateMerchandise,
     createMerchandiseReview,
     getMerchandiseById,
     getAllMerchandise,
-    createUser, 
-    updateUser, 
-    getUserByUserId, 
-    getUserByUsername, 
-    getAllUsers, 
-    createUserPreferences, 
-    updateUserPreferences, 
+    createUser,
+    updateUser,
+    getUserByUserId,
+    getUserByUsername,
+    getAllUsers,
+    createUserPreferences,
+    updateUserPreferences,
 
     getUserPreferencesByUserId,
     createPayment,
-    createBlog, 
+    createBlog,
 
 } = require('./index');
 
@@ -192,9 +192,9 @@ async function createTables() {
 
 async function initializeMerchandise() {
     for (let index = 0; index < 20; index++) {
-        const merch = await createMerchandise({name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price:faker.commerce.price(),cat: 1});
-        
-        const review = await createMerchandiseReview(index+1, 1, 5, faker.hacker.phrase());
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 1 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 }
 
@@ -224,7 +224,7 @@ async function createInitialUsers() {
                 lastname: 'Ferguson'
             }
         ]
-    
+
         console.log(seededUsers);
 
         await Promise.all(seededUsers.map(async user => {
@@ -363,13 +363,15 @@ async function createInitialBlogs() {
     };
 };
 
-async function initializeSeansStuff(){
+async function initializeSeansStuff() {
 
     await createInitialUsers();
+    await createInititialUserPrefs()
 
-    const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
 
-    const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+    const catArray = ['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+
+    const newCategory = await Promise.all(catArray.map((cat) => addCategory(cat)));
     console.log(newCategory);
 
 
@@ -397,14 +399,14 @@ async function testDB() {
         const createPayment = await createInitialPayments();
         console.log('Payment: ', createPayment);
 
-        const catArray=['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+        const catArray = ['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
 
-        const newCategory = await Promise.all(catArray.map((cat)=>addCategory(cat)));
+        const newCategory = await Promise.all(catArray.map((cat) => addCategory(cat)));
         console.log(newCategory);
-    
-    
+
+
         await initializeMerchandise();
-        await updateMerchandise(2,{price:5, description: faker.company.catchPhrase});
+        await updateMerchandise(2, { price: 5, description: faker.company.catchPhrase });
         await createMerchandiseReview(2, 1, 5, 'I have no idea what this is or why I bought it...');
         await getAllMerchandise();
         await getMerchandiseById(2);
@@ -422,7 +424,6 @@ async function startDb() {
         await createTables()
         // await testDB()
         // await createInitialUsers()
-        // await createInititialUserPrefs()
         // await createInitialBlogs()
         await initializeSeansStuff();
 

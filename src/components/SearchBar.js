@@ -1,9 +1,12 @@
-import React, {Component, useState} from 'react';
+import React, { Component, useState } from 'react';
 import axios from 'axios';
+import { Input, Icon, Container, Dropdown, Button, Search } from 'semantic-ui-react';
 
-import {Input, Dropdown} from 'semantic-ui-react';
+const SearchBar = ({ results, setResults, setSearchTerm }) => {
+
 
 const SearchBar = ({setSearchTerm})=>{
+  
   const [optionsValue, setOptionsValue] = useState('all');
 
     const options = [
@@ -14,6 +17,20 @@ const SearchBar = ({setSearchTerm})=>{
         { key: 'sports', text: 'sports', value: 'sports' },
         { key: 'camping', text: 'camping', value: 'camping' },
       ]
+
+  const handleInputChange = async (e) => {
+
+    const value = e.target.value;
+
+    const data = { name: `${value}`, category: 'tents' };
+    const search = await axios.post('/api/merchandise/search', data);
+
+    console.log('your search: ', search.data.data);
+
+  }
+
+  return (
+let category='';
 
 const handleInputChange= async(e, data)=>{
   const value=e.target.value;
@@ -43,7 +60,13 @@ const handleOptionSelect = (e, data)=>{
   setOptionsValue(data.value);
 }
 
-return (
+    <Input style={{ minWidth: '400px' }}
+      label={<Dropdown defaultValue='all' options={options} />}
+      labelPosition='right'
+      placeholder='Search...'
+      onChange={handleInputChange}
+    />
+  )
 
     <Input style={{minWidth:'400px'}}
     label={ <Dropdown options={options} value={optionsValue} onChange={handleOptionSelect}/>}
@@ -52,11 +75,10 @@ return (
     onChange={handleInputChange}
   />
  
-
 )
-    
+
 }
 
 
 
-export {SearchBar};
+export default SearchBar;

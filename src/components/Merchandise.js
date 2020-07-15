@@ -71,4 +71,4 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
 
 }
 
-export { Merchandise }
+export default Merchandise;
