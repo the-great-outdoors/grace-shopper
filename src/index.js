@@ -2,9 +2,6 @@ import React, { useState} from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import { Merchandise } from "./components/Merchandise";
-import { NavBar } from "./components/Navbar";
-import { Hero } from "./components/Hero";
 import Categories from './components/Categories'
 import {Sticky} from 'semantic-ui-react';
 
@@ -52,14 +49,7 @@ const App = () => {
                     setMerchandise={setMerchandise} />
                 </Route>
                 <Redirect from='/home' to='/'/>
-            </Switch>
-            <Hero
-                results={results}
-                setResults={setResults} />
-            <Merchandise
-                searchTerm={searchTerm}
-                merchandise={merchandise}
-                setMerchandise={setMerchandise} />
+                </Switch>
         </Router>
 
     )

@@ -23,7 +23,6 @@ const NavBar = ({
   console.log('Entered navbar.js component');
 
   const [state, setState] = useState({ activeItem: 'home' });
-  const [login, setLogin] = useState(false);
   const history = useHistory();
   const [registerShow, registerSetShow] = useState(false);
   const [loginShow, loginSetShow] = useState(false);
