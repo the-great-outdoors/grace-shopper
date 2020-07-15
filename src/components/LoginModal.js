@@ -6,9 +6,7 @@ import {
     Button,
     Modal,
 } from 'semantic-ui-react'
-
 import './LoginModal.css';
-
 const LoginModal = ({
     loginShow,
     loginSetShow,
@@ -23,19 +21,14 @@ const LoginModal = ({
     token,
     setToken
 }) => {
-
     const [username, setUsername] = useState("");
     const [hashpassword, setHashpassword] = useState("");
-
     const handleClose = () => { loginSetShow(false) };
-
     const loginUser = () => {
         console.log('In login user!!')
-
         if (!username && !hashpassword) {
             return;
         }
-
         console.log('Login User is being called!');
         axios.post('/api/users/login', { username, hashpassword, })
             .then(res => {
@@ -51,15 +44,11 @@ const LoginModal = ({
             .catch(error => {
                 console.error('Error logging-in user!', error);
             })
-
     };
-
     const clearForm = () => {
         setUsername("");
         setHashpassword("");
     };
-
-
     return (
         <div>
             <Modal open={loginShow} size='mini'>
@@ -107,7 +96,6 @@ const LoginModal = ({
                         backgroundColor: 'darkgrey',
                         color: 'white',
                         borderTop: '2px solid black'
-
                     }}>
                     <Button negative
                         style={{
@@ -139,5 +127,4 @@ const LoginModal = ({
         </div>
     )
 }
-
 export default LoginModal;

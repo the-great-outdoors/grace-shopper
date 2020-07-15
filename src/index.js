@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
@@ -6,7 +6,7 @@ import { ProductPage } from "./components/ProductPage";
 
 import Categories from './components/Categories'
 import {Sticky} from 'semantic-ui-react';
-
+import axios from 'axios';
 import {
     CreateUserModal,
     Hero,
@@ -22,21 +22,36 @@ const App = () => {
     const [results, setResults] = useState([]);
     const [user, setUser] = useState({});
     const [login, setLogin] = useState(false);
-    const [token, setToken] = useState('');
     const [searchTerm, setSearchTerm] = useState({value:'',category:''});
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token && token.length) {
+            axios.post('/api/users/token', { token })
+                .then(res => {
+                    if (res.data.user_id) {
+                        setUser(res.data);
+                        setLogin(true);
+                    }
+                })
+                .catch(error => console.error(error));
+        }
+    }, []);
 
     return (
         <Router>
-            <div><Link to="/productpage">Product Page</Link></div>
             <Sticky>
               <NavBar 
                 setSearchTerm={setSearchTerm}
                 setLogin={setLogin}
                 login={login}
                 user={user}
-                setUser={setUser}/>
+                setUser={setUser} />
             </Sticky>
             <Switch>
+                <Route path='/categories'>
+                    <Categories />
+                </Route>
                 <Route path="/productpage">    
                     <ProductPage />  
                 </Route>
@@ -46,15 +61,12 @@ const App = () => {
                         setResults={setResults} />
                     <Merchandise
                         merchandise={merchandise}
-                        setMerchandise={setMerchandise} />
+                        setMerchandise={setMerchandise}
+                        searchTerm={searchTerm} />
                 </Route>
-            </Switch>  
-            
-            <Switch>
-                <Route path='/categories'>
-                    <Categories/>
+
                 <Redirect from='/home' to='/'/>
-                </Switch>
+            </Switch>          
         </Router>
     )
 }
