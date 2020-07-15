@@ -4,7 +4,9 @@ import faker from "faker";
 import axios from "axios";
 
 
-const Merchandise = ({ merchandise, setMerchandise }) => {
+const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
+
+  console.log('searchTerm:', searchTerm.value.length);
 
   const handleSelect = async (e, data) => {
     console.log('entered handle select', data.id);
@@ -14,14 +16,40 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
   }
 
   useEffect(() => {
-    axios.get('/api/merchandise')
-      .then((res) => {
 
+    if (searchTerm.value.length) {
+      console.log('entered component Merch searchTerm');
+      try {
+        axios.post('/api/merchandise/search', searchTerm)
+        .then((res)=>{
+          const results = res.data.data;
+          if (results) {
+            setMerchandise(results);
+          }
+        })
+       
+        
+      } catch (error) {
+        throw error;
+      }
+    
+    }else{
+      console.log('Entered comp Merch getAll');
+      try {
+        axios.get('/api/merchandise')
+      .then((res) => {
+        console.log(res);
         const merch = res.data.merch;
+        console.log('Merch com hook: ', merch);
         return setMerchandise(merch)
       })
+      } catch (error) {
+        throw error;
+      }
+      
+    }
 
-  }, [])
+  }, [searchTerm])
 
   return (
     <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
@@ -50,4 +78,4 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
 
 }
 
-export { Merchandise }
+export default Merchandise;
