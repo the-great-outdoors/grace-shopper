@@ -14,7 +14,8 @@ const NavBar = ({
   setLogin,
   setUser,
   token,
-  setToken
+  setToken,
+  setSearchTerm
 }) => {
 
   console.log('Entered navbar.js component');
@@ -98,8 +99,7 @@ const NavBar = ({
       <Menu fixed inverted pointing secondary size='large'>
         <Menu.Item>
           <SearchBar
-            results={results}
-            setResults={setResults} />
+            setSearchTerm={setSearchTerm}/>
         </Menu.Item>
         <Menu.Item position='right'>
 
@@ -136,6 +136,7 @@ const NavBar = ({
           }
 
           {registerShow ?
+
             <CreateUserModal
               registerShow={registerShow}
               registerSetShow={registerSetShow}

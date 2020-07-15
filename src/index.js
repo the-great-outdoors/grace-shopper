@@ -20,8 +20,7 @@ const App = () => {
     const [token, setToken] = useState('');
 
     // const loggedIn = JSON.parse(localStorage.getItem('token'));
-
-    
+    const [searchTerm, setSearchTerm] = useState({value:'',category:''});
 
     return (
         <Router>
@@ -38,7 +37,9 @@ const App = () => {
                 setUser={setUser}
                 token={token}
                 setToken={setToken} />
+                setSearchTerm={setSearchTerm}/>
             <Merchandise
+                searchTerm={searchTerm}
                 merchandise={merchandise}
                 setMerchandise={setMerchandise} />
         </Router>

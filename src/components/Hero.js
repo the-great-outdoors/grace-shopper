@@ -7,7 +7,6 @@ import { Jumbotron, Container } from "react-bootstrap";
 import css from './Hero.css';
 import { NavBar } from '../components';
 
-
 const Hero = ({
     results,
     setResults,
@@ -17,7 +16,8 @@ const Hero = ({
     login,
     setUser,
     token,
-    setToken
+    setToken,
+    setSearchTerm
 }) => {
 
     return (
@@ -29,8 +29,7 @@ const Hero = ({
             }}
             >
                 <NavBar
-                    results={results}
-                    setResults={setResults}
+                    setSearchTerm={setSearchTerm}
                     show={show}
                     setShow={setShow}
                     setLogin={setLogin}
