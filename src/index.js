@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { Merchandise } from "./components/Merchandise";
+import { NavBar } from "./components/Navbar";
+import { Hero } from "./components/Hero";
+import Categories from './components/Categories'
+import {Sticky} from 'semantic-ui-react';
 
 import {
     CreateUserModal,
@@ -24,20 +30,32 @@ const App = () => {
 
     return (
         <Router>
-            <Hero
-                results={results}
-                setResults={setResults} 
-                // username={username}
-                // setUsername={setUsername}
-                // hashpassword={hashpassword}
-                // setHashpassword={setHashpassword}
+            <Sticky>
+              <NavBar 
+                setSearchTerm={setSearchTerm}
                 setLogin={setLogin}
                 login={login}
                 user={user}
-                setUser={setUser}
-                token={token}
-                setToken={setToken} />
-                setSearchTerm={setSearchTerm}/>
+                setUser={setUser}/>
+            </Sticky>
+            <Switch>
+                <Route path='/categories'>
+                    <Categories/>
+                </Route>
+                <Route exact path='/'>
+                <Hero
+                    setSearchTerm={setSearchTerm}/>
+                
+                <Merchandise
+                    searchTerm={searchTerm}
+                    merchandise={merchandise}
+                    setMerchandise={setMerchandise} />
+                </Route>
+                <Redirect from='/home' to='/'/>
+            </Switch>
+            <Hero
+                results={results}
+                setResults={setResults} />
             <Merchandise
                 searchTerm={searchTerm}
                 merchandise={merchandise}

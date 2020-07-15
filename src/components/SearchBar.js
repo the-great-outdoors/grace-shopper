@@ -4,15 +4,19 @@ import { Input, Icon, Container, Dropdown, Button, Search } from 'semantic-ui-re
 
 const SearchBar = ({ results, setResults, setSearchTerm }) => {
 
-  const options = [
-    { key: 'all', text: 'All', value: 'all' },
-    { key: 'tents', text: 'tents', value: 'tents' },
-    { key: 'climbing', text: 'climbing', value: 'climbing' },
-    { key: 'hiking', text: 'hiking', value: 'hiking' },
-    { key: 'sports', text: 'sports', value: 'sports' },
-    { key: 'camping', text: 'camping', value: 'camping' },
-  ]
 
+const SearchBar = ({setSearchTerm})=>{
+  
+  const [optionsValue, setOptionsValue] = useState('all');
+
+    const options = [
+        { key: 'all', text: 'All', value: 'all' },
+        { key: 'clothing', text: 'clothing', value: 'clothing' },
+        { key: 'climbing', text: 'climbing', value: 'climbing' },
+        { key: 'hiking', text: 'hiking', value: 'hiking' },
+        { key: 'sports', text: 'sports', value: 'sports' },
+        { key: 'camping', text: 'camping', value: 'camping' },
+      ]
 
   const handleInputChange = async (e) => {
 
@@ -33,8 +37,13 @@ const handleInputChange= async(e, data)=>{
 
   console.log('searchTerm:',value);
 
+  let category = optionsValue;
+
   let srch={};
   srch.value=value;
+  if (optionsValue==='all') {
+    category=''
+  }
 
   if (category.length) {
     console.log('Category?:', category);
@@ -42,21 +51,13 @@ const handleInputChange= async(e, data)=>{
   }
 
   setSearchTerm(srch)
-
-  // const search = await axios.post('/api/merchandise/search',srch);
-  
-  // const results = search.data.data;
-
-  // if (search.data.data) {
-  //   console.log('Entered SearchBar -search:',search.data.data, 'category:',category);
-  //   setMerchandise(results);
-  // }
   
 }
 
 const handleOptionSelect = (e, data)=>{
   console.log('Entered handleOptionChange',data.value );
-  category= data.value;
+  // category= data.value;
+  setOptionsValue(data.value);
 }
 
     <Input style={{ minWidth: '400px' }}
@@ -68,11 +69,14 @@ const handleOptionSelect = (e, data)=>{
   )
 
     <Input style={{minWidth:'400px'}}
-    label={<Dropdown defaultValue='all' options={options} onChange={handleOptionSelect}/>}
+    label={ <Dropdown options={options} value={optionsValue} onChange={handleOptionSelect}/>}
     labelPosition='right'
     placeholder='Search...'
     onChange={handleInputChange}
   />
+ 
+)
+
 }
 
 
