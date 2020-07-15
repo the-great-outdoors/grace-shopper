@@ -111,7 +111,7 @@ merchRouter.post('/search', async(req, res, next)=>{
 
 })
 
-merchRouter.get('search/:merchId', async(req, res, next)=>{
+merchRouter.get('/search/:merchId', async(req, res, next)=>{
     const { merchId } = req.params;
 
     try {
