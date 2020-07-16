@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useHistory} from "react-router-dom";
 import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
 import faker from "faker";
 import axios from "axios";
@@ -6,13 +7,13 @@ import axios from "axios";
 
 const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
 
+  const history=useHistory();
   console.log('searchTerm:', searchTerm.value.length);
 
   const handleSelect = async (e, data) => {
     console.log('entered handle select', data.id);
-    const merchId = data.id;
-    const merchItem = await axios.get(`/api/merchandise/search/${merchId}`);
-    console.log(merchItem);
+    history.push(`/productpage/${data.id}`);
+
   }
 
   useEffect(() => {

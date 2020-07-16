@@ -116,14 +116,15 @@ merchRouter.get('/search/:merchId', async(req, res, next)=>{
 
     try {
         const merch = await getMerchandiseById(merchId);
-
         if (merch) {
+            console.log('Merch to send: ', merch)
             res.send({
                 message: 'Successfully retrieved item',
                 status: true,
                 merch
             })
         }else{
+            console.log('Failed to fetch')
             next({
                 error: 'FailedToRetrieveItemByIdError',
                 message:`Unable to retrieve item by id:${merchId} `
