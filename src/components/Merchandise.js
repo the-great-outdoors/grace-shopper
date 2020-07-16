@@ -1,26 +1,62 @@
 import React, { useState, useEffect } from "react";
+import {useHistory} from "react-router-dom";
 import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
 import faker from "faker";
 import axios from "axios";
 
 
-const Merchandise = ({ merchandise, setMerchandise }) => {
+const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
+
+  const history=useHistory();
+  console.log('searchTerm:', searchTerm.value.length);
+
+  const handleSelect = async (e, data) => {
+    console.log('entered handle select', data.id);
+    history.push(`/productpage/${data.id}`);
+
+  }
 
   useEffect(() => {
-    axios.get('/api/merchandise')
-      .then((res) => {
 
+    if (searchTerm.value.length) {
+      console.log('entered component Merch searchTerm');
+      try {
+        axios.post('/api/merchandise/search', searchTerm)
+        .then((res)=>{
+          const results = res.data.data;
+          if (results) {
+            setMerchandise(results);
+          }
+        })
+       
+        
+      } catch (error) {
+        throw error;
+      }
+    
+    }else{
+      console.log('Entered comp Merch getAll');
+      try {
+        axios.get('/api/merchandise')
+      .then((res) => {
+        console.log(res);
         const merch = res.data.merch;
+        console.log('Merch com hook: ', merch);
         return setMerchandise(merch)
       })
+      } catch (error) {
+        throw error;
+      }
+      
+    }
 
-  }, [])
+  }, [searchTerm])
 
   return (
     <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
       {merchandise.map((item) => {
         return (
-          <Card key={item.merch_id}>
+          <Card onClick={handleSelect} key={item.merch_id} id={item.merch_id}>
             <Image src='http://placeimg.com/300/300/nature' wrapped ui={false} />
             <Card.Content>
               <Card.Header>{item.name}</Card.Header>
@@ -43,4 +79,4 @@ const Merchandise = ({ merchandise, setMerchandise }) => {
 
 }
 
-export { Merchandise }
+export default Merchandise;

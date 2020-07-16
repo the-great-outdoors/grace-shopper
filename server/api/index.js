@@ -60,11 +60,14 @@ apiRouter.use('/payments', paymentsRouter);
 const ordersRouter = require('./orders');
 apiRouter.use('/orders', ordersRouter);
 
+<<<<<<< HEAD
 const wishlistRouter = require('./wishlist');
 apiRouter.use('/wishlist', wishlistRouter);
 
 const blogRouter = require('./blog');
 apiRouter.use('/blog', blogRouter);
+=======
+>>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
 
 apiRouter.use((error, req, res, next) => {
     res.send(error);

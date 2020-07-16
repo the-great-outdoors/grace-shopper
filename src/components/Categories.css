@@ -1,0 +1,13 @@
+.category{
+    height: 400px;
+    background-size: cover;
+}
+
+.ui.header.catHeader{
+    position: absolute;
+    bottom: 0;
+    padding-left: 30%;
+    padding-bottom: 20%;
+    font-size: 4rem;
+    
+}
