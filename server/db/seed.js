@@ -191,8 +191,26 @@ async function createTables() {
 };
 
 async function initializeMerchandise() {
-    for (let index = 0; index < 20; index++) {
+    for (let index = 0; index < 5; index++) {
         const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 1 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 2 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 3 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 4 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
@@ -369,7 +387,7 @@ async function initializeSeansStuff() {
     await createInititialUserPrefs()
 
 
-    const catArray = ['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+    const catArray = ['clothing', 'climbing', 'hiking', 'sports', 'camping'];
 
     const newCategory = await Promise.all(catArray.map((cat) => addCategory(cat)));
     console.log(newCategory);
