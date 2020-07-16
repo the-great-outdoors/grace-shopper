@@ -52,7 +52,7 @@ const App = () => {
                 <Route path='/categories'>
                     <Categories />
                 </Route>
-                <Route path="/productpage">    
+                <Route path="/productpage/:id">    
                     <ProductPage />  
                 </Route>
                 <Route path='/'>

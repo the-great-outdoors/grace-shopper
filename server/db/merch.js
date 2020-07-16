@@ -58,7 +58,7 @@ async function searchMerchandise(searchTerm,category='tents') {
             SELECT * FROM reviews
             WHERE "merchId" = $1;
         `, [merchId])
-
+        
         merchandise.reviews = reviews;
 
         return merchandise;
