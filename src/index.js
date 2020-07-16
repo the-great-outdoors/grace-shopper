@@ -18,12 +18,22 @@ const App = () => {
 
     return (
         <Router>
+            <Route path = '/' exact= {true}>
             <Hero
                 results={results}
-                setResults={setResults} />
+                setResults={setResults} 
+            />
             <Merchandise
                 merchandise={merchandise}
-                setMerchandise={setMerchandise} />
+                setMerchandise={setMerchandise} 
+            />
+            </Route>
+            <Route path = '/wishlist'>
+                <NavBar
+                    results={results}
+                    setResults={setResults}
+                />
+            </Route>
         </Router>
 
     )

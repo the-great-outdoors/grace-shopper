@@ -34,3 +34,7 @@ server.listen(PORT, () => {
     })
 
 server.use('/api', apiRouter);
+
+server.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
