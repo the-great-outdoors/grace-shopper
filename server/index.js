@@ -39,11 +39,3 @@ server.listen(PORT, () => {
     console.log(chalk.green(`Server is listening on PORT: ${PORT}`))
     })
 
-<<<<<<< HEAD
-server.use('/api', apiRouter);
-
-server.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
-=======
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575

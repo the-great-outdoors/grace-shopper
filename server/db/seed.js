@@ -19,12 +19,8 @@ const {
 
     getUserPreferencesByUserId,
     createPayment,
-<<<<<<< HEAD
     createBlog, 
     createWishListByUserId,
-=======
-    createBlog,
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
 
 } = require('./index');
 
@@ -368,7 +364,6 @@ async function createInitialBlogs() {
     };
 };
 
-<<<<<<< HEAD
 async function createInitialWishlist () {
     try {
         const seedWishlist = [
@@ -392,9 +387,6 @@ async function createInitialWishlist () {
 };
 
 async function initializeSeansStuff(){
-=======
-async function initializeSeansStuff() {
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
 
     await createInitialUsers();
     await createInititialUserPrefs()
@@ -454,13 +446,8 @@ async function startDb() {
         await dropTables()
         await createTables()
         // await testDB()
-<<<<<<< HEAD
-        await createInitialUsers()
-        await createInititialUserPrefs()
-=======
         // await createInitialUsers()
-        // await createInitialBlogs()
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
+        // await createInititialUserPrefs()
         await initializeSeansStuff();
         await createInitialBlogs();
         await createInitialWishlist();

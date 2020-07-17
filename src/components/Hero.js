@@ -7,13 +7,6 @@ import { Jumbotron, Container } from "react-bootstrap";
 import css from './Hero.css';
 import { NavBar } from '../components';
 
-<<<<<<< HEAD
-
-
-const Hero = ({ 
-    results, 
-    setResults, 
-=======
 const Hero = ({
     results,
     setResults,
@@ -25,7 +18,6 @@ const Hero = ({
     token,
     setToken,
     setSearchTerm
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
 }) => {
     return (
         <Container fluid>
@@ -35,12 +27,6 @@ const Hero = ({
                 backgroundImage: `url('/resources/rock_climbing_hanging_crop.jpeg')`, backgroundSize: 'cover'
             }}
             >
-<<<<<<< HEAD
-                <NavBar
-                    results={results}
-                    setResults={setResults}/>
-=======
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
                 <Header inverted color='orange' textAlign='right' style={{ fontFamily: 'Ultra', fontSize: '6rem', paddingRight: '50px', paddingTop: '50px' }}>The Great Outdoors</Header>
                 <Header inverted textAlign='right' style={{ fontSize: '6rem', paddingRight: '50px', paddingTop: '25px', fontFamily: 'Calligraffitti' }}>Adventure awaits</Header>
             </Container>

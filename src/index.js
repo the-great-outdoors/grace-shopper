@@ -40,25 +40,6 @@ const App = () => {
 
     return (
         <Router>
-<<<<<<< HEAD
-            <Route path = '/' exact= {true}>
-            <Hero
-                results={results}
-                setResults={setResults} 
-            />
-            <Merchandise
-                merchandise={merchandise}
-                setMerchandise={setMerchandise} 
-            />
-            </Route>
-            <Route path = '/wishlist'>
-                <NavBar
-                    results={results}
-                    setResults={setResults}
-                />
-            </Route>
-        </Router>
-=======
             <Sticky>
               <NavBar 
                 setSearchTerm={setSearchTerm}
@@ -74,6 +55,9 @@ const App = () => {
                 <Route path="/productpage/:id">    
                     <ProductPage />  
                 </Route>
+                <Route path= '/wishlist'>
+                    <Wishlist />
+                </Route>
                 <Route path='/'>
                     <Hero
                         results={results}
@@ -83,7 +67,6 @@ const App = () => {
                         setMerchandise={setMerchandise}
                         searchTerm={searchTerm} />
                 </Route>
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
 
                 <Redirect from='/home' to='/'/>
             </Switch>          

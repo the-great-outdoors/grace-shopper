@@ -3,18 +3,11 @@ import React, { Component, useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Link, Switch, useHistory } from "react-router-dom";
 import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
 
-<<<<<<< HEAD
-import { SearchBar } from './SearchBar';
-import CreateUserModal from './CreateUserModal';
-import {useHistory} from 'react-router-dom';
-
-=======
 import {
   CreateUserModal,
   LoginModal,
   SearchBar
 } from '../components';
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
 
 const NavBar = ({
   results,
@@ -27,12 +20,8 @@ const NavBar = ({
   setSearchTerm
 }) => {
 
-<<<<<<< HEAD
-  const history = useHistory();
-=======
   console.log('Entered navbar.js component');
 
->>>>>>> 2283edabc791f219775caf5743b6a530aefc8575
   const [state, setState] = useState({ activeItem: 'home' });
   const history = useHistory();
   const [registerShow, registerSetShow] = useState(false);
