@@ -3,9 +3,12 @@ import { Image, Segment, Grid, Header, Rating, Divider, Button, Input, Breadcrum
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import './ProductPage.css';
 
 const ProductPage = (props) => {
     const [item, setItem] = useState({});
+    const [quantity, setQuantity] = useState(1);
+    const [total, setTotal] = useState('');
     const sections = [
         { key: 'Home', content: 'Home', link: true },
         { key: 'Store', content: 'Store', link: true },
@@ -31,28 +34,44 @@ const ProductPage = (props) => {
         
     }, []);
 
+    const basketTotal=()=>{
+       const qty = quantity;
+       const price = item.price;
+       const basket = qty*price;
+       console.log(basket);
+        return setTotal(basket);
+    }
+
+    const registerChange = (e, data)=>{
+        const qty=data.value;
+        setQuantity(qty);
+        console.log('what is qty?:', quantity);
+    }
+
    return(
     <>   
         <Breadcrumb icon='right angle' sections={sections} style={{ marginTop: '3rem', marginLeft: '3rem' }} />
        <div style={{ marginTop: '5rem',  }}>
-            <Grid centered style={{ marginLeft: '5rem' }} >
-                <Grid.Column width={8} style={{ marginRight: '1rem' }}>
-                    <SideBySideMagnifier imageSrc='/resources/backpack_AZ.jpg' imageAlt='Example' alwaysInPlace />
-                </Grid.Column>
-                <Grid.Column width={3} textAlign='right' > 
-                    <Header as='h1'>{item.name}</Header>
-                    <Header as='h5' color='grey' >Item #123456</Header>
-                    <Rating rating={item.rating} maxRating={5}></Rating>
-                    <Header as='h1'>{item.price}</Header>
-                    <Header as='h1'>{item.description}</Header>
-                    <Input type='number' style={{ marginBottom: '1rem' }}></Input>
-                    <Button size='huge'
-                        color='teal'
-                        icon='cart'
-                        content='Checkout - $150.00' 
-                    />
-                    <Button basic style={{ marginTop: '1rem' }}>Add to wishlist</Button>
-                </Grid.Column>
+            <Grid  style={{ marginLeft: '5rem' }} >
+                <Grid.Row columns={2}>
+                    <Grid.Column width={8} style={{ marginRight: '1rem' }}>
+                        <SideBySideMagnifier imageSrc='/resources/backpack_AZ.jpg' imageAlt='Example' alwaysInPlace />
+                    </Grid.Column>
+                    <Grid.Column center width={5} textAlign='right' > 
+                        <Header className='titleblock' as='h1'>{item.name}</Header>
+                        <Header className='titleblock' as='h5' color='grey' >Item #123456</Header>
+                        <Rating className='titleblock' rating={item.rating} maxRating={5}></Rating>
+                        <Header as='h2' color='orange'>{item.price}</Header>
+                        <Header as='h2' style={{fontWeight:'bold'}}>Description</Header><Header as='h3'>{item.description}</Header>
+                        <Input type='number' style={{ marginBottom: '1rem' }} onChange = {registerChange} ></Input>
+                        <Button size='huge'
+                            color='teal'
+                            icon='cart'
+                            content={total} onClick={basketTotal}
+                        />
+                        <Button basic style={{ marginTop: '1rem' }}>Add to wishlist</Button>
+                    </Grid.Column>
+                </Grid.Row>
             </Grid>
             <Grid centered>
                 <Grid.Column textAlign='center' style={{ marginTop: '3rem' }}>

@@ -88,7 +88,7 @@ async function createTables() {
                 merch_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
-                price MONEY NOT NULL,
+                price NUMERIC NOT NULL,
                 rating INTEGER,
                 cats INTEGER REFERENCES categories(cat_id)
                 
@@ -192,25 +192,25 @@ async function createTables() {
 
 async function initializeMerchandise() {
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 1 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 1 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 2 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 2 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 3 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 3 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 4 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 4 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
