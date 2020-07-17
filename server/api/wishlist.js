@@ -14,26 +14,23 @@ wishlistRouter.use((req, res, next) => {
     next();
 });
 
-wishlistRouter.get('/', async(req, res, next)=>{
+wishlistRouter.get('/:userId', async(req, res, next)=>{
     const { userId } = req.params;
-    const user = req.user;
-    console.log("UserId: ", userId)
-    console.log('Req.user: ', req.user)
-    console.log("Req.user.id: ", req.user.user_id)
+   console.log('welcome to wishlist route', userId);
     try {
-        if (user && user.user_id === Number(userId)) {
-            const activatedUser = await getWishListByUserId(user.user_id, {
-                active: true
-            });
-            res.send({ 
+       
+        const wishlistitem = await getWishListByUserId(userId);
+        console.log('wishlist item begin', wishlistitem)
+            if (wishlistitem)     {
+                console.log('begin res.send in wishlist');
+        res.send({ 
                 message: 'successfully retrieved user wishlist',
-                activatedUser 
+                wishlistitem
             });
-            console.log("Activated User: ", activatedUser);
         } else {
             next({
-                name: "ActivateUserError",
-                message: "You cannot find a wishlist that is not yours"
+                name: "WishListRetrievalError",
+                message: "You cannot find a wishlist"
             })
         };
     } catch ({ error, message }) {
@@ -41,25 +38,27 @@ wishlistRouter.get('/', async(req, res, next)=>{
     };
 });
 
-wishlistRouter.patch('/', requireUser, async (req, res, next) => {
+wishlistRouter.patch('/:userId', requireUser, async (req, res, next) => {
     const { userId } = req.params;
     const user = req.user;
+    const {title} = req.body;
     console.log("UserId: ", userId)
     console.log('Req.user: ', req.user)
     console.log("Req.user.id: ", req.user.user_id)
     try {
         if (user && user.user_id === Number(userId)) {
-            const activatedUser = await updateWishListByUserId(user.user_id, {
-                active: true
+            const updatedwishlist = await updateWishListByUserId(user.user_id, {
+                title
             });
             res.send({ 
+                data: updatedwishlist,
                 message: 'successfully updated user wishlist',
-                activatedUser 
+                status: true,
             });
-            console.log("Activated User: ", activatedUser);
+            console.log("wishlist ", updatedwishlist);
         } else {
             next({
-                name: "ActivateUserError",
+                name: "UpdateWishlistError",
                 message: "You cannot update a wishlist that is not yours"
             })
         };

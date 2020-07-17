@@ -13,7 +13,8 @@ import {
     NavBar,
     SearchBar,
     ProductPage,
-    Categories
+    Categories,
+    Wishlist,
 } from './components';
 
 const App = () => {
@@ -56,7 +57,7 @@ const App = () => {
                     <ProductPage />  
                 </Route>
                 <Route path= '/wishlist'>
-                    <Wishlist />
+                    <Wishlist user= {user} />
                 </Route>
                 <Route path='/'>
                     <Hero
