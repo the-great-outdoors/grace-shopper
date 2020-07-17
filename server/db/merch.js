@@ -20,10 +20,10 @@ async function getMerchandiseByName(merchName) {
     return merchandise;
 }
 
-async function searchMerchandise(searchTerm,category='tents') {
+async function searchMerchandise(searchTerm,category='') {
         console.log('Entered db.searchMerchandise', searchTerm, category);
 
-        const catSearch = category.length?`AND "Catname"='${category}'`:'';
+        const catSearch = category.length?`"Catname"='${category}' AND `:'';
 
         console.log('category:', catSearch);
         try {
@@ -31,8 +31,8 @@ async function searchMerchandise(searchTerm,category='tents') {
         const { rows: merchandise } = await db.query(`
             SELECT * FROM merchandise
             JOIN categories ON merchandise.cats=categories.cat_id
-            WHERE name LIKE '%${searchTerm}%' OR description LIKE '%${searchTerm}%'
-            ${catSearch};
+            WHERE ${catSearch} (name LIKE '%${searchTerm}%' OR description LIKE '%${searchTerm}%');
+            
         `);
 
         console.log('Successfully retrieved search!', merchandise);

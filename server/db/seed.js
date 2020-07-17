@@ -89,7 +89,7 @@ async function createTables() {
                 merch_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
-                price MONEY NOT NULL,
+                price NUMERIC NOT NULL,
                 rating INTEGER,
                 cats INTEGER REFERENCES categories(cat_id)
                 
@@ -192,8 +192,26 @@ async function createTables() {
 };
 
 async function initializeMerchandise() {
-    for (let index = 0; index < 20; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 1 });
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 1 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 2 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 3 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 4 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
@@ -392,7 +410,7 @@ async function initializeSeansStuff(){
     await createInititialUserPrefs()
 
 
-    const catArray = ['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+    const catArray = ['clothing', 'climbing', 'hiking', 'sports', 'camping'];
 
     const newCategory = await Promise.all(catArray.map((cat) => addCategory(cat)));
     console.log(newCategory);

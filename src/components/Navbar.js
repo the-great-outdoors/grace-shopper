@@ -20,8 +20,6 @@ const NavBar = ({
   setSearchTerm
 }) => {
 
-  console.log('Entered navbar.js component');
-
   const [state, setState] = useState({ activeItem: 'home' });
   const history = useHistory();
   const [registerShow, registerSetShow] = useState(false);
@@ -29,7 +27,7 @@ const NavBar = ({
 
   const options = [
     { key: 'all', text: 'All', value: 'all' },
-    { key: 'tents', text: 'tents', value: 'tents' },
+    { key: 'clothing', text: 'clothing', value: 'clothing' },
     { key: 'climbing', text: 'climbing', value: 'climbing' },
     { key: 'hiking', text: 'hiking', value: 'hiking' },
     { key: 'sports', text: 'sports', value: 'sports' },

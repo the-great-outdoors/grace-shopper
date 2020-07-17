@@ -8,7 +8,6 @@ import axios from "axios";
 const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
 
   const history=useHistory();
-  console.log('searchTerm:', searchTerm.value.length);
 
   const handleSelect = async (e, data) => {
     console.log('entered handle select', data.id);
@@ -19,7 +18,7 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
   useEffect(() => {
 
     if (searchTerm.value.length) {
-      console.log('entered component Merch searchTerm');
+        
       try {
         axios.post('/api/merchandise/search', searchTerm)
         .then((res)=>{
@@ -35,13 +34,10 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
       }
     
     }else{
-      console.log('Entered comp Merch getAll');
       try {
         axios.get('/api/merchandise')
       .then((res) => {
-        console.log(res);
         const merch = res.data.merch;
-        console.log('Merch com hook: ', merch);
         return setMerchandise(merch)
       })
       } catch (error) {
