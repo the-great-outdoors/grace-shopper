@@ -20,8 +20,6 @@ const SearchBar = ({ results, setResults, setSearchTerm }) => {
 const handleInputChange= async(e, data)=>{
   const value=e.target.value;
 
-  console.log('searchTerm:',value);
-
   let category = optionsValue;
 
   let srch={};
@@ -31,24 +29,22 @@ const handleInputChange= async(e, data)=>{
   }
 
   if (category.length) {
-    console.log('Category?:', category);
+
     srch.category=category;
   }
 
-
+  console.log('Search terms: ', srch.category, srch.value)
   setSearchTerm(srch)
 }
 
 const handleOptionSelect = (e, data)=>{
-  console.log('Entered handleOptionChange',data.value );
-  // category= data.value;
   setOptionsValue(data.value);
 }
 
 return (
 
     <Input style={{ minWidth: '400px' }}
-      label={<Dropdown defaultValue='all' options={options} />}
+      label={<Dropdown defaultValue='all' options={options} onChange={handleOptionSelect} />}
       labelPosition='right'
       placeholder='Search...'
       onChange={handleInputChange}
