@@ -89,4 +89,5 @@ const ProductPage = (props) => {
    )
 }
 
+
 export default ProductPage;
