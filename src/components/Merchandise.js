@@ -21,14 +21,14 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
         
       try {
         axios.post('/api/merchandise/search', searchTerm)
-        .then((res)=>{
-          const results = res.data.data;
-          if (results) {
-            setMerchandise(results);
-          }
-        })
-       
-        
+          .then((res) => {
+            const results = res.data.data;
+            if (results) {
+              setMerchandise(results);
+            }
+          })
+
+
       } catch (error) {
         throw error;
       }
@@ -43,7 +43,7 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
       } catch (error) {
         throw error;
       }
-      
+
     }
 
   }, [searchTerm])
