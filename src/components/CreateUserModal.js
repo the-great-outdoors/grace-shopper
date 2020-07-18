@@ -61,10 +61,9 @@ const CreateUserModal = ({
                 setUser(res.data.user);
                 localStorage.setItem('token', res.data.token);
                 console.log(localStorage.getItem('token'));
-                // setToken(res.data.token);
-            })
-            .then(() => {
-                setLogin(true);
+                if (res.data.user) {
+                    setLogin(true);
+                }
             })
             .catch(error => {
                 console.error('Error registering user!', error);

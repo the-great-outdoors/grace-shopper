@@ -21,32 +21,32 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
       console.log('entered component Merch searchTerm');
       try {
         axios.post('/api/merchandise/search', searchTerm)
-        .then((res)=>{
-          const results = res.data.data;
-          if (results) {
-            setMerchandise(results);
-          }
-        })
-       
-        
+          .then((res) => {
+            const results = res.data.data;
+            if (results) {
+              setMerchandise(results);
+            }
+          })
+
+
       } catch (error) {
         throw error;
       }
-    
-    }else{
+
+    } else {
       console.log('Entered comp Merch getAll');
       try {
         axios.get('/api/merchandise')
-      .then((res) => {
-        console.log(res);
-        const merch = res.data.merch;
-        console.log('Merch com hook: ', merch);
-        return setMerchandise(merch)
-      })
+          .then((res) => {
+            console.log(res);
+            const merch = res.data.merch;
+            console.log('Merch com hook: ', merch);
+            return setMerchandise(merch)
+          })
       } catch (error) {
         throw error;
       }
-      
+
     }
 
   }, [searchTerm])

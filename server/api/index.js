@@ -51,6 +51,9 @@ apiRouter.get('/health', (req, res, next) => {
 const usersRouter = require('./users');
 apiRouter.use('/users', usersRouter);
 
+const userPrefsRouter = require('./userprefs');
+apiRouter.use('/userprefs', userPrefsRouter);
+
 const merchRouter = require('./merchandise');
 apiRouter.use('/merchandise', merchRouter);
 

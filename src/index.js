@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import {Sticky} from 'semantic-ui-react';
+import { Sticky } from 'semantic-ui-react';
 import axios from 'axios';
 
 import {
+    Categories,
     CreateUserModal,
     Hero,
     LoginModal,
@@ -13,7 +14,7 @@ import {
     NavBar,
     SearchBar,
     ProductPage,
-    Categories
+    UserProfile
 } from './components';
 
 const App = () => {
@@ -22,7 +23,7 @@ const App = () => {
     const [results, setResults] = useState([]);
     const [user, setUser] = useState({});
     const [login, setLogin] = useState(false);
-    const [searchTerm, setSearchTerm] = useState({value:'',category:''});
+    const [searchTerm, setSearchTerm] = useState({ value: '', category: '' });
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -41,19 +42,23 @@ const App = () => {
     return (
         <Router>
             <Sticky>
-              <NavBar 
-                setSearchTerm={setSearchTerm}
-                setLogin={setLogin}
-                login={login}
-                user={user}
-                setUser={setUser} />
+                <NavBar
+                    setSearchTerm={setSearchTerm}
+                    setLogin={setLogin}
+                    login={login}
+                    user={user}
+                    setUser={setUser} />
             </Sticky>
             <Switch>
                 <Route path='/categories'>
                     <Categories />
                 </Route>
-                <Route path="/productpage">    
-                    <ProductPage />  
+                <Route path='/productpage'>
+                    <ProductPage />
+                </Route>
+                <Route path='/userprofile'>
+                    <UserProfile
+                        user={user} />
                 </Route>
                 <Route path='/'>
                     <Hero
@@ -65,8 +70,8 @@ const App = () => {
                         searchTerm={searchTerm} />
                 </Route>
 
-                <Redirect from='/home' to='/'/>
-            </Switch>          
+                <Redirect from='/home' to='/' />
+            </Switch>
         </Router>
     )
 }
