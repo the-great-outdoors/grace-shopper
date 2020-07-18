@@ -82,7 +82,7 @@ wishlistRouter.post('/:userId', requireUser, async (req, res, next) => {
     }
 
     try {
-        if (user && user.user_id === Number(userId) && !merchId) {
+        if (user && user.user_id === Number(userId)) {
             const wishlistitem= await createWishListByUserId(wishlistData);
 
             res.send({ 

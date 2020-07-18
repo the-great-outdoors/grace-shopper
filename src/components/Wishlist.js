@@ -26,15 +26,11 @@ const Wishlist = ({ user }) => {
     useEffect(() => {
       
       if (user_id) {
-        console.log ('user', user_id)
 
           axios.get(`/api/wishlist/${ user_id }`, {user_id})
         .then(res => {
-          console.log(res.data);
           const list = res.data.wishlistitem;
-          console.log("list", res.data.wishlistitem);
           setWishlist(list);
-          console.log("setlist", list)
         })
         .catch(error => console.error("wishlist error", error)) 
        

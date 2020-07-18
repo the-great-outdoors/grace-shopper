@@ -56,16 +56,16 @@ blogRouter.get('/', async(req, res, next)=>{
     };
 });
 
-blogRouter.get('/', async(req, res, next)=>{
-    const { blogId } = req.params;
+blogRouter.get('/:merchId', async(req, res, next)=>{
+    const { merchId } = req.params;
 
     try {
-        const blog = await getBlogByMerchId(merchId);
+        const blogs = await getBlogByMerchId(merchId);
 
-        if (blog) {
+        if (blogs) {
             res.send({
                 message: 'Successfully retrieved blog',
-                blog
+                blogs
             })
         }else{
             next({

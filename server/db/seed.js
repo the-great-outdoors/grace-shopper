@@ -132,7 +132,8 @@ async function createTables() {
                 wish_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
                 title VARCHAR(255),
-                "userId" INTEGER REFERENCES users(user_id)
+                "userId" INTEGER REFERENCES users(user_id),
+                CONSTRAINT UC_wishlist UNIQUE (wish_id, "merchId")
             );
         `);
 
