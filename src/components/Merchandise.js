@@ -57,7 +57,7 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
             <Card.Content>
               <Card.Header>{item.name}</Card.Header>
               <Card.Meta>
-                {item.price}
+                ${item.price}
               </Card.Meta>
               <Card.Description>
                 {item.description}

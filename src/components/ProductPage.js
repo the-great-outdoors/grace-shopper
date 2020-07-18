@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, Segment, Grid, Header, Rating, Divider, Button, Input, Breadcrumb } from 'semantic-ui-react';
+import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb } from 'semantic-ui-react';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -9,13 +9,14 @@ const ProductPage = (props) => {
     const [item, setItem] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
+
     const sections = [
         { key: 'Home', content: 'Home', link: true },
         { key: 'Store', content: 'Store', link: true },
         { key: 'Backpack', content: 'Backpack', active: true },
     ]
 
-    const { id} = useParams();
+    const { id } = useParams();
 
     useEffect(()=>{
         console.log('Here I am!: ', id);
@@ -71,15 +72,16 @@ const ProductPage = (props) => {
                         <Header className='titleblock' as='h1'>{item.name}</Header>
                         <Header className='titleblock' as='h5' color='grey' >Item #123456</Header>
                         <Rating className='titleblock' rating={item.rating} maxRating={5}></Rating>
-                        <Header as='h2' color='orange'>{item.price}</Header>
+                        <Header as='h2' color='orange'>${item.price}</Header>
                         <Header as='h2' style={{fontWeight:'bold'}}>Description</Header><Header as='h3'>{item.description}</Header>
-                        <Input type='number' style={{ marginBottom: '1rem' }} onChange = {registerChange} ></Input>
-                        <Button size='huge'
-                            color='teal'
-                            icon='cart'
-                            content={total} onClick={basketTotal}
-                        />
-                        <Button basic style={{ marginTop: '1rem' }}>Add to wishlist</Button>
+                        <Input label={{color: 'teal', labelPosition: 'left', content: 'Quantity'}} min={1} max={10} type='number' style={{ marginBottom: '1rem' }} onChange = {registerChange} />
+                        <div>
+                            <Button size='huge'
+                                color='teal'
+                                icon='cart'
+                                content='Checkout' />
+                            <Button size='huge' basic style={{ marginTop: '1rem', marginLeft: '1rem' }}>Add to wishlist</Button>
+                        </div>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>

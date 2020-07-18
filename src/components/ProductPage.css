@@ -2,3 +2,7 @@
     margin: 0;
 
 }
+
+.ui.button {
+    margin-right: -0.25rem;
+}

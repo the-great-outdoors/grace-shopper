@@ -39,10 +39,10 @@ async function dropTables() {
             DROP TABLE IF EXISTS blogs;
             DROP TABLE IF EXISTS wishlist;
             DROP TABLE IF EXISTS userPreferences;
+            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
-            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
             DROP TABLE IF EXISTS users;
@@ -192,25 +192,25 @@ async function createTables() {
 
 async function initializeMerchandise() {
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 1 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 1 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 2 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 2 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 3 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 3 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 4 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 4 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
