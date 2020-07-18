@@ -162,7 +162,9 @@ const NavBar = ({
             <Button.Content visible><Icon name='signup' /></Button.Content>
             <Button.Content hidden>Sign Up</Button.Content>
           </Button>
-          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
+          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick = {() => {
+            history.push('/wishlist');
+          }}>
             <Button.Content hidden>Wishlist</Button.Content>
             <Button.Content visible><Icon name='gift' /></Button.Content>
           </Button>

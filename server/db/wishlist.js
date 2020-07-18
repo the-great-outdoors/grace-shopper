@@ -2,23 +2,37 @@ const db = require('./database');
 
 const { getUserByUserId } = require('./users');
 
+async function createWishListByUserId({merchId, title, userId}) {
+    
+     
+    try{
+        const {rows: result} = await db.query(`
+        INSERT INTO wishlist ("merchId", title, "userId")
+        VALUES ($1, $2, $3)
+        RETURNING *;
+        `, [merchId, title, userId]);
+        console.log('check whats working', result)
+
+        return result;
+
+    }  catch(e) {
+        console.log("Error creating wishlist", e);
+    }
+}
+
   //updateWishlistByUserId(userId, fields={'merchIds'})
-async function updateWishListByUserId(fields = {}){
-    
-    const id = fields.id
-    delete fields.id
-    
-    const user = await getUserByUserId(userId)
+async function updateWishListByUserId(userId, fields = {}){
+        
 
         const setString = Object.keys(fields).map(
-            (key, index) => `"${ key }"$${ index + 1}`
+            (key, index) => `"${ key }"=$${ index + 1}`
         ).join(', ');
         console.log(fields)
     try{
         const {rows: result} = await db.query(`
         UPDATE wishlist
         SET ${ setString }
-        WHERE id=${ id }
+        WHERE "userId" = ${ userId }
         RETURNING *;
         `,Object.values(fields));
 
@@ -33,24 +47,14 @@ async function updateWishListByUserId(fields = {}){
 async function getWishListByUserId(userId) {
 
     try {
-        const user = await getUserByUserId(userId)
-
+    
         const { rows } = await db.query(`
         SELECT *
         FROM wishlist
-        WHERE wishlist."userId" = $1;
-        `, [user.id]);
+        JOIN merchandise ON wishlist."merchId" = merchandise.merch_id
+        WHERE "userId" = $1;
+        `, [userId]);
 
-        for(let wish of rows) {
-
-            const {rows: merch} = await db.query(`
-            SELECT *
-            FROM merchandise
-            JOIN merchandise ON merchandise."merch_id" = merch.id
-            WHERE "wish_id" = $1
-            `, [wish.id])
-            wish.merchandise = merch
-        }
 
         return rows;
     }   catch(e) {
@@ -58,7 +62,27 @@ async function getWishListByUserId(userId) {
     }
 }
 
+async function deleteWishListByUserId(userId, wishId){
+    
+    const user = await getUserByUserId(userId)
+
+    try{
+        const {rows: result} = await db.query(`
+        DELETE FROM wishlist
+        WHERE "wish_id" = ${ wishId }
+        RETURNING *;
+        `);
+
+        return result;
+
+    }  catch(e) {
+        console.error("must be logged in to remove wishlist", e);
+    }
+}
+
 module.exports = {
+    createWishListByUserId,
     updateWishListByUserId,
     getWishListByUserId,
+    deleteWishListByUserId,
 }

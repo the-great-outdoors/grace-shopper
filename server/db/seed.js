@@ -19,7 +19,9 @@ const {
 
     getUserPreferencesByUserId,
     createPayment,
-    createBlog,
+    createBlog, 
+    createWishListByUserId,
+    getWishListByUserId,
 
 } = require('./index');
 
@@ -130,7 +132,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS wishlist(
                 wish_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
-                title VARCHAR(255) UNIQUE NOT NULL,
+                title VARCHAR(255),
                 "userId" INTEGER REFERENCES users(user_id)
             );
         `);
@@ -381,7 +383,32 @@ async function createInitialBlogs() {
     };
 };
 
-async function initializeSeansStuff() {
+async function createInitialWishlist () {
+    try {
+        const seedWishlist = [
+            {
+                "merchId": 1,
+                title: "graduation day",
+                "userId": 1
+            }
+        ]
+
+        await Promise.all(seedWishlist.map(async wishlist => {
+            const seededwishlist = await createWishListByUserId(wishlist);
+            return seededwishlist;
+        }));
+
+        const list = await getWishListByUserId(1);
+        console.log('getting wishlist item', list);
+
+
+    } catch (e) {
+        console.log(chalk.red('There was an error creating wishlist!', e));
+        console.error(e);
+    };
+};
+
+async function initializeSeansStuff(){
 
     await createInitialUsers();
     await createInititialUserPrefs()
@@ -442,8 +469,11 @@ async function startDb() {
         await createTables()
         // await testDB()
         // await createInitialUsers()
-        // await createInitialBlogs()
+        // await createInititialUserPrefs()
         await initializeSeansStuff();
+        await createInitialBlogs();
+        await createInitialWishlist();
+
 
     } catch (error) {
         console.error(chalk.red("Error during startDB"));

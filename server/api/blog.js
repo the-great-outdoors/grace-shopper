@@ -1,4 +1,5 @@
 const blogRouter = require('express').Router();
+const { requireUser } = require('./utils');
 
 const { 
     getAllBlogs,

@@ -6,3 +6,4 @@ export { default as NavBar } from './NavBar';
 export { default as SearchBar } from './SearchBar';
 export { default as ProductPage } from './ProductPage';
 export { default as Categories } from './Categories';
+export { default as Wishlist } from './Wishlist';
