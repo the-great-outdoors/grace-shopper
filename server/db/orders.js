@@ -1,17 +1,31 @@
 const db = require('./database');
 
-async function createOrder({userId, orderItemId, status, price}) {
+async function createOrder({userId, status, price}) {
     try {
         const { rows: [order] } = await db.query(`
-        INSERT INTO payments("userId", "orderItemId", status, price)
-        VALUES($1, $2, $3, $4)
+        INSERT INTO orders("userId", status, price)
+        VALUES($1, $2, $3)
         RETURNING *;
-    `, [userId, orderItemId, status, price]);
+    `, [userId, status, price]);
 
         return order;
     } catch (error) {
         throw error;
     }     
+}
+
+async function createOrderItem(orderId, {merchId, quantity, price}) {
+    try {
+       const { rows: orderItem } = await db.query(`
+        INSERT INTO orderItem("merchId", quantity, price, "orderId")
+        VALUES($1, $2, $3, $4)
+        RETURNING *;
+       `, [merchId, quantity, price, orderId]);
+       
+       return orderItem
+    } catch (error) {
+        throw error;
+    }
 }
 
 //getUserOrdersByUsername(username)
@@ -73,5 +87,6 @@ module.exports = {
     getUserOrdersByUsername,
     getUserOrdersByUserId,
     updateUserOrderByOrderId,
-    createOrder
+    createOrder,
+    createOrderItem
 }

@@ -39,7 +39,17 @@ const ProductPage = (props) => {
        const price = item.price;
        const basket = qty*price;
        console.log(basket);
-        return setTotal(basket);
+        setTotal(basket);
+        axios.post('/api/orders', { 
+            userId: 1,
+            status: true,
+            price
+        })
+        .then(res => { 
+            const newOrder = res.data.order
+            console.log(newOrder) 
+        })
+        
     }
 
     const registerChange = (e, data)=>{
