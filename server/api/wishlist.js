@@ -77,23 +77,22 @@ wishlistRouter.post('/:userId', requireUser, async (req, res, next) => {
     const { title, merchId } = req.body;
     const wishlistData = {
         title,
-        merchID: req.merch.id,
-        userId: req.user.id,
+        merchId,
+        userId
     }
 
     try {
-        if (user && user.user_id === Number(userId)) {
-            const activatedUser = await createWishListByUserId(user.user_id, {
-                active: true
-            });
+        if (user && user.user_id === Number(userId) && !merchId) {
+            const wishlistitem= await createWishListByUserId(wishlistData);
+
             res.send({ 
                 message: 'successfully updated user wishlist',
-                activatedUser 
+                wishlistitem 
             });
-            console.log("Activated User: ", activatedUser);
+            console.log("wishlistitem log", wishlistitem);
         } else {
             next({
-                name: "ActivateUserError",
+                name: "CreateWishListItemError",
                 message: "Must be logged in to create wishlist"
             })
         };
