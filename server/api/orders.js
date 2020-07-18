@@ -1,5 +1,5 @@
 const ordersRouter = require('express').Router();
-const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername } = require('../db');
+const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername, createOrderItem } = require('../db');
 const { requireUser } = require('./utils');
 
 ordersRouter.use((req, res, next) => {
@@ -23,6 +23,31 @@ ordersRouter.get('/:userName', async(req, res, next)=>{
             next({
                 error: 'FailedToRetrieveOrdersByUserNameError',
                 message:`Unable to retrieve orders by username:${userName}`
+            });
+        }
+    } catch ({error, message}) {
+        next({error, message})
+    }
+});
+
+ordersRouter.post('/:orderId', async(req, res, next)=>{
+    const { orderId } = req.params;
+    const { merchId, quantity, price } = req.body;
+    const orderItemData = { orderId, merchId, quantity, price }
+
+    try {
+        const orderItem = await createOrderItem(orderItemData);
+
+        if (orderItem) {
+            res.send({
+                message: 'Successfully retrieved orderItems',
+                status: true,
+                orderItem
+            });
+        }else{
+            next({
+                error: 'FailedToRetrieveOrdersItems',
+                message:`Unable to retrieve orderItems`
             });
         }
     } catch ({error, message}) {
@@ -55,18 +80,28 @@ ordersRouter.get('/:userId', async(req, res, next)=>{
 
 ordersRouter.post('/', async (req, res, next)=>{
     try {
-        const { userId, orderItemId, status, price } = req.body;
-        const orderData = { userId, orderItemId, status, price }
+        const { userId, status, price, merchId, quantity } = req.body;
+        const orderData = { userId, status, price };
+        let orderId = req.body.orderId;
         
         const order = await createOrder(orderData);
+        orderId = order.orderId;
+        console.log("This is the order:", order);
+        console.log("orderId", orderId);
+        console.log('Not in if statement!')
+        const orderItemData = { merchId, quantity, price }
+        const orderItem = await createOrderItem(orderId, orderItemData)
+        console.log("order item:", orderItem);
 
-        if(order){
+        console.log("order", order);
+
+        if(orderItem) {
             res.send({
                 message: 'successfully created new order',
                 status: true,
-                order
+                orderItem
             });
-        }else{
+        }else {
             next({
                 error: 'FailedToCreateOrderError',
                 message: 'Unable to create new order'

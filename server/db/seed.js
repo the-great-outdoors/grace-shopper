@@ -18,7 +18,9 @@ const {
     updateUserPreferences,
     getUserPreferencesByUserId,
     createPayment,
-    createBlog,
+    createBlog, 
+    createWishListByUserId,
+    getWishListByUserId,
 
 } = require('./index');
 
@@ -87,7 +89,7 @@ async function createTables() {
                 merch_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
-                price MONEY NOT NULL,
+                price NUMERIC NOT NULL,
                 rating INTEGER,
                 cats INTEGER REFERENCES categories(cat_id)
                 
@@ -129,18 +131,8 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS wishlist(
                 wish_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
-                title VARCHAR(255) UNIQUE NOT NULL,
+                title VARCHAR(255),
                 "userId" INTEGER REFERENCES users(user_id)
-            );
-        `);
-
-        console.log('Creating orderItem...')
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS orderItem(
-                item_id SERIAL PRIMARY KEY,
-                "merchId" INTEGER REFERENCES merchandise(merch_id),
-                quantity INTEGER DEFAULT 1,
-                price NUMERIC NOT NULL
             );
         `);
 
@@ -149,9 +141,19 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
-                "orderItemId" INTEGER REFERENCES orderItem(item_id),
                 status BOOLEAN,
                 price NUMERIC
+            );
+        `);
+
+        console.log('Creating orderItem...')
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS orderItem(
+                item_id SERIAL PRIMARY KEY,
+                "orderId" INTEGER REFERENCES orders("orderId"),
+                "merchId" INTEGER REFERENCES merchandise(merch_id),
+                quantity INTEGER DEFAULT 1,
+                price NUMERIC NOT NULL
             );
         `);
 
@@ -190,8 +192,26 @@ async function createTables() {
 };
 
 async function initializeMerchandise() {
-    for (let index = 0; index < 20; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.commerce.price(), cat: 1 });
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 1 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 2 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 3 });
+
+        const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
+    }
+
+    for (let index = 0; index < 5; index++) {
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 4 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
@@ -362,13 +382,38 @@ async function createInitialBlogs() {
     };
 };
 
-async function initializeSeansStuff() {
+async function createInitialWishlist () {
+    try {
+        const seedWishlist = [
+            {
+                "merchId": 1,
+                title: "graduation day",
+                "userId": 1
+            }
+        ]
+
+        await Promise.all(seedWishlist.map(async wishlist => {
+            const seededwishlist = await createWishListByUserId(wishlist);
+            return seededwishlist;
+        }));
+
+        const list = await getWishListByUserId(1);
+        console.log('getting wishlist item', list);
+
+
+    } catch (e) {
+        console.log(chalk.red('There was an error creating wishlist!', e));
+        console.error(e);
+    };
+};
+
+async function initializeSeansStuff(){
 
     await createInitialUsers();
     await createInititialUserPrefs()
 
 
-    const catArray = ['tents', 'sleeping bags', 'clothing', 'outdoor gear'];
+    const catArray = ['clothing', 'climbing', 'hiking', 'sports', 'camping'];
 
     const newCategory = await Promise.all(catArray.map((cat) => addCategory(cat)));
     console.log(newCategory);
@@ -423,8 +468,11 @@ async function startDb() {
         await createTables()
         // await testDB()
         // await createInitialUsers()
-        // await createInitialBlogs()
+        // await createInititialUserPrefs()
         await initializeSeansStuff();
+        await createInitialBlogs();
+        await createInitialWishlist();
+
 
     } catch (error) {
         console.error(chalk.red("Error during startDB"));

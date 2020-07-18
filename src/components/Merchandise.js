@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useHistory} from "react-router-dom";
 import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
 import faker from "faker";
 import axios from "axios";
@@ -6,19 +7,18 @@ import axios from "axios";
 
 const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
 
-  console.log('searchTerm:', searchTerm.value.length);
+  const history=useHistory();
 
   const handleSelect = async (e, data) => {
     console.log('entered handle select', data.id);
-    const merchId = data.id;
-    const merchItem = await axios.get(`/api/merchandise/search/${merchId}`);
-    console.log(merchItem);
+    history.push(`/productpage/${data.id}`);
+
   }
 
   useEffect(() => {
 
     if (searchTerm.value.length) {
-      console.log('entered component Merch searchTerm');
+        
       try {
         axios.post('/api/merchandise/search', searchTerm)
           .then((res) => {
@@ -32,17 +32,14 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
       } catch (error) {
         throw error;
       }
-
-    } else {
-      console.log('Entered comp Merch getAll');
+    
+    }else{
       try {
         axios.get('/api/merchandise')
-          .then((res) => {
-            console.log(res);
-            const merch = res.data.merch;
-            console.log('Merch com hook: ', merch);
-            return setMerchandise(merch)
-          })
+      .then((res) => {
+        const merch = res.data.merch;
+        return setMerchandise(merch)
+      })
       } catch (error) {
         throw error;
       }

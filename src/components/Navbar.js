@@ -23,8 +23,6 @@ const NavBar = ({
   setUserPreferences
 }) => {
 
-  console.log('Entered navbar.js component');
-
   const [state, setState] = useState({ activeItem: 'home' });
   const history = useHistory();
   const [registerShow, registerSetShow] = useState(false);
@@ -32,7 +30,7 @@ const NavBar = ({
 
   const options = [
     { key: 'all', text: 'All', value: 'all' },
-    { key: 'tents', text: 'tents', value: 'tents' },
+    { key: 'clothing', text: 'clothing', value: 'clothing' },
     { key: 'climbing', text: 'climbing', value: 'climbing' },
     { key: 'hiking', text: 'hiking', value: 'hiking' },
     { key: 'sports', text: 'sports', value: 'sports' },
@@ -180,8 +178,9 @@ const NavBar = ({
           Profile
           </Button>
           }
-
-          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
+          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick = {() => {
+            history.push('/wishlist');
+          }}>
             <Button.Content hidden>Wishlist</Button.Content>
             <Button.Content visible><Icon name='gift' /></Button.Content>
           </Button>

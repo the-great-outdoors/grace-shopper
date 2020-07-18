@@ -2,51 +2,101 @@ import React, { useState, useEffect } from 'react';
 import { Image, Segment, Grid, Header, Rating, Divider, Button, Input, Breadcrumb } from 'semantic-ui-react';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import './ProductPage.css';
 
 const ProductPage = (props) => {
-
+    const [item, setItem] = useState({});
+    const [quantity, setQuantity] = useState(1);
+    const [total, setTotal] = useState('');
     const sections = [
         { key: 'Home', content: 'Home', link: true },
         { key: 'Store', content: 'Store', link: true },
         { key: 'Backpack', content: 'Backpack', active: true },
     ]
 
-    return (
-        <>
-            <Breadcrumb icon='right angle' sections={sections} style={{ marginTop: '3rem', marginLeft: '3rem' }} />
-            <div style={{ marginTop: '5rem', }}>
-                <Grid centered style={{ marginLeft: '5rem' }} >
+    const { id} = useParams();
+
+    useEffect(()=>{
+        console.log('Here I am!: ', id);
+        try {
+            axios.get(`/api/merchandise/search/${id}`)
+            .then(res=>{
+                const {data:merch} = res;
+                console.log('retrievedMerch: ',merch.merch)
+                setItem(merch.merch);
+                console.log('item set?', item);
+            })
+            
+        } catch (error) {
+            throw error;
+        }
+        
+    }, []);
+
+    const basketTotal=()=>{
+       const qty = quantity;
+       const price = item.price;
+       const basket = qty*price;
+       console.log(basket);
+        setTotal(basket);
+        axios.post('/api/orders', { 
+            userId: 1,
+            status: true,
+            price
+        })
+        .then(res => { 
+            const newOrder = res.data.order
+            console.log(newOrder) 
+        })
+        
+    }
+
+    const registerChange = (e, data)=>{
+        const qty=data.value;
+        setQuantity(qty);
+        console.log('what is qty?:', quantity);
+    }
+
+   return(
+    <>   
+        <Breadcrumb icon='right angle' sections={sections} style={{ marginTop: '3rem', marginLeft: '3rem' }} />
+       <div style={{ marginTop: '5rem',  }}>
+            <Grid  style={{ marginLeft: '5rem' }} >
+                <Grid.Row columns={2}>
                     <Grid.Column width={8} style={{ marginRight: '1rem' }}>
                         <SideBySideMagnifier imageSrc='/resources/backpack_AZ.jpg' imageAlt='Example' alwaysInPlace />
                     </Grid.Column>
-                    <Grid.Column width={3} textAlign='right' >
-                        <Header as='h1'>Backpack</Header>
-                        <Header as='h5' color='grey' >Item #123456</Header>
-                        <Rating defaultRating={4} maxRating={5}></Rating>
-                        <Header as='h1' >$150.00</Header>
-                        <Header as='h1'>Look at this cool backpack!!</Header>
-                        <Input type='number' style={{ marginBottom: '1rem' }}></Input>
+                    <Grid.Column center width={5} textAlign='right' > 
+                        <Header className='titleblock' as='h1'>{item.name}</Header>
+                        <Header className='titleblock' as='h5' color='grey' >Item #123456</Header>
+                        <Rating className='titleblock' rating={item.rating} maxRating={5}></Rating>
+                        <Header as='h2' color='orange'>{item.price}</Header>
+                        <Header as='h2' style={{fontWeight:'bold'}}>Description</Header><Header as='h3'>{item.description}</Header>
+                        <Input type='number' style={{ marginBottom: '1rem' }} onChange = {registerChange} ></Input>
                         <Button size='huge'
                             color='teal'
                             icon='cart'
-                            content='Checkout - $150.00'
+                            content={total} onClick={basketTotal}
                         />
                         <Button basic style={{ marginTop: '1rem' }}>Add to wishlist</Button>
                     </Grid.Column>
-                </Grid>
-                <Grid centered>
-                    <Grid.Column textAlign='center' style={{ marginTop: '3rem' }}>
-                        <h1>Blogs rendering soon!</h1>
-                        <Divider />
-                        <h1>Blogs rendering soon!</h1>
-                        <Divider />
-                        <h1>Blogs rendering soon!</h1>
-                        <Divider />
-                    </Grid.Column>
-                </Grid>
-            </div>
-        </>
-    )
+                </Grid.Row>
+            </Grid>
+            <Grid centered>
+                <Grid.Column textAlign='center' style={{ marginTop: '3rem' }}>
+                
+                    <h1>Blogs rendering soon!</h1>
+                    <Divider />
+                    <h1>Blogs rendering soon!</h1>
+                    <Divider />
+                    <h1>Blogs rendering soon!</h1>
+                    <Divider />
+                </Grid.Column>
+            </Grid>
+        </div>
+    </>    
+   )
 }
 
 export default ProductPage;

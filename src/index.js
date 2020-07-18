@@ -14,7 +14,8 @@ import {
     NavBar,
     SearchBar,
     ProductPage,
-    UserProfile
+    UserProfile,
+    Wishlist,
 } from './components';
 
 const App = () => {
@@ -53,12 +54,15 @@ const App = () => {
                 <Route path='/categories'>
                     <Categories />
                 </Route>
-                <Route path='/productpage'>
-                    <ProductPage />
-                </Route>
                 <Route path='/userprofile'>
                     <UserProfile
                         user={user} />
+                </Route>
+                <Route path="/productpage/:id">    
+                    <ProductPage />  
+                </Route>
+                <Route path= '/wishlist'>
+                    <Wishlist user= {user} />
                 </Route>
                 <Route path='/'>
                     <Hero
