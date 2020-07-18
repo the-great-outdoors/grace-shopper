@@ -467,8 +467,8 @@ async function startDb() {
         await dropTables()
         await createTables()
         // await testDB()
-        // await createInitialUsers()
-        // await createInititialUserPrefs()
+        await createInitialUsers()
+        await createInititialUserPrefs()
         await initializeSeansStuff();
         await createInitialBlogs();
         await createInitialWishlist();
