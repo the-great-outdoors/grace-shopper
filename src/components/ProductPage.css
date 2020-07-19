@@ -2,3 +2,13 @@
     margin: 0;
 
 }
+
+.ui.breadcrumb{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    margin-left: 3rem;
+}
+
+.ui.button {
+    margin-right: -0.25rem;
+}

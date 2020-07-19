@@ -16,10 +16,11 @@ const {
     getAllUsers,
     createUserPreferences,
     updateUserPreferences,
-
     getUserPreferencesByUserId,
     createPayment,
-    createBlog,
+    createBlog, 
+    createWishListByUserId,
+    getWishListByUserId,
 
 } = require('./index');
 
@@ -42,10 +43,10 @@ async function dropTables() {
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
+            DROP TABLE IF EXISTS users;
             DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
-            DROP TABLE IF EXISTS users;
         `);
 
         console.log('Successfully dropped all tables.');
@@ -130,18 +131,8 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS wishlist(
                 wish_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
-                title VARCHAR(255) UNIQUE NOT NULL,
+                title VARCHAR(255),
                 "userId" INTEGER REFERENCES users(user_id)
-            );
-        `);
-
-        console.log('Creating orderItem...')
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS orderItem(
-                item_id SERIAL PRIMARY KEY,
-                "merchId" INTEGER REFERENCES merchandise(merch_id),
-                quantity INTEGER DEFAULT 1,
-                price NUMERIC NOT NULL
             );
         `);
 
@@ -150,9 +141,19 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
-                "orderItemId" INTEGER REFERENCES orderItem(item_id),
-                status BOOLEAN,
+                status BOOLEAN DEFAULT true,
                 price NUMERIC
+            );
+        `);
+
+        console.log('Creating orderItem...')
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS orderItem(
+                item_id SERIAL PRIMARY KEY,
+                "orderId" INTEGER REFERENCES orders("orderId"),
+                "merchId" INTEGER REFERENCES merchandise(merch_id),
+                quantity INTEGER DEFAULT 1,
+                price VARCHAR(255) NOT NULL
             );
         `);
 
@@ -192,25 +193,25 @@ async function createTables() {
 
 async function initializeMerchandise() {
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 1 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 1 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 2 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 2 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 3 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 3 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
 
     for (let index = 0; index < 5; index++) {
-        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number()*25.35, cat: 4 });
+        const merch = await createMerchandise({ name: faker.hacker.ingverb(), description: faker.hacker.phrase(), price: faker.random.number(), cat: 4 });
 
         const review = await createMerchandiseReview(index + 1, 1, 5, faker.hacker.phrase());
     }
@@ -381,7 +382,32 @@ async function createInitialBlogs() {
     };
 };
 
-async function initializeSeansStuff() {
+async function createInitialWishlist () {
+    try {
+        const seedWishlist = [
+            {
+                "merchId": 1,
+                title: "graduation day",
+                "userId": 1
+            }
+        ]
+
+        await Promise.all(seedWishlist.map(async wishlist => {
+            const seededwishlist = await createWishListByUserId(wishlist);
+            return seededwishlist;
+        }));
+
+        const list = await getWishListByUserId(1);
+        console.log('getting wishlist item', list);
+
+
+    } catch (e) {
+        console.log(chalk.red('There was an error creating wishlist!', e));
+        console.error(e);
+    };
+};
+
+async function initializeSeansStuff(){
 
     await createInitialUsers();
     await createInititialUserPrefs()
@@ -442,8 +468,11 @@ async function startDb() {
         await createTables()
         // await testDB()
         // await createInitialUsers()
-        // await createInitialBlogs()
+        // await createInititialUserPrefs()
         await initializeSeansStuff();
+        await createInitialBlogs();
+        await createInitialWishlist();
+
 
     } catch (error) {
         console.error(chalk.red("Error during startDB"));

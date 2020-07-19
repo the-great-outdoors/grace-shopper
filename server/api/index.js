@@ -51,6 +51,9 @@ apiRouter.get('/health', (req, res, next) => {
 const usersRouter = require('./users');
 apiRouter.use('/users', usersRouter);
 
+const userPrefsRouter = require('./userprefs');
+apiRouter.use('/userprefs', userPrefsRouter);
+
 const merchRouter = require('./merchandise');
 apiRouter.use('/merchandise', merchRouter);
 
@@ -60,6 +63,11 @@ apiRouter.use('/payments', paymentsRouter);
 const ordersRouter = require('./orders');
 apiRouter.use('/orders', ordersRouter);
 
+const wishlistRouter = require('./wishlist');
+apiRouter.use('/wishlist', wishlistRouter);
+
+const blogRouter = require('./blog');
+apiRouter.use('/blog', blogRouter);
 
 apiRouter.use((error, req, res, next) => {
     res.send(error);

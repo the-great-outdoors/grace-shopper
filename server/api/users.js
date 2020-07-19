@@ -86,12 +86,14 @@ usersRouter.post('/register', async (req, res, next) => {
 
 usersRouter.post('/login', async (req, res, next) => {
     const { username, hashpassword } = req.body;
+
     if (!username || !hashpassword) {
         next({
             name: "MissingCredentialsError",
             message: "Please supply both a username and password"
         });
     };
+    
     try {
         const user = await getUserByUsername(username);
         console.log('USER: ', user);
@@ -149,9 +151,10 @@ usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
     const { userId } = req.params;
     const { firstname, lastname } = req.body
     const user = req.user;
-    console.log("UserId: ", userId)
-    console.log('Req.user: ', req.user)
-    console.log("Req.user.id: ", req.user.user_id)
+    console.log("UserId: ", userId);
+    console.log('Req.user: ', req.user);
+    console.log("Req.user.id: ", req.user.user_id);
+
     try {
         if (user && user.user_id === Number(userId)) {
         const updatedUser = await updateUser(user.user_id, {
@@ -163,7 +166,7 @@ usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
         } else {
             next({
                 name: "UpdateUserError",
-                message: "Their was an error updating the user!"
+                message: "There was an error updating the user!"
             })
         };
     } catch ({ name, message }) {

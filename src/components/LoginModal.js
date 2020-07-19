@@ -10,10 +10,6 @@ import './LoginModal.css';
 const LoginModal = ({
     loginShow,
     loginSetShow,
-    // username,
-    // setUsername,
-    // hashpassword,
-    // setHashpassword,
     login,
     setLogin,
     user,
@@ -23,12 +19,16 @@ const LoginModal = ({
 }) => {
     const [username, setUsername] = useState("");
     const [hashpassword, setHashpassword] = useState("");
+
     const handleClose = () => { loginSetShow(false) };
+
     const loginUser = () => {
-        console.log('In login user!!')
+        console.log('In login user!');
+
         if (!username && !hashpassword) {
             return;
         }
+
         console.log('Login User is being called!');
         axios.post('/api/users/login', { username, hashpassword, })
             .then(res => {
@@ -36,10 +36,9 @@ const LoginModal = ({
                 setUser(res.data.user);
                 localStorage.setItem('token', res.data.token);
                 console.log(localStorage.getItem('token'));
-                // setToken(res.data.token);
-            })
-            .then(() => {
-                setLogin(true);
+                if (res.data.user) {
+                    setLogin(true);
+                }
             })
             .catch(error => {
                 console.error('Error logging-in user!', error);
