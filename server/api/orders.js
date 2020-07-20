@@ -1,5 +1,5 @@
 const ordersRouter = require('express').Router();
-const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername, createOrderItem } = require('../db');
+const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername, createOrderItem,deleteItemByOrderId, deleteOrderByOrderId  } = require('../db');
 const { requireUser } = require('./utils');
 
 ordersRouter.use((req, res, next) => {
@@ -29,15 +29,47 @@ ordersRouter.get('/:userName', async(req, res, next)=>{
         next({error, message})
     }
 });
+ordersRouter.post('/', async (req, res, next)=>{
+    try {
+        const { userId, status, price, merchId, quantity } = req.body;
+        const orderData = { userId, status, price };
+        let orderId = req.body.orderId;
+        
+        if (!orderId) {
+            console.log('Creating new order!');
+            const order = await createOrder(orderData);
+            orderId = order.orderId;
+        }
+       
+        console.log('Creating new orderItem');
+        const orderItemData = { merchId, quantity, price }
+        const orderItem = await createOrderItem(orderId, orderItemData)
+
+        if(orderItem) {
+            res.send({
+                message: 'successfully created new order',
+                status: true,
+                orderItem
+            });
+        }else {
+            next({
+                error: 'FailedToCreateOrderError',
+                message: 'Unable to create new order'
+            });
+        }
+    } catch ({error, message}) {
+        next({error, message});
+    }
+});
 
 ordersRouter.post('/:orderId', async(req, res, next)=>{
     const { orderId } = req.params;
     const { merchId, quantity, price } = req.body;
-    const orderItemData = { orderId, merchId, quantity, price }
-
+    const orderItemData = {merchId, quantity, price }
+    console.log('welcome to POST /orderId!');
     try {
-        const orderItem = await createOrderItem(orderItemData);
-
+        const orderItem = await createOrderItem(orderId, orderItemData);
+        console.log('Success!');
         if (orderItem) {
             res.send({
                 message: 'Successfully retrieved orderItems',
@@ -78,39 +110,7 @@ ordersRouter.get('/:userId', async(req, res, next)=>{
     }
 });
 
-ordersRouter.post('/', async (req, res, next)=>{
-    try {
-        const { userId, status, price, merchId, quantity } = req.body;
-        const orderData = { userId, status, price };
-        let orderId = req.body.orderId;
-        
-        const order = await createOrder(orderData);
-        orderId = order.orderId;
-        console.log("This is the order:", order);
-        console.log("orderId", orderId);
-        console.log('Not in if statement!')
-        const orderItemData = { merchId, quantity, price }
-        const orderItem = await createOrderItem(orderId, orderItemData)
-        console.log("order item:", orderItem);
 
-        console.log("order", order);
-
-        if(orderItem) {
-            res.send({
-                message: 'successfully created new order',
-                status: true,
-                orderItem
-            });
-        }else {
-            next({
-                error: 'FailedToCreateOrderError',
-                message: 'Unable to create new order'
-            });
-        }
-    } catch ({error, message}) {
-        next({error, message});
-    }
-});
 
 ordersRouter.patch('/:orderId', requireUser, async (req, res, next) => {
     const { orderId } = req.params;
@@ -152,5 +152,53 @@ ordersRouter.patch('/:orderId', requireUser, async (req, res, next) => {
         next({ name, message });
     }
 });
+ordersRouter.delete('/cart/:itemId', async(req, res, next)=>{
+
+    const{orderId, item_id} = req.body;
+    console.log('From DELETE /cart/itemId OrderId:', orderId, ' item_id:', item_id);
+    try {
+        const deletedItem = await deleteItemByOrderId(item_id, orderId);
+
+        if (deletedItem) {
+            res.send({
+                message: `Successfully removed ${deletedItem.name} from order`,
+                status:true,
+                data:deletedItem
+            });
+        }else{
+            next({
+                message: 'Unable to remove item from cart',
+                error:'FailedToRemoveItemFromOrderError'
+            });
+        }
+    } catch ({message, error}) {
+        next({message, error});
+    }
+})
+
+
+ordersRouter.delete('/:orderId', async(req, res, next)=>{
+    console.log('Entered DELTE /orderID to DELETE ENTIRE ORDER')
+    const {orderId} = req.params;
+    try {
+        const cart = await deleteOrderByOrderId(orderId);
+
+        if (cart) {
+            res.send({
+                message: 'successfully deleted order',
+                data: cart,
+                status:true
+            })
+        }else{
+            next({
+                message:'Unable to remove all items from cart.',
+                error:'FailedToDeleteOrderError'
+            })
+        }
+    } catch ({message, error}) {
+        next({message, error})
+    }
+})
+
 
 module.exports = ordersRouter;

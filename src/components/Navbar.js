@@ -103,7 +103,7 @@ const NavBar = ({
             <Icon inverted color='teal' name='snapchat ghost' />
           </Menu.Item>
       </Menu>
-      <Menu fixed inverted pointing secondary size='large'>
+      <Menu inverted pointing secondary size='large'>
         <Menu.Item>
           <SearchBar
             setSearchTerm={setSearchTerm}/>
@@ -185,7 +185,7 @@ const NavBar = ({
             <Button.Content visible><Icon name='gift' /></Button.Content>
           </Button>
           <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
-            <Button.Content hidden>Shop</Button.Content>
+            <Button.Content hidden>Cart</Button.Content>
             <Button.Content visible>
               <Icon name='shop' />
             </Button.Content>

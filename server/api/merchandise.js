@@ -186,7 +186,7 @@ merchRouter.post('/:merchId', async(req, res, next)=>{
 
 merchRouter.delete('/:merchId', async(req, res, next)=>{
     const { merchId} = req. params;
-
+    
     try {
         const merch = await deleteMerchandise(merchId);
         if (merch) {
@@ -205,6 +205,30 @@ merchRouter.delete('/:merchId', async(req, res, next)=>{
     } catch ({error, message}) {
         next({error, message});
     }
+})
+
+merchRouter.get('/category/:catId', async(req, res, next)=>{
+    const {catId} = req.params;
+    console.log('inside GET /category/catid with:', catId)
+    try {
+        const data = await getMerchandiseByCategory(catId);
+
+        if (data) {
+            res.send({
+                message: 'successfully retrieved items',
+                data
+            })
+        }else{
+            next({
+                error:'FailedToRetrieveItemsError',
+                message:'Unable to retrieve items for selected category'
+            })
+        }
+        
+    } catch ({error, message}) {
+        next({error, message})
+    }
+
 })
 
 

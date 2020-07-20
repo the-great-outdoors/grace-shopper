@@ -40,13 +40,13 @@ async function dropTables() {
             DROP TABLE IF EXISTS blogs;
             DROP TABLE IF EXISTS wishlist;
             DROP TABLE IF EXISTS userPreferences;
-            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
+            DROP TABLE IF EXISTS users;
+            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
-            DROP TABLE IF EXISTS users;
         `);
 
         console.log('Successfully dropped all tables.');
@@ -141,7 +141,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
-                status BOOLEAN,
+                status BOOLEAN DEFAULT true,
                 price NUMERIC
             );
         `);
@@ -153,7 +153,7 @@ async function createTables() {
                 "orderId" INTEGER REFERENCES orders("orderId"),
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
                 quantity INTEGER DEFAULT 1,
-                price NUMERIC NOT NULL
+                price VARCHAR(255) NOT NULL
             );
         `);
 

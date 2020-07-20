@@ -15,7 +15,7 @@ import {
     SearchBar,
     ProductPage,
     UserProfile,
-    Wishlist,
+    Wishlist
 } from './components';
 
 const App = () => {
@@ -25,6 +25,7 @@ const App = () => {
     const [user, setUser] = useState({});
     const [login, setLogin] = useState(false);
     const [searchTerm, setSearchTerm] = useState({ value: '', category: '' });
+    const [item, setItem] = useState({});
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -48,18 +49,22 @@ const App = () => {
                     setLogin={setLogin}
                     login={login}
                     user={user}
-                    setUser={setUser} />
+                    setUser={setUser}/>
             </Sticky>
             <Switch>
                 <Route path='/categories'>
-                    <Categories />
+                    <Categories 
+                    setMerchandise={setMerchandise}
+                    merchandise={merchandise}/>
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
                         user={user} />
                 </Route>
                 <Route path="/productpage/:id">    
-                    <ProductPage />  
+                    <ProductPage
+                     item={item}
+                     setItem={setItem}/>  
                 </Route>
                 <Route path= '/wishlist'>
                     <Wishlist user= {user} />
