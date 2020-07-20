@@ -7,7 +7,7 @@ ordersRouter.use((req, res, next) => {
     next();
 });
 
-ordersRouter.get('/:userName', async(req, res, next)=>{
+ordersRouter.get('/:userName', async (req, res, next) => {
     const { userName } = req.params;
 
     try {
@@ -19,18 +19,18 @@ ordersRouter.get('/:userName', async(req, res, next)=>{
                 status: true,
                 orders
             });
-        }else{
+        } else {
             next({
                 error: 'FailedToRetrieveOrdersByUserNameError',
-                message:`Unable to retrieve orders by username:${userName}`
+                message: `Unable to retrieve orders by username:${userName}`
             });
         }
-    } catch ({error, message}) {
-        next({error, message})
+    } catch ({ error, message }) {
+        next({ error, message })
     }
 });
 
-ordersRouter.post('/:orderId', async(req, res, next)=>{
+ordersRouter.post('/:orderId', async (req, res, next) => {
     const { orderId } = req.params;
     const { merchId, quantity, price } = req.body;
     const orderItemData = { orderId, merchId, quantity, price }
@@ -44,18 +44,18 @@ ordersRouter.post('/:orderId', async(req, res, next)=>{
                 status: true,
                 orderItem
             });
-        }else{
+        } else {
             next({
                 error: 'FailedToRetrieveOrdersItems',
-                message:`Unable to retrieve orderItems`
+                message: `Unable to retrieve orderItems`
             });
         }
-    } catch ({error, message}) {
-        next({error, message})
+    } catch ({ error, message }) {
+        next({ error, message })
     }
 });
 
-ordersRouter.get('/:userId', async(req, res, next)=>{
+ordersRouter.get('/:userId', async (req, res, next) => {
     const { userId } = req.params;
 
     try {
@@ -67,23 +67,23 @@ ordersRouter.get('/:userId', async(req, res, next)=>{
                 status: true,
                 orders
             });
-        }else{
+        } else {
             next({
                 error: 'FailedToRetrieveOrdersByUserIdError',
-                message:`Unable to retrieve orders by id:${userId}`
+                message: `Unable to retrieve orders by id:${userId}`
             });
         }
-    } catch ({error, message}) {
-        next({error, message})
+    } catch ({ error, message }) {
+        next({ error, message })
     }
 });
 
-ordersRouter.post('/', async (req, res, next)=>{
+ordersRouter.post('/', async (req, res, next) => {
     try {
         const { userId, status, price, merchId, quantity } = req.body;
         const orderData = { userId, status, price };
         let orderId = req.body.orderId;
-        
+
         const order = await createOrder(orderData);
         orderId = order.orderId;
         console.log("This is the order:", order);
@@ -95,20 +95,20 @@ ordersRouter.post('/', async (req, res, next)=>{
 
         console.log("order", order);
 
-        if(orderItem) {
+        if (orderItem) {
             res.send({
                 message: 'successfully created new order',
                 status: true,
                 orderItem
             });
-        }else {
+        } else {
             next({
                 error: 'FailedToCreateOrderError',
                 message: 'Unable to create new order'
             });
         }
-    } catch ({error, message}) {
-        next({error, message});
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 });
 
@@ -136,13 +136,13 @@ ordersRouter.patch('/:orderId', requireUser, async (req, res, next) => {
     try {
         const updatedOrder = await updateUserOrderByOrderId(orderId, updateFields);
 
-        if(updatedOrder){
+        if (updatedOrder) {
             res.send({
                 message: 'Successfully updated order',
                 status: true,
-                payment: updatedOrder 
+                payment: updatedOrder
             });
-        }else{
+        } else {
             next({
                 error: 'FailedToUpdateOrderError',
                 message: 'Unable to update order'

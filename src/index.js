@@ -8,6 +8,7 @@ import axios from 'axios';
 import {
     Categories,
     CreateUserModal,
+    EditProfile,
     Hero,
     LoginModal,
     Merchandise,
@@ -25,6 +26,7 @@ const App = () => {
     const [user, setUser] = useState({});
     const [login, setLogin] = useState(false);
     const [searchTerm, setSearchTerm] = useState({ value: '', category: '' });
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -56,13 +58,17 @@ const App = () => {
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
-                        user={user} />
+                        user={user}
+                        setUser={setUser}
+                        editMode={editMode}
+                        setEditMode={setEditMode} />
                 </Route>
                 <Route path="/productpage/:id">    
                     <ProductPage />  
                 </Route>
                 <Route path= '/wishlist'>
-                    <Wishlist user= {user} />
+                    <Wishlist 
+                        user= {user} />
                 </Route>
                 <Route path='/'>
                     <Hero

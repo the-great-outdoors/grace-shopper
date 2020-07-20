@@ -18,87 +18,87 @@ const ProductPage = (props) => {
 
     const { id } = useParams();
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log('Here I am!: ', id);
         try {
             axios.get(`/api/merchandise/search/${id}`)
-            .then(res=>{
-                const {data:merch} = res;
-                console.log('retrievedMerch: ',merch.merch)
-                setItem(merch.merch);
-                console.log('item set?', item);
-            })
-            
+                .then(res => {
+                    const { data: merch } = res;
+                    console.log('retrievedMerch: ', merch.merch)
+                    setItem(merch.merch);
+                    console.log('item set?', item);
+                })
+
         } catch (error) {
             throw error;
         }
-        
+
     }, []);
 
-    const basketTotal=()=>{
-       const qty = quantity;
-       const price = item.price;
-       const basket = qty*price;
-       console.log(basket);
+    const basketTotal = () => {
+        const qty = quantity;
+        const price = item.price;
+        const basket = qty * price;
+        console.log(basket);
         setTotal(basket);
-        axios.post('/api/orders', { 
+        axios.post('/api/orders', {
             userId: 1,
             status: true,
             price
         })
-        .then(res => { 
-            const newOrder = res.data.order
-            console.log(newOrder) 
-        })
-        
+            .then(res => {
+                const newOrder = res.data.order
+                console.log(newOrder)
+            })
+
     }
 
-    const registerChange = (e, data)=>{
-        const qty=data.value;
+    const registerChange = (e, data) => {
+        const qty = data.value;
         setQuantity(qty);
         console.log('what is qty?:', quantity);
     }
 
-   return(
-    <>   
-        <Breadcrumb icon='right angle' sections={sections} style={{ marginTop: '3rem', marginLeft: '3rem' }} />
-       <div style={{ marginTop: '5rem',  }}>
-            <Grid  style={{ marginLeft: '5rem' }} >
-                <Grid.Row columns={2}>
-                    <Grid.Column width={8} style={{ marginRight: '1rem' }}>
-                        <SideBySideMagnifier imageSrc='/resources/backpack_AZ.jpg' imageAlt='Example' alwaysInPlace />
+    return (
+        <>
+            <Breadcrumb icon='right angle' sections={sections} style={{ marginTop: '3rem', marginLeft: '3rem' }} />
+            <div style={{ marginTop: '5rem', }}>
+                <Grid style={{ marginLeft: '5rem' }} >
+                    <Grid.Row columns={2}>
+                        <Grid.Column width={8} style={{ marginRight: '1rem' }}>
+                            <SideBySideMagnifier imageSrc='/resources/backpack_AZ.jpg' imageAlt='Example' alwaysInPlace />
+                        </Grid.Column>
+                        <Grid.Column center width={5} textAlign='right' >
+                            <Header className='titleblock' as='h1'>{item.name}</Header>
+                            <Header className='titleblock' as='h5' color='grey' >Item #123456</Header>
+                            <Rating className='titleblock' rating={item.rating} maxRating={5}></Rating>
+                            <Header as='h2' color='orange'>${item.price}</Header>
+                            <Header as='h2' style={{ fontWeight: 'bold' }}>Description</Header><Header as='h3'>{item.description}</Header>
+                            <Input label={{ color: 'teal', labelPosition: 'left', content: 'Quantity' }} min={1} max={10} type='number' style={{ marginBottom: '1rem' }} onChange={registerChange} />
+                            <div>
+                                <Button size='huge'
+                                    color='teal'
+                                    icon='cart'
+                                    content='Checkout' />
+                                <Button size='huge' basic style={{ marginTop: '1rem', marginLeft: '1rem' }}>Add to wishlist</Button>
+                            </div>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+                <Grid centered>
+                    <Grid.Column textAlign='center' style={{ marginTop: '3rem' }}>
+
+                        <h1>Blogs rendering soon!</h1>
+                        <Divider />
+                        <h1>Blogs rendering soon!</h1>
+                        <Divider />
+                        <h1>Blogs rendering soon!</h1>
+                        <Divider />
                     </Grid.Column>
-                    <Grid.Column center width={5} textAlign='right' > 
-                        <Header className='titleblock' as='h1'>{item.name}</Header>
-                        <Header className='titleblock' as='h5' color='grey' >Item #123456</Header>
-                        <Rating className='titleblock' rating={item.rating} maxRating={5}></Rating>
-                        <Header as='h2' color='orange'>${item.price}</Header>
-                        <Header as='h2' style={{fontWeight:'bold'}}>Description</Header><Header as='h3'>{item.description}</Header>
-                        <Input label={{color: 'teal', labelPosition: 'left', content: 'Quantity'}} min={1} max={10} type='number' style={{ marginBottom: '1rem' }} onChange = {registerChange} />
-                        <div>
-                            <Button size='huge'
-                                color='teal'
-                                icon='cart'
-                                content='Checkout' />
-                            <Button size='huge' basic style={{ marginTop: '1rem', marginLeft: '1rem' }}>Add to wishlist</Button>
-                        </div>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
-            <Grid centered>
-                <Grid.Column textAlign='center' style={{ marginTop: '3rem' }}>
-                
-                    <h1>Blogs rendering soon!</h1>
-                    <Divider />
-                    <h1>Blogs rendering soon!</h1>
-                    <Divider />
-                    <h1>Blogs rendering soon!</h1>
-                    <Divider />
-                </Grid.Column>
-            </Grid>
-        </div>
-    </>    
-   )
+                </Grid>
+            </div>
+        </>
+    )
 }
 
 export default ProductPage;

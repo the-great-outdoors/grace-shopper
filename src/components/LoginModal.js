@@ -48,6 +48,7 @@ const LoginModal = ({
         setUsername("");
         setHashpassword("");
     };
+
     return (
         <div>
             <Modal open={loginShow} size='mini'>
@@ -114,7 +115,6 @@ const LoginModal = ({
                         }}
                         onClick={
                             (event) => {
-                                // event.preventDefault();
                                 loginUser();
                                 handleClose();
                                 clearForm();

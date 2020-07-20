@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import faker from 'faker';
+import _ from 'lodash';
+
 import {
     Form,
     Input,
     Radio,
     Button,
     Modal,
-    Image
+    Image,
+    Dropdown
 } from 'semantic-ui-react'
 
 import './CreateUserModal.css';
@@ -14,10 +18,6 @@ import './CreateUserModal.css';
 const CreateUserModal = ({
     registerShow,
     registerSetShow,
-    // username,
-    // setUsername,
-    // hashpassword,
-    // setHashpassword,
     login,
     setLogin,
     user,
@@ -37,10 +37,23 @@ const CreateUserModal = ({
     const [zip, setZip] = useState("");
     const [shipping, setShipping] = useState('USPS');
 
+    const addressDefinitions = faker.definitions.address
+    const stateOptions = _.map(addressDefinitions.state, (state, index) => ({
+        key: addressDefinitions.state_abbr[index],
+        text: state,
+        value: addressDefinitions.state_abbr[index],
+    }));
+
     const handleChange = (e, param) => {
         console.log('Handle Change', param.value)
-        setShipping(param.value)
+        setShipping(param.value);
     };
+
+    const handleStateChange = (e, param) => {
+        console.log('Handle State Change', param.value);
+        setState(param.value);
+    };
+
     const handleClose = () => { registerSetShow(false) };
     console.log('Shipping: ', shipping);
 
@@ -204,15 +217,16 @@ const CreateUserModal = ({
                             </Form.Field>
                             <Form.Field required>
                                 <label>State:</label>
-                                <Input
-                                    type='text'
-                                    placeholder='State'
-                                    style={{
-                                        border: '1px solid black',
-                                        borderRadius: '5px'
-                                    }}
-                                    onChange={event => setState(event.target.value)}
-                                    value={state}
+                                <Dropdown 
+                                placeholder='State'
+                                style={{
+                                    border: '1px solid black',
+                                    borderRadius: '5px'
+                                }}
+                                search 
+                                selection 
+                                options={stateOptions}
+                                onChange={handleStateChange}
                                 />
                             </Form.Field>
                             <Form.Field required>
