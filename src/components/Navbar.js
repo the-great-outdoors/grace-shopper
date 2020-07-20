@@ -38,6 +38,7 @@ const NavBar = ({
   ]
 
   const handleItemClick = (e, { name }) => {
+    e.preventDefault();
     console.log('In Navbar link: ', name);
     setState({ activeItem: name });
     let path=`/${name}`;
@@ -184,7 +185,7 @@ const NavBar = ({
             <Button.Content hidden>Wishlist</Button.Content>
             <Button.Content visible><Icon name='gift' /></Button.Content>
           </Button>
-          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
+          <Button name='orders' animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick={handleItemClick}>
             <Button.Content hidden>Cart</Button.Content>
             <Button.Content visible>
               <Icon name='shop' />

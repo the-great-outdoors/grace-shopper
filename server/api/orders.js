@@ -1,5 +1,5 @@
 const ordersRouter = require('express').Router();
-const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername, createOrderItem,deleteItemByOrderId, deleteOrderByOrderId  } = require('../db');
+const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername, createOrderItem,deleteItemByOrderId, deleteOrderByOrderId, getActiveOrderForUser  } = require('../db');
 const { requireUser } = require('./utils');
 
 ordersRouter.use((req, res, next) => {
@@ -7,11 +7,11 @@ ordersRouter.use((req, res, next) => {
     next();
 });
 
-ordersRouter.get('/:userName', async(req, res, next)=>{
-    const { userName } = req.params;
+ordersRouter.get('/cart', async(req, res, next)=>{
+    const {userId} = req.userId;
 
     try {
-        const orders = await getUserOrdersByUsername(userName);
+        const orders = await getActiveOrderForUser(userId);
 
         if (orders) {
             res.send({
@@ -32,24 +32,16 @@ ordersRouter.get('/:userName', async(req, res, next)=>{
 ordersRouter.post('/', async (req, res, next)=>{
     try {
         const { userId, status, price, merchId, quantity } = req.body;
-        const orderData = { userId, status, price };
-        let orderId = req.body.orderId;
+        const orderData = { userId, status };
         
-        if (!orderId) {
-            console.log('Creating new order!');
-            const order = await createOrder(orderData);
-            orderId = order.orderId;
-        }
+        console.log('Creating new order!');
+        const order = await createOrder(orderData);
        
-        console.log('Creating new orderItem');
-        const orderItemData = { merchId, quantity, price }
-        const orderItem = await createOrderItem(orderId, orderItemData)
-
-        if(orderItem) {
+        if(order) {
             res.send({
                 message: 'successfully created new order',
                 status: true,
-                orderItem
+                order
             });
         }else {
             next({
