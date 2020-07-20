@@ -16,7 +16,8 @@ import {
     SearchBar,
     ProductPage,
     UserProfile,
-    Wishlist
+    Wishlist,
+    Orders
 } from './components';
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState({ value: '', category: '' });
     const [editMode, setEditMode] = useState(false);
     const [item, setItem] = useState({});
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -69,11 +71,17 @@ const App = () => {
                 <Route path="/productpage/:id">    
                     <ProductPage
                      item={item}
-                     setItem={setItem}/>  
+                     setItem={setItem}
+                     setCart={setCart}
+                     cart={cart}/>  
                 </Route>
                 <Route path= '/wishlist'>
                     <Wishlist 
                         user= {user} />
+                </Route>
+                <Route path='/orders'>
+                    <Orders cart={cart}
+                    setCart={setCart}/>
                 </Route>
                 <Route path='/'>
                     <Hero

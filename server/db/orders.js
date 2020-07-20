@@ -1,13 +1,15 @@
 const db = require('./database');
 
-async function createOrder({userId, status=true, price}) {
+async function createOrder({userId, status=true}) {
+    console.log('db createOrder');
     try {
         const { rows: [order] } = await db.query(`
-        INSERT INTO orders("userId", status, price)
-        VALUES($1, $2, $3)
+        INSERT INTO orders("userId", status)
+        VALUES($1, $2)
         RETURNING *;
-    `, [userId, status, price]);
+    `, [userId, status]);
 
+        console.log('Successfully created db order:', order);
         return order;
     } catch (error) {
         throw error;
@@ -128,6 +130,34 @@ async function deleteItemByOrderId(item_Id, orderId){
    
 }
 
+async function getActiveOrderForUser(userId) {
+    console.log('Entered db getActiveOrderForUser with userId:',userId);
+
+    try {
+        const { rows:[order] } = await db.query(`
+        SELECT * FROM orders
+        WHERE orders."userId" = $1
+        AND status = true;
+    `,[userId]);
+
+    const orderId = order.orderId;
+
+    const { rows:items  } = await db.query(`
+        SELECT * FROM orderItems
+        WHERE "orderId" = $1;
+    `,[orderId])
+
+    order.items = items
+    console.log('Successfully retrieved active order:',order);
+    return order
+
+    } catch (error) {
+        throw error;
+    }
+   
+
+}
+
 module.exports = {
     getUserOrdersByUsername,
     getUserOrdersByUserId,
@@ -135,5 +165,6 @@ module.exports = {
     createOrder,
     createOrderItem,
     deleteItemByOrderId,
-    deleteOrderByOrderId
+    deleteOrderByOrderId,
+    getActiveOrderForUser
 }

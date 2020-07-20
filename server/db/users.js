@@ -43,20 +43,6 @@ async function updateUser(userId, fields = {}) {
 
 };
 
-//deleteAccount(userId)
-// async function deleteUser(userId) {
-//     try {
-//         await db.query(`
-//             DELETE *
-//             FROM users
-//             WHERE user_id=$1;
-//         `, [ userId ]);
-
-//     } catch (error) {
-//         throw error;
-//     };
-// };
-
 async function getUserByUserId(userId) {
 
     try {

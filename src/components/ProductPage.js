@@ -5,16 +5,14 @@ import axios from 'axios';
 import { useParams, useHistory} from 'react-router-dom';
 import './ProductPage.css';
 
-const ProductPage = ({item, setItem}) => {
+const ProductPage = ({item, setItem, cart, setCart}) => {
 
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
-    const [cart, setCart] = useState('');
     const [addItem, setAddItem] = useState(false);
     const { id } = useParams();
 
     const history = useHistory();
-
     const handleClick = (event, data)=>{
         let path =`/${data.name}`;
         history.push(path);
@@ -24,8 +22,9 @@ const ProductPage = ({item, setItem}) => {
         try {
             axios.get(`/api/merchandise/search/${id}`)
             .then(res=>{
-                const {data:merch} = res;
-                setItem(merch.merch);
+                const {data:item} = res;
+                console.log( item.merch);
+                setItem(item.merch);
             })
         } catch (error) {
             throw error;
@@ -33,56 +32,32 @@ const ProductPage = ({item, setItem}) => {
 
     }, []);
 
-    const AddItem=async()=>{
+    const AddItem= ()=>{
+        console.log('clicked addItem')
        const qty = quantity;
        const price = item.price;
-       const basket = qty*item.price;
-        setTotal(basket);
+        console.log('qty:',qty, 'price:',price);
+       const merch = {
+           merchId:id,
+           quantity:qty,
+           price,
+           name:item.name,
+           description:item.description
 
-        if(!cart){
-        const res = await axios.post('/api/orders', { 
-            userId: 1,
-            status: true,
-            price,
-            merchId:item.merch_id,
-            quantity
-        })
-            const newOrder = res.data.orderItem;
-             console.log('New Order Num:', newOrder);
-             setCart(newOrder);
+       }
+
+       const cartArray = cart;
+       cartArray.push(merch);
+       setCart(cartArray);
+       localStorage.setItem('activeCart', JSON.stringify(cartArray));
     }
-        if (cart) {
-            const res = await axios.post(`/api/orders/`, { 
-                userId: 1,
-                price,
-                merchId:item.merch_id,
-                quantity,
-                orderId:cart.orderId});
-                const newOrderItem = res.data.orderItem;
-                setCart(newOrderItem);
-                console.log('New item created:', newOrderItem);
-            };
-
-            setAddItem(true);
-        }
-
-        const removeItem=async(event, data)=>{
-
-            try {
-                const res = await axios.delete(`/api/orders/cart/${cart.item_id}`, {data:{orderId: cart.orderId, item_id:cart.item_id}});
-                setAddItem(false);
-                return res;
-
-            } catch (error) {
-                throw error; 
-            }
-            
-        }
 
     const registerChange = (e, data) => {
         const qty = data.value;
         setQuantity(qty);
     }
+
+    console.log('items in cart:', cart)
 
    return(
     <>   
@@ -128,3 +103,43 @@ const ProductPage = ({item, setItem}) => {
 }
 
 export default ProductPage;
+
+// if(!cart){
+//     const res = await axios.post('/api/orders', { 
+//         userId: 1,
+//         status: true,
+//         price,
+//         merchId:item.merch_id,
+//         quantity
+//     })
+//         const newOrder = res.data.orderItem;
+//          console.log('New Order Num:', newOrder);
+//          setCart(newOrder);
+// }
+//     if (cart) {
+//         const res = await axios.post(`/api/orders/`, { 
+//             userId: 1,
+//             price,
+//             merchId:item.merch_id,
+//             quantity,
+//             orderId:cart.orderId});
+//             const newOrderItem = res.data.orderItem;
+//             setCart(newOrderItem);
+//             console.log('New item created:', newOrderItem);
+//         };
+
+//         setAddItem(true);
+//     }
+
+//     const removeItem=async(event, data)=>{
+
+//         try {
+//             const res = await axios.delete(`/api/orders/cart/${cart.item_id}`, {data:{orderId: cart.orderId, item_id:cart.item_id}});
+//             setAddItem(false);
+//             return res;
+
+//         } catch (error) {
+//             throw error; 
+//         }
+        
+//     }
