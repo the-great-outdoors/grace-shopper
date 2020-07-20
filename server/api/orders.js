@@ -121,10 +121,6 @@ ordersRouter.patch('/:orderId', requireUser, async (req, res, next) => {
         updateFields.userId = userId;
     }
 
-    if (orderItemId) {
-        updateFields.orderItemId = orderItemId;
-    }
-
     if (status) {
         updateFields.status = status;
     }

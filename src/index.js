@@ -16,6 +16,7 @@ import {
     ProductPage,
     UserProfile,
     Wishlist,
+    AboutUsPage
 } from './components';
 
 const App = () => {
@@ -51,6 +52,9 @@ const App = () => {
                     setUser={setUser} />
             </Sticky>
             <Switch>
+                <Route path='/about'>
+                    <AboutUsPage />
+                </Route>
                 <Route path='/categories'>
                     <Categories />
                 </Route>
@@ -62,7 +66,7 @@ const App = () => {
                     <ProductPage />  
                 </Route>
                 <Route path= '/wishlist'>
-                    <Wishlist user= {user} />
+                    <Wishlist user={user} />
                 </Route>
                 <Route path='/'>
                     <Hero

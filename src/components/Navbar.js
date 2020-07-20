@@ -60,8 +60,7 @@ const NavBar = ({
     setLogin(false);
     setUser({});
   };
-
-
+  
   return (
     <Segment inverted>
       <Menu inverted pointing secondary>
@@ -91,16 +90,16 @@ const NavBar = ({
           onClick={handleItemClick}
         />
           <Menu.Item position='right'>
-            <Icon inverted color='teal' name='facebook f' />
+            <a href='https://www.facebook.com'><Icon inverted color='teal' name='facebook f' /></a>
           </Menu.Item>
           <Menu.Item>
-            <Icon inverted color='teal' name='twitter' />
+            <a href='https://twitter.com/explore'><Icon inverted color='teal' name='twitter' /></a>
           </Menu.Item>
           <Menu.Item>
-            <Icon inverted color='teal' name='pinterest p' />
+            <a href='https://www.pinterest.com/'><Icon inverted color='teal' name='pinterest p' /></a>
           </Menu.Item>
           <Menu.Item >
-            <Icon inverted color='teal' name='snapchat ghost' />
+            <a href='https://www.snapchat.com/'><Icon inverted color='teal' name='snapchat ghost' /></a>
           </Menu.Item>
       </Menu>
       <Menu fixed inverted pointing secondary size='large'>

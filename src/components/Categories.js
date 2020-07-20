@@ -26,7 +26,7 @@ const Categories=(props)=>{
             </Grid.Row>
             <Grid.Row columns={2}>
                 <Grid.Column width={8}>
-                <Container style={{ height: '400px', backgroundImage:`url('/resources/mountaintop_victory.jpg')`, backgroundSize:'cover'}}>
+                <Container style={{ height: '400px', backgroundImage:`url('/resources/rock_man_clouds.jpg')`, backgroundSize:'cover'}}>
                     <Header className='catHeader' inverted textAlign='center'>Climbing</Header>
                     </Container>
                 </Grid.Column>
