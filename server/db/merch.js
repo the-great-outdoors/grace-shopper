@@ -68,10 +68,10 @@ async function searchMerchandise(searchTerm,category='') {
 
 
     }  
-    //getMerchandiseByCategory(catId)
+
 
     async function getMerchandiseByCategory(catId) {
-        const { rows: [merchandise] } = await db.query(`
+        const { rows: merchandise } = await db.query(`
             SELECT * FROM merchandise
             WHERE cats = $1;
         `, [catId]);
@@ -79,7 +79,6 @@ async function searchMerchandise(searchTerm,category='') {
         return merchandise;
     }
 
-    //getAllMerchandiseReviews(merchId)
 
     async function getAllMerchandiseReviews(merchId) {
         const { rows: [merchandise] } = await db.query(`
