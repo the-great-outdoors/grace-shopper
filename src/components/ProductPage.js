@@ -80,7 +80,7 @@ const ProductPage = ({item, setItem, cart, setCart}) => {
                         <Rating className='titleblock' rating={item.rating} maxRating={5}></Rating>
                         <Header as='h2' color='orange'>${item.price}</Header>
                         <Header as='h2' style={{fontWeight:'bold'}}>Description</Header><Header as='h3'>{item.description}</Header>
-                        <Input label={{color: 'teal', labelPosition: 'left', content: 'Quantity'}} min={1} max={10} type='number' style={{ marginBottom: '1rem' }} onChange = {registerChange} />
+                        <Input label={{color: 'teal', labelPosition: 'left', content: 'Quantity'}} min={1} max={10} type='number' style={{ marginBottom: '1rem' }} onChange = {registerChange} defaultValue='1' />
                         <div>
                             {!addItem?
                             <Button size='huge'

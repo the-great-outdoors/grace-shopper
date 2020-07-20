@@ -17,6 +17,7 @@ import {
     ProductPage,
     UserProfile,
     Wishlist,
+    AboutUsPage,
     Orders
 } from './components';
 
@@ -56,6 +57,9 @@ const App = () => {
                     setUser={setUser}/>
             </Sticky>
             <Switch>
+                <Route path='/about'>
+                    <AboutUsPage />
+                </Route>
                 <Route path='/categories'>
                     <Categories 
                     setMerchandise={setMerchandise}
@@ -76,12 +80,13 @@ const App = () => {
                      cart={cart}/>  
                 </Route>
                 <Route path= '/wishlist'>
-                    <Wishlist 
-                        user= {user} />
+                    <Wishlist user={user} />
+
                 </Route>
                 <Route path='/orders'>
                     <Orders cart={cart}
                     setCart={setCart}/>
+
                 </Route>
                 <Route path='/'>
                     <Hero

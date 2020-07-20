@@ -42,9 +42,12 @@ const handleClick= async(event, data)=>{
             </Grid.Row>
             <Grid.Row columns={2}>
                 <Grid.Column width={8}>
-                <Card value={2} fluid style={{ height: '400px', backgroundImage:`url('/resources/mountaintop_victory.jpg')`, backgroundSize:'cover'}} onClick={handleClick}>
-                    <Header className='catHeader' inverted textAlign='center' >Climbing</Header>
-                    </Card>
+
+                <Container style={{ height: '400px', backgroundImage:`url('/resources/rock_man_clouds.jpg')`, backgroundSize:'cover'}}>
+                    <Header className='catHeader' inverted textAlign='center'>Climbing</Header>
+                    </Container>
+
+
                 </Grid.Column>
                 <Grid.Column width={8}>
                 <Card value={4} fluid style={{ height: '400px', backgroundImage:`url('/resources/kayak.jpeg')`, backgroundSize:'cover'}} onClick={handleClick}>
