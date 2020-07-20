@@ -18,7 +18,7 @@ const {
     updateUserPreferences,
     getUserPreferencesByUserId,
     createPayment,
-    createBlog, 
+    createBlog,
     createWishListByUserId,
     getWishListByUserId,
 
@@ -40,13 +40,13 @@ async function dropTables() {
             DROP TABLE IF EXISTS blogs;
             DROP TABLE IF EXISTS wishlist;
             DROP TABLE IF EXISTS userPreferences;
-            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
+            DROP TABLE IF EXISTS users;
+            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
-            DROP TABLE IF EXISTS users;
         `);
 
         console.log('Successfully dropped all tables.');
@@ -132,7 +132,8 @@ async function createTables() {
                 wish_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
                 title VARCHAR(255),
-                "userId" INTEGER REFERENCES users(user_id)
+                "userId" INTEGER REFERENCES users(user_id),
+                UNIQUE (wish_id, "merchId")
             );
         `);
 
@@ -141,7 +142,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
-                status BOOLEAN,
+                status BOOLEAN DEFAULT false,
                 price NUMERIC
             );
         `);
@@ -153,7 +154,7 @@ async function createTables() {
                 "orderId" INTEGER REFERENCES orders("orderId"),
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
                 quantity INTEGER DEFAULT 1,
-                price NUMERIC NOT NULL
+                price VARCHAR(255) NOT NULL
             );
         `);
 
@@ -382,7 +383,7 @@ async function createInitialBlogs() {
     };
 };
 
-async function createInitialWishlist () {
+async function createInitialWishlist() {
     try {
         const seedWishlist = [
             {
@@ -407,7 +408,7 @@ async function createInitialWishlist () {
     };
 };
 
-async function initializeSeansStuff(){
+async function initializeSeansStuff() {
 
     await createInitialUsers();
     await createInititialUserPrefs()
@@ -467,8 +468,8 @@ async function startDb() {
         await dropTables()
         await createTables()
         // await testDB()
-        // await createInitialUsers()
-        // await createInititialUserPrefs()
+        await createInitialUsers()
+        await createInititialUserPrefs()
         await initializeSeansStuff();
         await createInitialBlogs();
         await createInitialWishlist();

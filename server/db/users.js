@@ -1,11 +1,6 @@
 const db = require('./database');
 const { getPreferencesByUserId } = require('./userprefs');
 
-//table: users !!!!!!!
-
-// --- LEVI
-
-//createUser(userName, password)
 async function createUser({ username, hashpassword, firstname, lastname }) {
 
     try {
@@ -23,7 +18,6 @@ async function createUser({ username, hashpassword, firstname, lastname }) {
 
 };
 
-//updateUserByUserId(userId)
 async function updateUser(userId, fields = {}) {
 
     const setString = Object.keys(fields).map(
@@ -49,21 +43,6 @@ async function updateUser(userId, fields = {}) {
 
 };
 
-//deleteAccount(userId)
-// async function deleteUser(userId) {
-//     try {
-//         await db.query(`
-//             DELETE *
-//             FROM users
-//             WHERE user_id=$1;
-//         `, [ userId ]);
-
-//     } catch (error) {
-//         throw error;
-//     };
-// };
-
-//getUserByUserId(userId)
 async function getUserByUserId(userId) {
 
     try {
@@ -88,7 +67,6 @@ async function getUserByUserId(userId) {
 
 };
 
-//getUserByUsername(userName)
 async function getUserByUsername(username) {
 
     try {

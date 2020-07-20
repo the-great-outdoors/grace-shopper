@@ -8,6 +8,7 @@ import axios from 'axios';
 import {
     Categories,
     CreateUserModal,
+    EditProfile,
     Hero,
     LoginModal,
     Merchandise,
@@ -16,7 +17,8 @@ import {
     ProductPage,
     UserProfile,
     Wishlist,
-    AboutUsPage
+    AboutUsPage,
+    Orders
 } from './components';
 
 const App = () => {
@@ -26,6 +28,9 @@ const App = () => {
     const [user, setUser] = useState({});
     const [login, setLogin] = useState(false);
     const [searchTerm, setSearchTerm] = useState({ value: '', category: '' });
+    const [editMode, setEditMode] = useState(false);
+    const [item, setItem] = useState({});
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -49,24 +54,39 @@ const App = () => {
                     setLogin={setLogin}
                     login={login}
                     user={user}
-                    setUser={setUser} />
+                    setUser={setUser}/>
             </Sticky>
             <Switch>
                 <Route path='/about'>
                     <AboutUsPage />
                 </Route>
                 <Route path='/categories'>
-                    <Categories />
+                    <Categories 
+                    setMerchandise={setMerchandise}
+                    merchandise={merchandise}/>
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
-                        user={user} />
+                        user={user}
+                        setUser={setUser}
+                        editMode={editMode}
+                        setEditMode={setEditMode} />
                 </Route>
                 <Route path="/productpage/:id">    
-                    <ProductPage />  
+                    <ProductPage
+                     item={item}
+                     setItem={setItem}
+                     setCart={setCart}
+                     cart={cart}/>  
                 </Route>
                 <Route path= '/wishlist'>
                     <Wishlist user={user} />
+
+                </Route>
+                <Route path='/orders'>
+                    <Orders cart={cart}
+                    setCart={setCart}/>
+
                 </Route>
                 <Route path='/'>
                     <Hero
