@@ -2,7 +2,7 @@ const merchRouter = require('express').Router();
 
 const { getAllMerchandise, getMerchandiseByCategory, getMerchandiseById, getMerchandiseByName, getMerchandiseReviewByUserId, createMerchandise, deleteMerchandise, deleteMerchandiseReview, addCategory, updateMerchandise, createMerchandiseReview, searchMerchandise } = require('../db')
 
-merchRouter.get('/', async (req, res, next)=>{
+merchRouter.get('/', async (req, res, next) => {
 
     const merch = await getAllMerchandise();
 
@@ -15,31 +15,31 @@ merchRouter.get('/', async (req, res, next)=>{
 
 })
 
-merchRouter.post('/', async(req, res, next)=>{
-    const {name, description, price, rating, cat} = req.body;
+merchRouter.post('/', async (req, res, next) => {
+    const { name, description, price, rating, cat } = req.body;
     try {
-        const merch = await createMerchandise({name, description, price, rating, cat});
-        if(merch){
+        const merch = await createMerchandise({ name, description, price, rating, cat });
+        if (merch) {
             res.send({
                 message: 'successfully created new item',
                 status: true,
                 merch
             })
-        }else{
+        } else {
             next({
                 error: 'FailedToCreateItemError',
                 message: 'Unable to create new item'
             })
         }
-        
-    } catch ({error, message}) {
-        next({error, message});
+
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 
 })
 
-merchRouter.delete('/review/:reviewId', async(req, res, next)=>{
-    const {reviewId} = req.params;
+merchRouter.delete('/review/:reviewId', async (req, res, next) => {
+    const { reviewId } = req.params;
     try {
         const review = await deleteMerchandiseReview(reviewId);
 
@@ -49,69 +49,69 @@ merchRouter.delete('/review/:reviewId', async(req, res, next)=>{
                 status: true,
                 review
             })
-        }else{
+        } else {
             next({
                 error: 'FailedToDeleteReviewError',
                 message: `Unable to delete review: ${reviewId}`
             })
         }
-    } catch ({error, message}) {
-        next({error, message});
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 })
 
-merchRouter.post('/review/:merchId', async(req, res, next)=>{
-    const { merchId} = req.params;
+merchRouter.post('/review/:merchId', async (req, res, next) => {
+    const { merchId } = req.params;
     const { userId, rating, description } = req.body;
 
     try {
-        const review = await createMerchandiseReview(merchId,userId, rating, description);
-        
+        const review = await createMerchandiseReview(merchId, userId, rating, description);
+
         if (review) {
             res.send({
                 message: `Successfully created new review for product id: ${merchId}`,
                 status: true,
                 data: review
             })
-        }else{
+        } else {
             next({
                 error: 'FailedToCreateNewReviewError',
                 message: 'Unable to create new review'
             })
         }
-    } catch ({error, message}) {
-        next({error, message});
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 
 })
 
-merchRouter.post('/search', async(req, res, next)=>{
+merchRouter.post('/search', async (req, res, next) => {
     console.log('Entered POST /search');
 
-    const {value, category} = req.body;
+    const { value, category } = req.body;
     console.log('From /Search:', value, category);
-    
+
     try {
-        const resp= await searchMerchandise(value, category);
-        console.log('/Search results:',resp);
+        const resp = await searchMerchandise(value, category);
+        console.log('/Search results:', resp);
 
         if (resp.length) {
             res.send({
-                message:'Successfull search',
-                status:true,
+                message: 'Successfull search',
+                status: true,
                 data: resp
             })
-        }else{
-            next({error:'UnableToRetrieveSearchResultsError', message: 'Unable to retrieve search results. Please refine your search'})
+        } else {
+            next({ error: 'UnableToRetrieveSearchResultsError', message: 'Unable to retrieve search results. Please refine your search' })
         }
 
-    } catch ({error, message}) {
-        next({error, message})
+    } catch ({ error, message }) {
+        next({ error, message })
     }
 
 })
 
-merchRouter.get('/search/:merchId', async(req, res, next)=>{
+merchRouter.get('/search/:merchId', async (req, res, next) => {
     const { merchId } = req.params;
 
     try {
@@ -123,70 +123,69 @@ merchRouter.get('/search/:merchId', async(req, res, next)=>{
                 status: true,
                 merch
             })
-        }else{
+        } else {
             console.log('Failed to fetch')
             next({
                 error: 'FailedToRetrieveItemByIdError',
-                message:`Unable to retrieve item by id:${merchId} `
+                message: `Unable to retrieve item by id:${merchId} `
             })
         }
-    } catch ({error, message}) {
-        next({error, message})
+    } catch ({ error, message }) {
+        next({ error, message })
     }
 })
 
-merchRouter.post('/:merchId', async(req, res, next)=>{
-    const {name, description, price, rating, cat} = req.body;
+merchRouter.post('/:merchId', async (req, res, next) => {
+    const { name, description, price, rating, cat } = req.body;
 
     const { merchId } = req.params;
 
-    let fields={};
+    let fields = {};
 
     try {
-        if(name){
-            fields.name=name;
+        if (name) {
+            fields.name = name;
         }
-    
+
         if (description) {
-            fields.description=description;
+            fields.description = description;
         }
-    
+
         if (price) {
-            fields.price=price;
+            fields.price = price;
         }
-    
+
         if (rating) {
-            fields.rating=rating;
+            fields.rating = rating;
         }
         if (cat) {
-            fields.cat=cat; 
+            fields.cat = cat;
         }
-    
+
         const merch = await updateMerchandise(merchId, fields);
-    
+
         if (merch) {
             res.send({
-                message:'Successfully updated item',
+                message: 'Successfully updated item',
                 status: true,
                 merch
-        
+
             })
-        }else{
+        } else {
             next({
                 error: 'FailedToUpdateItemError',
                 message: 'Unable to update item'
             })
         }
-        
-    } catch ({error, message}) {
-        next({error, message});
+
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 
 })
 
-merchRouter.delete('/:merchId', async(req, res, next)=>{
-    const { merchId} = req. params;
-    
+merchRouter.delete('/:merchId', async (req, res, next) => {
+    const { merchId } = req.params;
     try {
         const merch = await deleteMerchandise(merchId);
         if (merch) {
@@ -195,15 +194,15 @@ merchRouter.delete('/:merchId', async(req, res, next)=>{
                 status: true,
                 merch
             })
-        }else{
+        } else {
             next({
                 error: 'FailedToDeleteItemError',
                 message: 'Unable to delete item'
             })
         }
 
-    } catch ({error, message}) {
-        next({error, message});
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 })
 

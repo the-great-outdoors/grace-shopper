@@ -44,6 +44,7 @@ usersRouter.post('/register', async (req, res, next) => {
                 name: 'PasswordTooShort',
                 message: 'Password must be at least 8 characters'
             })
+            return;
         };
         bcrypt.hash(hashpassword, SALT_COUNT, async function (err, hashedPassword) {
             const user = await createUser({

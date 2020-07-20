@@ -18,7 +18,7 @@ const {
     updateUserPreferences,
     getUserPreferencesByUserId,
     createPayment,
-    createBlog, 
+    createBlog,
     createWishListByUserId,
     getWishListByUserId,
 
@@ -132,7 +132,8 @@ async function createTables() {
                 wish_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
                 title VARCHAR(255),
-                "userId" INTEGER REFERENCES users(user_id)
+                "userId" INTEGER REFERENCES users(user_id),
+                UNIQUE (wish_id, "merchId")
             );
         `);
 
@@ -382,7 +383,7 @@ async function createInitialBlogs() {
     };
 };
 
-async function createInitialWishlist () {
+async function createInitialWishlist() {
     try {
         const seedWishlist = [
             {
@@ -407,7 +408,7 @@ async function createInitialWishlist () {
     };
 };
 
-async function initializeSeansStuff(){
+async function initializeSeansStuff() {
 
     await createInitialUsers();
     await createInititialUserPrefs()

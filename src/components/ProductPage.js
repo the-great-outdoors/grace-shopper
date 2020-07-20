@@ -19,7 +19,7 @@ const ProductPage = ({item, setItem}) => {
         let path =`/${data.name}`;
         history.push(path);
     }
-
+    
     useEffect(()=>{
         try {
             axios.get(`/api/merchandise/search/${id}`)
@@ -27,11 +27,10 @@ const ProductPage = ({item, setItem}) => {
                 const {data:merch} = res;
                 setItem(merch.merch);
             })
-            
         } catch (error) {
             throw error;
         }
-        
+
     }, []);
 
     const AddItem=async()=>{
@@ -80,8 +79,8 @@ const ProductPage = ({item, setItem}) => {
             
         }
 
-    const registerChange = (e, data)=>{
-        const qty=data.value;
+    const registerChange = (e, data) => {
+        const qty = data.value;
         setQuantity(qty);
     }
 
@@ -122,22 +121,10 @@ const ProductPage = ({item, setItem}) => {
                             <Button size='huge' basic style={{ marginTop: '1rem', marginLeft: '1rem' }}>Add to wishlist</Button>
                         </div>
                     </Grid.Column>
-                </Grid.Row>
-            </Grid>
-            <Grid centered>
-                <Grid.Column textAlign='center' style={{ marginTop: '3rem' }}>
-                
-                    <h1>Blogs rendering soon!</h1>
-                    <Divider />
-                    <h1>Blogs rendering soon!</h1>
-                    <Divider />
-                    <h1>Blogs rendering soon!</h1>
-                    <Divider />
-                </Grid.Column>
-            </Grid>
-        </div>
-    </>    
-   )
+                </Grid>
+            </div>
+        </>
+    )
 }
 
 export default ProductPage;

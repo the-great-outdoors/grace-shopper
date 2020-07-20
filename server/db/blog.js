@@ -2,97 +2,94 @@ const db = require('./database');
 const { getUserByUserId, } = require('./users')
 const { getMerchandiseById, getMerchandiseByCategory } = require('./merch')
 
-    //getAllBlogs
+//getAllBlogs
 async function getAllBlogs() {
-    const { rows } = await db.query(`
-    SELECT *
-    FROM blogs;
+
+    try {
+        const { rows } = await db.query(`
+            SELECT *
+            FROM blogs;
     `);
 
-    return rows;
-}
+        return rows;
+    } catch (e) {
+        console.error(e)
+    };
+};
 
-  //getBlogsByUserId(userId)
+//getBlogsByUserId(userId)
 async function getBlogByUserId(userId) {
     try {
-        const user = await getUserByUserId(userId)
 
-        const { rows } = await db.query(`
-        SELECT *
-        FROM blogs
-        WHERE blogs."authorID" = $1;
-        `, [user.id]);
+        const { rows: [blog] } = await db.query(`
+            SELECT *
+            FROM blogs
+            WHERE "authorID"=$1;
+        `, [userId]);
 
-        return rows;
+        return blog;
     } catch (e) {
         console.error(e)
-    }
-}
+    };
+};
 
-    //getBlogByMerchId(merchId)
+//getBlogByMerchId(merchId)
 async function getBlogByMerchId(merchId) {
     try {
-        const user = await getMerchandiseById(merchId)
-
         const { rows } = await db.query(`
-        SELECT *
-        FROM blogs
-        WHERE blogs."merchID" = $1;
-        `, [merch.id]);
+            SELECT *
+            FROM blogs
+            WHERE "merchID"=$1;
+        `, [merchId]);
 
         return rows;
     } catch (e) {
         console.error(e)
-    }
-}
+    };
+};
 
-    //getBlogByCategoryId(categoryId)
-async function getBlogByCategoryId(catId) {
-    try {
-        const user= await getMerchandiseByCategory(catId)
+//getBlogByCategoryId(categoryId)
+// async function getBlogByCategoryId(catId) {
+//     try {
+//         const user = await getMerchandiseByCategory(catId)
 
-        const { rows } = await db.query(`
-        SELECT *
-        FROM blogs
-        WHERE blogs."merchID" = $1 AND cat_id = $1;
-        `, [cat.id]);
+//         const { rows } = await db.query(`
+//         SELECT *
+//         FROM blogs
+//         WHERE blogs."merchID" = $1 AND cat_id = $1;
+//         `, [catId]);
 
-        return rows;
-    } catch (e) {
-        console.error(e)
-    }
-}
+//         return rows;
+//     } catch (e) {
+//         console.error(e)
+//     };
+// };
 
-    //creatBlog(userId)
+//creatBlog(userId)
 async function createBlog({
     merchId,
     title,
     blogText,
     authorId
-})  
-
-    {
+}) {
     try {
         const { rows } = await db.query(`
-        INSERT INTO blogs ( "merchId", title, "blogText", "authorId")
-        VALUES($1, $2, $3, $4)
-        
-        RETURNING "merchId", title, "blogText", "authorId";
-        `, [ merchId, title, blogText, authorId ]);
+            INSERT INTO blogs ("merchId", title, "blogText", "authorId")
+            VALUES($1, $2, $3, $4)
+            RETURNING *;
+        `, [merchId, title, blogText, authorId]);
 
         return rows;
-    }   catch (e) {
+    } catch (e) {
         console.error(e);
-    }
-}
+    };
+};
 
-    //updateBlog(blogId)
-async function updateBlog(userId, fields = {}) {
-    const id = fields.id
-    delete fields.id
+//updateBlog(blogId)
+async function updateBlog(blogId, fields = {}) {
 
     const setString = Object.keys(fields).map(
-    (key, index) => `"${ key }"=$${ index + 1}`
+        (key, index) => `"${key}"=$${index + 1}`
     ).join(', ');
     console.log(fields)
 
@@ -103,42 +100,38 @@ async function updateBlog(userId, fields = {}) {
     };
 
     try {
-        const {rows: [result]} = await db.query(`
-        UPDATE blogs
-        SET ${ setString }
-        WHERE id=${ id }
-        RETURNING *;
+        const { rows: [result] } = await db.query(`
+            UPDATE blogs
+            SET ${ setString} 
+            WHERE blog_id=${blogId }
+            RETURNING *;
         `, Object.values(fields));
 
         return result;
-    }   catch (e) {
+    } catch (e) {
         console.error(e);
-    }
-}
+    };
+};
 
-    //deleteBlog(blogId)
+//deleteBlog(blogId)
 async function deleteBlog(blogId) {
     try {
-        const { rows: [blog] } = await db.query(`
+        await db.query(`
             DELETE FROM blogs
-            WHERE "blog_id" = ${ BlogId }
-            RETURNING *;
-        `);
-        console.log('Blog deleted:', blog);
-
-        return blog;
-    } catch(e) {
+            WHERE blog_id= ${blogId}
+        `, [blogId]);
+    } catch (e) {
         console.error(e);
-    }
-}
+    };
+};
 
 
 module.exports = {
     getAllBlogs,
     getBlogByUserId,
     getBlogByMerchId,
-    getBlogByCategoryId,
+    // getBlogByCategoryId,
     createBlog,
     updateBlog,
     deleteBlog,
-}
+};

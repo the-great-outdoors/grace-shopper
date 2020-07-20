@@ -2,6 +2,7 @@
 
 export { default as Categories } from './Categories';
 export { default as CreateUserModal } from './CreateUserModal';
+export { default as EditProfile } from './EditProfile';
 export { default as Hero } from './Hero';
 export { default as LoginModal } from './LoginModal';
 export { default as Merchandise } from './Merchandise';
