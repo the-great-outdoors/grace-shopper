@@ -12,6 +12,7 @@ import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
 import axios from 'axios';
 
 const Wishlist = ({ user }) => {
+    const { user_id } = user;
 
     const history=useHistory();
 
@@ -24,13 +25,16 @@ const Wishlist = ({ user }) => {
   
     useEffect(() => {
       
-      if (user.user_id) {
-        console.log ('user', user.user_id)
+      if (user_id) {
+        console.log ('user', user_id)
 
-          axios.get(`/api/wishlist/${ user.user_id }`)
-        .then((res) => {
-          const list = res.data.list;
+          axios.get(`/api/wishlist/${ user_id }`, {user_id})
+        .then(res => {
+          console.log(res.data);
+          const list = res.data.wishlistitem;
+          console.log("list", res.data.wishlistitem);
           setWishlist(list);
+          console.log("setlist", list)
         })
         .catch(error => console.error("wishlist error", error)) 
        

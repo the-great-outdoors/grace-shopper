@@ -19,8 +19,6 @@ const NavBar = ({
   token,
   setToken,
   setSearchTerm,
-  userPreferences,
-  setUserPreferences
 }) => {
 
   const [state, setState] = useState({ activeItem: 'home' });
@@ -41,7 +39,7 @@ const NavBar = ({
     e.preventDefault();
     console.log('In Navbar link: ', name);
     setState({ activeItem: name });
-    let path=`/${name}`;
+    let path = `/${name}`;
     history.push(path);
 
   }
@@ -91,23 +89,23 @@ const NavBar = ({
           active={state.activeItem === 'contact us'}
           onClick={handleItemClick}
         />
-          <Menu.Item position='right'>
-            <Icon inverted color='teal' name='facebook f' />
-          </Menu.Item>
-          <Menu.Item>
-            <Icon inverted color='teal' name='twitter' />
-          </Menu.Item>
-          <Menu.Item>
-            <Icon inverted color='teal' name='pinterest p' />
-          </Menu.Item>
-          <Menu.Item >
-            <Icon inverted color='teal' name='snapchat ghost' />
-          </Menu.Item>
+        <Menu.Item position='right'>
+          <Icon inverted color='teal' name='facebook f' />
+        </Menu.Item>
+        <Menu.Item>
+          <Icon inverted color='teal' name='twitter' />
+        </Menu.Item>
+        <Menu.Item>
+          <Icon inverted color='teal' name='pinterest p' />
+        </Menu.Item>
+        <Menu.Item >
+          <Icon inverted color='teal' name='snapchat ghost' />
+        </Menu.Item>
       </Menu>
       <Menu inverted pointing secondary size='large'>
         <Menu.Item>
           <SearchBar
-            setSearchTerm={setSearchTerm}/>
+            setSearchTerm={setSearchTerm} />
         </Menu.Item>
         <Menu.Item position='right'>
 
@@ -117,10 +115,7 @@ const NavBar = ({
               loginSetShow={loginSetShow}
               login={login}
               setLogin={setLogin}
-              setUser={setUser}
-              setUserPreferences={setUserPreferences}
-              token={token}
-              setToken={setToken} />
+              setUser={setUser} />
             : ''
           }
 
@@ -150,36 +145,34 @@ const NavBar = ({
               registerShow={registerShow}
               registerSetShow={registerSetShow}
               setLogin={setLogin}
-              setUser={setUser}
-              token={token}
-              setToken={setToken} />
+              setUser={setUser} />
             : ''
           }
-    
-          {!login ? 
-          <Button
-            as='a'
-            animated
-            inverted
-            style={{ marginLeft: '0.5em' }}
-            onClick={registerButtonClick}
-          >
 
-            <Button.Content visible><Icon name='signup' /></Button.Content>
-            <Button.Content hidden>Sign Up</Button.Content>
-          </Button> :
-          <Button
-          as='a'
-          inverted
-          style={{ marginLeft: '0.5em' }}
-          name='userprofile'
-          active={state.activeItem === 'userprofile'}
-          onClick={handleItemClick}
-        >
-          Profile
+          {!login ?
+            <Button
+              as='a'
+              animated
+              inverted
+              style={{ marginLeft: '0.5em' }}
+              onClick={registerButtonClick}
+            >
+
+              <Button.Content visible><Icon name='signup' /></Button.Content>
+              <Button.Content hidden>Sign Up</Button.Content>
+            </Button> :
+            <Button
+              as='a'
+              inverted
+              style={{ marginLeft: '0.5em' }}
+              name='userprofile'
+              active={state.activeItem === 'userprofile'}
+              onClick={handleItemClick}
+            >
+              Profile
           </Button>
           }
-          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick = {() => {
+          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick={() => {
             history.push('/wishlist');
           }}>
             <Button.Content hidden>Wishlist</Button.Content>
