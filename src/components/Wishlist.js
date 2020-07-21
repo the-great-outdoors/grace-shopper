@@ -62,7 +62,7 @@ const Wishlist = ({ user }) => {
         })}
       </Card.Group>
       : <div>
-      <h1> "Guest Users cannot have a wishlist. Please create an account or a wishlist to proceed." </h1>
+      <h1> "Guest Users cannot have a wishlist. Or if you are logged in please create a wishlist to proceed." </h1>
       </div>
     )
   
