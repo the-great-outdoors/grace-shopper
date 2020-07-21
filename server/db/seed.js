@@ -71,8 +71,8 @@ async function createTables() {
                 hashpassword VARCHAR(255) NOT NULL,
                 firstname VARCHAR(255) NOT NULL,
                 lastname VARCHAR(255) NOT NULL,
-                active BOOLEAN DEFAULT true,
-                savePayment BOOLEAN DEFAULT false
+                save_pmt BOOLEAN DEFAULT false,
+                active BOOLEAN DEFAULT true
             );
         `);
 

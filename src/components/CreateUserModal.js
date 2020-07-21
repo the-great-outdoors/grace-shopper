@@ -31,13 +31,13 @@ const CreateUserModal = ({
     const [confirmHashpassword, setConfirmHashpassword] = useState("");
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [streetAddress, setStreetAddress] = useState("");
+    const [street, setStreet] = useState("");
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zip, setZip] = useState("");
     const [shipping, setShipping] = useState('USPS');
 
-    const addressDefinitions = faker.definitions.address
+    const addressDefinitions = faker.definitions.address;
     const stateOptions = _.map(addressDefinitions.state, (state, index) => ({
         key: addressDefinitions.state_abbr[index],
         text: state,
@@ -60,14 +60,14 @@ const CreateUserModal = ({
     const registerUser = () => {
         console.log('In register user!!')
 
-        if (!username || !hashpassword || !confirmHashpassword || !firstname || !lastname || !streetAddress || !city || !state || !zip) {
+        if (!username || !hashpassword || !confirmHashpassword || !firstname || !lastname || !street || !city || !state || !zip) {
             return;
         }
 
         if (hashpassword !== confirmHashpassword) return;
 
         console.log('Register User is being called!');
-        axios.post('/api/users/register', { username, hashpassword, firstname, lastname, street: streetAddress, city, state, zip, shipping })
+        axios.post('/api/users/register', { username, hashpassword, firstname, lastname, street, city, state, zip, shipping })
             .then(res => {
                 console.log('New User: ', res.data);
                 console.log('Token: ', res.data.token)
@@ -91,7 +91,7 @@ const CreateUserModal = ({
         setConfirmHashpassword("");
         setFirstname("");
         setLastname("");
-        setStreetAddress("");
+        setStreet("");
         setCity("");
         setState("");
         setZip("");
@@ -197,8 +197,8 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
-                                onChange={event => setStreetAddress(event.target.value)}
-                                value={streetAddress}
+                                onChange={event => setStreet(event.target.value)}
+                                value={street}
                             />
                         </Form.Field>
                         <Form.Group widths='equal'>

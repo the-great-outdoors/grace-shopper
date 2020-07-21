@@ -9,14 +9,14 @@ const UserProfile = ({
     user,
     editMode,
     setEditMode,
-    editUserProfile
+    editUserProfile,
 }) => {
 
     if (!user.user_id) {
         return <div>
             <Segment>
                 <Dimmer active inverted>
-                    <Loader inverted>Loading</Loader>
+                    <Loader inverted active>Loading</Loader>
                 </Dimmer>
 
                 <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
@@ -24,13 +24,34 @@ const UserProfile = ({
         </div>;
     };
 
-    // const [editProfileShow, editProfileSetShow] = useState(false);
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [street, setStreet] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [zip, setZip] = useState("");
+    const [shipping, setShipping] = useState("");
 
-    console.log('Logged-in User: ', user);
-    const { firstname, lastname, userPreferences } = user;
+    useEffect(() => {
+        console.log('ID of the User: ', user.user_id);
+        const { user_id } = user;
+        axios.get(`/api/users/${user_id}`, user_id)
+            .then(res => {
+                console.log('Fetched User: ', res.data.user);
+                setFirstname(res.data.user.firstname);
+                setLastname(res.data.user.lastname);
+                setStreet(res.data.user.userPreferences.street);
+                setCity(res.data.user.userPreferences.city);
+                setState(res.data.user.userPreferences.state);
+                setZip(res.data.user.userPreferences.zip);
+                setShipping(res.data.user.userPreferences.shipping);
+            })
+            .catch(error => console.error(error));
+    }, []);
 
-    console.log('User Preferences: ', userPreferences);
-
+    // console.log('Logged-in User: ', user);
+    // const { firstname, lastname, userPreferences } = user;
+    // console.log('User Preferences: ', firstname, lastname, userPreferences);
 
     const editProfileButtonClick = (e, data) => {
         console.log('Entered Edit Profile Click Handler!');
@@ -44,8 +65,22 @@ const UserProfile = ({
             <EditProfile
                 user={user}
                 setEditMode={setEditMode}
-                editUserProfile={editUserProfile} />
-
+                editUserProfile={editUserProfile}
+                firstname={firstname}
+                setFirstname={setFirstname}
+                lastname={lastname}
+                setLastname={setLastname}
+                street={street}
+                setStreet={setStreet}
+                city={city}
+                setCity={setCity}
+                state={state}
+                setState={setState}
+                zip={zip}
+                setZip={setZip}
+                shipping={shipping}
+                setShipping={setShipping}
+            />
         )
 
     } else {
@@ -95,13 +130,7 @@ const UserProfile = ({
                                     backgroundColor: 'olivedrab',
                                 }}
                             >
-                                {/* {editProfileShow ?
-                                    <EditProfile
-                                        editProfileShow={editProfileShow}
-                                        editProfileSetShow={editProfileSetShow} />
-                                    : ''
-                                } */}
-                            User Profile
+                                User Profile
                             <Button
                                     icon='edit'
                                     compact={true}
@@ -121,7 +150,7 @@ const UserProfile = ({
                             </Segment>
                             <Segment>
                                 <label>Street Address:</label>
-                                <p>{user.userPreferences.street}</p>
+                                <p>{street}</p>
                             </Segment>
                             <Segment.Group
                                 horizontal
@@ -131,20 +160,20 @@ const UserProfile = ({
                             >
                                 <Segment>
                                     <label>City:</label>
-                                    <p>{user.userPreferences.city}</p>
+                                    <p>{city}</p>
                                 </Segment>
                                 <Segment>
                                     <label>State:</label>
-                                    <p>{user.userPreferences.state}</p>
+                                    <p>{state}</p>
                                 </Segment>
                                 <Segment>
                                     <label>Zip Code:</label>
-                                    <p>{user.userPreferences.zip}</p>
+                                    <p>{zip}</p>
                                 </Segment>
                             </Segment.Group>
                             <Segment>
                                 <label>Preferred Shipping Method:</label>
-                                <p>{user.userPreferences.shipping}</p>
+                                <p>{shipping}</p>
                             </Segment>
                         </Segment.Group>
 

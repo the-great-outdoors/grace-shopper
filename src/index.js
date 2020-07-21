@@ -62,25 +62,26 @@ const App = () => {
                     <AboutUsPage />
                 </Route>
                 <Route path='/categories'>
-                    <Categories 
-                    setMerchandise={setMerchandise}
-                    merchandise={merchandise}/>
+                    <Categories
+                        setMerchandise={setMerchandise}
+                        merchandise={merchandise} />
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
                         user={user}
                         setUser={setUser}
                         editMode={editMode}
-                        setEditMode={setEditMode} />
+                        setEditMode={setEditMode}
+                    />
                 </Route>
-                <Route path="/productpage/:id">    
+                <Route path="/productpage/:id">
                     <ProductPage
-                     item={item}
-                     setItem={setItem}
-                     setCart={setCart}
-                     cart={cart}/>  
+                        item={item}
+                        setItem={setItem}
+                        setCart={setCart}
+                        cart={cart} />
                 </Route>
-                <Route path= '/wishlist'>
+                <Route path='/wishlist'>
                     <Wishlist user={user} />
 
                 </Route>
@@ -88,7 +89,6 @@ const App = () => {
                     <Orders cart={cart}
                     setCart={setCart}
                     user={user}/>
-
                 </Route>
                 <Route path='/'>
                     <Hero
