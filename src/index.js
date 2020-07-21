@@ -54,7 +54,8 @@ const App = () => {
                     setLogin={setLogin}
                     login={login}
                     user={user}
-                    setUser={setUser}/>
+                    setUser={setUser}
+                    cart={cart}/>
             </Sticky>
             <Switch>
                 <Route path='/about'>
@@ -85,7 +86,8 @@ const App = () => {
                 </Route>
                 <Route path='/orders'>
                     <Orders cart={cart}
-                    setCart={setCart}/>
+                    setCart={setCart}
+                    user={user}/>
 
                 </Route>
                 <Route path='/'>

@@ -40,11 +40,11 @@ async function dropTables() {
             DROP TABLE IF EXISTS blogs;
             DROP TABLE IF EXISTS wishlist;
             DROP TABLE IF EXISTS userPreferences;
+            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
             DROP TABLE IF EXISTS users;
-            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
         `);
@@ -71,7 +71,8 @@ async function createTables() {
                 hashpassword VARCHAR(255) NOT NULL,
                 firstname VARCHAR(255) NOT NULL,
                 lastname VARCHAR(255) NOT NULL,
-                active BOOLEAN DEFAULT true
+                active BOOLEAN DEFAULT true,
+                savePayment BOOLEAN DEFAULT false
             );
         `);
 
