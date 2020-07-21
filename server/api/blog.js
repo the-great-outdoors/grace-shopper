@@ -1,23 +1,23 @@
-const blogRouter = require('express').Router();
+const blogsRouter = require('express').Router();
 const { requireUser } = require('./utils');
 
 const {
     getAllBlogs,
     getBlogByUserId,
     getBlogByMerchId,
-    getBlogByCategoryId,
+    // getBlogByCategoryId,
     createBlog,
     updateBlog,
     deleteBlog,
 } = require('../db');
 
-blogRouter.use((req, res, next) => {
+blogsRouter.use((req, res, next) => {
     console.log('A request is being made to /blog');
     next();
 });
 
 
-blogRouter.get('/', async (req, res, next) => {
+blogsRouter.get('/', async (req, res, next) => {
     console.log('Entered get all blogs route...');
 
     const blogs = await getAllBlogs();
@@ -28,7 +28,7 @@ blogRouter.get('/', async (req, res, next) => {
     })
 });
 
-blogRouter.get('/:userId', async (req, res, next) => {
+blogsRouter.get('/:userId', async (req, res, next) => {
     const { userId } = req.params;
     const user = req.user;
     console.log("UserId: ", userId);
@@ -55,7 +55,7 @@ blogRouter.get('/:userId', async (req, res, next) => {
     };
 });
 
-blogRouter.get('/:merchId', async (req, res, next) => {
+blogsRouter.get('/:merchId', async (req, res, next) => {
     const { merchId } = req.params;
 
     try {
@@ -77,29 +77,29 @@ blogRouter.get('/:merchId', async (req, res, next) => {
     }
 });
 
-blogRouter.get('/', async (req, res, next) => {
-    const { blogId } = req.params;
+// blogRouter.get('/', async (req, res, next) => {
+//     const { blogId } = req.params;
 
-    try {
-        const blog = await getBlogByCategoryId(catId);
+//     try {
+//         const blog = await getBlogByCategoryId(catId);
 
-        if (blog) {
-            res.send({
-                message: 'Successfully retrieved blog',
-                blog
-            })
-        } else {
-            next({
-                error: 'FailedToRetrieveBlogError',
-                message: `Unable to retrieve blog by id:${catId} `
-            })
-        }
-    } catch ({ error, message }) {
-        next({ error, message })
-    }
-});
+//         if (blog) {
+//             res.send({
+//                 message: 'Successfully retrieved blog',
+//                 blog
+//             })
+//         } else {
+//             next({
+//                 error: 'FailedToRetrieveBlogError',
+//                 message: `Unable to retrieve blog by id:${catId} `
+//             })
+//         }
+//     } catch ({ error, message }) {
+//         next({ error, message })
+//     }
+// });
 
-blogRouter.patch('/', requireUser, async (req, res, next) => {
+blogsRouter.patch('/', requireUser, async (req, res, next) => {
     const { userId } = req.params;
     const user = req.user;
     console.log("UserId: ", userId)
@@ -123,7 +123,7 @@ blogRouter.patch('/', requireUser, async (req, res, next) => {
     };
 });
 
-blogRouter.post('/', async (req, res, next) => {
+blogsRouter.post('/', async (req, res, next) => {
     const {
         merchId,
         title,
@@ -140,14 +140,15 @@ blogRouter.post('/', async (req, res, next) => {
 
         if (blog) {
             res.send({
-                message: 'successfully created new blog',
-                blog
+                message: 'Successfully created new blog',
+                blog,
+                status: true
             });
 
         } else {
             next({
-                error: 'FailedToCreateBlog',
-                message: 'Unable to create new blog'
+                error: 'CreateNewBlogError',
+                message: 'Error creating new blog'
             });
         }
 
@@ -156,7 +157,7 @@ blogRouter.post('/', async (req, res, next) => {
     }
 });
 
-blogRouter.delete('/', async (req, res, next) => {
+blogsRouter.delete('/', async (req, res, next) => {
     const { blogId } = req.params;
 
     try {
@@ -178,4 +179,4 @@ blogRouter.delete('/', async (req, res, next) => {
     }
 });
 
-module.exports = blogRouter;
+module.exports = blogsRouter;

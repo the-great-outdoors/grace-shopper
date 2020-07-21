@@ -54,38 +54,53 @@ const App = () => {
                     setLogin={setLogin}
                     login={login}
                     user={user}
-                    setUser={setUser}/>
+                    setUser={setUser} />
             </Sticky>
             <Switch>
                 <Route path='/about'>
                     <AboutUsPage />
                 </Route>
                 <Route path='/categories'>
-                    <Categories 
-                    setMerchandise={setMerchandise}
-                    merchandise={merchandise}/>
+                    <Categories
+                        setMerchandise={setMerchandise}
+                        merchandise={merchandise} />
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
                         user={user}
                         setUser={setUser}
                         editMode={editMode}
-                        setEditMode={setEditMode} />
+                        setEditMode={setEditMode}
+                    // firstname={firstname}
+                    // setFirstname={setFirstname}
+                    // lastname={lastname}
+                    // setLastname={setLastname}
+                    // street={street}
+                    // setStreet={setStreet}
+                    // city={city}
+                    // setCity={setCity}
+                    // state={state}
+                    // setState={setState}
+                    // zip={zip}
+                    // setZip={setZip}
+                    // shipping={shipping}
+                    // setShipping={setShipping} 
+                    />
                 </Route>
-                <Route path="/productpage/:id">    
+                <Route path="/productpage/:id">
                     <ProductPage
-                     item={item}
-                     setItem={setItem}
-                     setCart={setCart}
-                     cart={cart}/>  
+                        item={item}
+                        setItem={setItem}
+                        setCart={setCart}
+                        cart={cart} />
                 </Route>
-                <Route path= '/wishlist'>
+                <Route path='/wishlist'>
                     <Wishlist user={user} />
 
                 </Route>
                 <Route path='/orders'>
                     <Orders cart={cart}
-                    setCart={setCart}/>
+                        setCart={setCart} />
 
                 </Route>
                 <Route path='/'>

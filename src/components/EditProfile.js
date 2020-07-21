@@ -1,16 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Form, Input, Radio, Button, Modal, Grid, Segment, Dimmer, Loader, Image } from 'semantic-ui-react';
+import { Form, Input, Radio, Button, Modal, Grid, Segment, Dimmer, Loader, Image, Dropdown } from 'semantic-ui-react';
 import faker from 'faker';
 import _ from 'lodash';
 
+import { UserProfile } from '../components';
 import './EditProfile.css';
+
 
 const EditProfile = ({
     user,
     setUser,
     editMode,
-    setEditMode
+    setEditMode,
+    firstname,
+    setFirstname,
+    lastname,
+    setLastname,
+    street,
+    setStreet,
+    city,
+    setCity,
+    state,
+    setState,
+    zip,
+    setZip,
+    shipping,
+    setShipping
 }) => {
 
     if (!user.user_id) {
@@ -24,42 +40,45 @@ const EditProfile = ({
         </div>;
     };
 
-    // const [firstname, setFirstname] = useState("");
-    // const [lastname, setLastname] = useState("");
-    // const [streetAddress, setStreetAddress] = useState("");
-    // const [city, setCity] = useState("");
-    // const [state, setState] = useState("");
-    // const [zip, setZip] = useState("");
-    // const [shipping, setShipping] = useState('USPS');
-
-
-    console.log('Logged-in User: ', user);
-    const { firstname, lastname, userPreferences } = user;
-
-    const addressDefinitions = faker.definitions.address
+    const addressDefinitions = faker.definitions.address;
     const stateOptions = _.map(addressDefinitions.state, (state, index) => ({
         key: addressDefinitions.state_abbr[index],
         text: state,
         value: addressDefinitions.state_abbr[index],
     }));
 
+    const handleStateChange = (e, param) => {
+        console.log('Handle State Change', param.value);
+        setState(param.value);
+    };
 
     const handleChange = (e, param) => {
         console.log('Handle Change', param.value)
         setShipping(param.value)
     };
 
-    // const handleClose = () => { editProfileSetShow(false) };
+    const toggleEditMode = (e) => {
+        console.log('Toggle Edit Mode', e);
+        setEditMode(false);
+    };
 
     const editUserProfile = () => {
-        console.log('In edit user preferences!!')
-
         console.log('Edit User Preferences is being called!');
-        axios.patch(`/api/userprefs/${user.user_id}`, { firstname, lastname, street: streetAddress, city, state, zip, shipping })
+        const { user_id } = user;
+        axios.patch(`/api/userprefs/${user_id}`, { user_id, firstname, lastname, street, city, state, zip, shipping })
             .then(res => {
                 console.log('New User Profile: ', res.data);
-                setUser(res.data.user);
+                const upUser = res.data.updatedUserInfo;
+                const newPrefs = res.data.updatedUserPreferences;
+                setFirstname(upUser.firstname);
+                setLastname(upUser.lastname);
+                setStreet(newPrefs.street);
+                setCity(newPrefs.city);
+                setState(newPrefs.state);
+                setZip(newPrefs.zip);
+                setShipping(newPrefs.shipping);
             })
+            .then(() => toggleEditMode())
             .catch(error => {
                 console.error('Error updating user preferences!', error);
             });
@@ -116,13 +135,16 @@ const EditProfile = ({
                         <Segment>
                             <p> First Name:</p>
                             <Input
-                                defaultValue={firstname}>
+                                defaultValue={firstname}
+                                onChange={event => setFirstname(event.target.value)}
+                            >
                             </Input>
                         </Segment>
                         <Segment>
                             <p>Last Name:</p>
                             <Input
                                 defaultValue={lastname}
+                                onChange={event => setLastname(event.target.value)}
                             >
                             </Input>
                         </Segment>
@@ -130,7 +152,8 @@ const EditProfile = ({
                         <Segment>
                             <p>Street Address:</p>
                             <Input
-                                defaultValue={user.userPreferences.street}
+                                defaultValue={street}
+                                onChange={event => setStreet(event.target.value)}
                             >
                             </Input>
                         </Segment>
@@ -144,23 +167,33 @@ const EditProfile = ({
                             <Segment>
                                 <p>City:</p>
                                 <Input
-                                    defaultValue={user.userPreferences.city}
+                                    defaultValue={city}
+                                    onChange={event => setCity(event.target.value)}
                                 >
                                 </Input>
                             </Segment>
 
                             <Segment>
                                 <p>State:</p>
-                                <Input
-                                    defaultValue={user.userPreferences.state}
-                                >
-                                </Input>
+                                <Dropdown
+                                    placeholder='State'
+                                    defaultValue={state}
+                                    style={{
+                                        border: '1px solid black',
+                                        borderRadius: '5px'
+                                    }}
+                                    search
+                                    selection
+                                    options={stateOptions}
+                                    onChange={handleStateChange}
+                                />
                             </Segment>
 
                             <Segment>
                                 <p>Zip Code:</p>
                                 <Input
-                                    defaultValue={user.userPreferences.zip}
+                                    defaultValue={zip}
+                                    onChange={event => setZip(event.target.value)}
                                 >
                                 </Input>
                             </Segment>
@@ -168,16 +201,41 @@ const EditProfile = ({
 
                         <Segment>
                             <p>Preferred Shipping Method:</p>
-                            <Input
-                                defaultValue={user.userPreferences.shipping}
-                            >
-                            </Input>
+                            <Radio
+                                label='USPS'
+                                value='USPS'
+                                checked={shipping === 'USPS'}
+                                onClick={handleChange}
+                                style={{ padding: '0 5px' }}
+                            />
+                            <Radio
+                                label='UPS'
+                                value='UPS'
+                                checked={shipping === 'UPS'}
+                                onClick={handleChange}
+                                style={{ padding: '0 5px' }}
+                            />
+                            <Radio
+                                label='FedEx'
+                                value='FedEx'
+                                checked={shipping === 'FedEx'}
+                                onClick={handleChange}
+                                style={{ padding: '0 5px' }}
+                            />
                         </Segment>
                     </Segment.Group>
 
                     <Segment>
-                        <Button>Cancel</Button>
-                        <Button>Submit</Button>
+                        <Button
+                            onClick={toggleEditMode}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={editUserProfile}
+                        >
+                            Submit
+                        </Button>
                     </Segment>
 
                 </Grid.Column>

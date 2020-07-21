@@ -7,7 +7,6 @@ import {
   CreateUserModal,
   LoginModal,
   SearchBar,
-  UserProfile
 } from '../components';
 
 const NavBar = ({
@@ -16,8 +15,6 @@ const NavBar = ({
   login,
   setLogin,
   setUser,
-  token,
-  setToken,
   setSearchTerm,
 }) => {
 
@@ -41,8 +38,7 @@ const NavBar = ({
     setState({ activeItem: name });
     let path = `/${name}`;
     history.push(path);
-
-  }
+  };
 
   const registerButtonClick = (e, data) => {
     console.log('Entered Register Button Click Handler!');
@@ -58,8 +54,10 @@ const NavBar = ({
     console.log('Entered Logout Button Click Handler!');
     setLogin(false);
     setUser({});
+    handleItemClick(e, name = 'home');
+    localStorage.clear('token');
   };
-  
+
   return (
     <Segment inverted>
       <Menu inverted pointing secondary>
@@ -89,18 +87,18 @@ const NavBar = ({
           onClick={handleItemClick}
         />
 
-          <Menu.Item position='right'>
-            <a href='https://www.facebook.com'><Icon inverted color='teal' name='facebook f' /></a>
-          </Menu.Item>
-          <Menu.Item>
-            <a href='https://twitter.com/explore'><Icon inverted color='teal' name='twitter' /></a>
-          </Menu.Item>
-          <Menu.Item>
-            <a href='https://www.pinterest.com/'><Icon inverted color='teal' name='pinterest p' /></a>
-          </Menu.Item>
-          <Menu.Item >
-            <a href='https://www.snapchat.com/'><Icon inverted color='teal' name='snapchat ghost' /></a>
-          </Menu.Item>
+        <Menu.Item position='right'>
+          <a href='https://www.facebook.com'><Icon inverted color='teal' name='facebook f' /></a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href='https://twitter.com/explore'><Icon inverted color='teal' name='twitter' /></a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href='https://www.pinterest.com/'><Icon inverted color='teal' name='pinterest p' /></a>
+        </Menu.Item>
+        <Menu.Item >
+          <a href='https://www.snapchat.com/'><Icon inverted color='teal' name='snapchat ghost' /></a>
+        </Menu.Item>
 
 
       </Menu>
@@ -135,6 +133,8 @@ const NavBar = ({
             <Button
               as='a'
               inverted
+              name='home'
+              active={state.activeItem === 'home'}
               onClick={logoutButtonClick}
             >
               Log Out
