@@ -54,7 +54,8 @@ const App = () => {
                     setLogin={setLogin}
                     login={login}
                     user={user}
-                    setUser={setUser} />
+                    setUser={setUser}
+                    cart={cart}/>
             </Sticky>
             <Switch>
                 <Route path='/about'>
@@ -71,20 +72,6 @@ const App = () => {
                         setUser={setUser}
                         editMode={editMode}
                         setEditMode={setEditMode}
-                    // firstname={firstname}
-                    // setFirstname={setFirstname}
-                    // lastname={lastname}
-                    // setLastname={setLastname}
-                    // street={street}
-                    // setStreet={setStreet}
-                    // city={city}
-                    // setCity={setCity}
-                    // state={state}
-                    // setState={setState}
-                    // zip={zip}
-                    // setZip={setZip}
-                    // shipping={shipping}
-                    // setShipping={setShipping} 
                     />
                 </Route>
                 <Route path="/productpage/:id">
@@ -100,8 +87,8 @@ const App = () => {
                 </Route>
                 <Route path='/orders'>
                     <Orders cart={cart}
-                        setCart={setCart} />
-
+                    setCart={setCart}
+                    user={user}/>
                 </Route>
                 <Route path='/'>
                     <Hero

@@ -11,6 +11,7 @@ const ProductPage = ({ item, setItem, cart, setCart }) => {
     const [total, setTotal] = useState('');
     const [addItem, setAddItem] = useState(false);
     const { id } = useParams();
+    
 
     const history = useHistory();
     const handleClick = (event, data) => {
@@ -50,12 +51,14 @@ const ProductPage = ({ item, setItem, cart, setCart }) => {
         cartArray.push(merch);
         setCart(cartArray);
         localStorage.setItem('activeCart', JSON.stringify(cartArray));
+
     }
 
     const registerChange = (e, data) => {
         const qty = data.value;
         setQuantity(qty);
     }
+
 
     console.log('items in cart:', cart)
 

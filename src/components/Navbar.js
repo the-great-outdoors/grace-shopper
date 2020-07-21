@@ -7,6 +7,7 @@ import {
   CreateUserModal,
   LoginModal,
   SearchBar,
+  UserProfile,
 } from '../components';
 
 const NavBar = ({
@@ -16,7 +17,16 @@ const NavBar = ({
   setLogin,
   setUser,
   setSearchTerm,
+  cart
 }) => {
+
+  const [quantity, setQuantity] = useState('');
+  
+  useEffect(()=>{
+    // setQuantity(cart.length);
+     setQuantity(cart.length);
+  }, [cart.length])
+
 
   const [state, setState] = useState({ activeItem: 'home' });
   const history = useHistory();
@@ -180,12 +190,18 @@ const NavBar = ({
             <Button.Content hidden>Wishlist</Button.Content>
             <Button.Content visible><Icon name='gift' /></Button.Content>
           </Button>
+        {cart.length? <Button name='orders' inverted style={{marginLeft:'0.5em'}} onClick={handleItemClick} Icon='shop'>
+            <Button.Content visible>
+              <span><Icon name='shop' /></span>
+              {quantity}
+            </Button.Content>
+        </Button>:
           <Button name='orders' animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick={handleItemClick}>
             <Button.Content hidden>Cart</Button.Content>
             <Button.Content visible>
               <Icon name='shop' />
             </Button.Content>
-          </Button>
+          </Button>}
         </Menu.Item>
       </Menu>
     </Segment>

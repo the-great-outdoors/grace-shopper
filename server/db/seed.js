@@ -40,11 +40,11 @@ async function dropTables() {
             DROP TABLE IF EXISTS blogs;
             DROP TABLE IF EXISTS wishlist;
             DROP TABLE IF EXISTS userPreferences;
+            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
             DROP TABLE IF EXISTS users;
-            DROP TABLE IF EXISTS orderItem;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
         `);
