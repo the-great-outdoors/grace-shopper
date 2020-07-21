@@ -11,7 +11,6 @@ export { default as ProductPage } from './ProductPage';
 export { default as SearchBar } from './SearchBar';
 export { default as UserProfile } from './UserProfile';
 export { default as Wishlist } from './Wishlist';
-export {default as Shipping } from './Shipping';
 export { default as AboutUsPage } from './AboutUs';
 
 export { default as Orders } from './Orders';

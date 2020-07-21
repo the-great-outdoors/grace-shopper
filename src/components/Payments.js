@@ -1,30 +1,33 @@
-import React, { useEffect, useState } from "react";
-import {Grid, Segment, Button, Input, Dropdown, Header, Form, Checkbox} from "semantic-ui-react";
+import React, { useState, useEffect } from "react";
+import {Grid, Segment, Button, Input, Dropdown, Icon} from "semantic-ui-react";
 import faker from 'faker';
 
+const Payments =({setStep, editMode, setEditMode, user}) =>{
 
-const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
-    const [shipMethod, setShipMethod] = useState(user.userPreferences.shipping);
+    const { firstname, lastname, userPreferences:{street, city, state,zip} } = user;
 
-    const { firstname, lastname, street, city, state, zip, shipping } = shippingInfo;
 
-    const shipOptions = [
-        {key:'UPS', text:'UPS', value:'UPS'},
-        {key:'USPS', text:'USPS', value:'USPS'},
-        {key:'FeDEX', text:'FeDEX', value:'FeDEX'}
+    const [savePayment, setSavePayment] = useState({firstname, lastname, street, city, state, zip });
+
+    
+    const cardType = [
+        {key:'AMEX', text:'American Express', value:'AMEX'},
+        {key:'MasterCard', text:'Master Card', value:'MasterCard'},
+        {key:'Visa', text:'Visa', value:'Visa'},
+        {key:'Discover', text:'Discover', value:'Discover'}
     ]
-
-    const handleSelect=(e, data)=>{
-        console.log('New shipping option chosen:', data.value);
-        setShipMethod(data.value);
-    }
 
     const handleInput=(e, data)=>{
         console.log('Input changed for ', data.name);
         const {name, value} = data;
         console.log('name:', name, ' value:', value);
-        setShipping({...shippingInfo, [name]:value})
+        setSavePayment({...savePayment, [name]:value})
 
+    }
+
+    const handleSelect=(e, data)=>{
+        console.log('New shipping option chosen:', data.value);
+        setSavePayment({...savePayment, [cardType]:data.value});
     }
 
     const addressDefinitions = faker.definitions.address;
@@ -39,13 +42,9 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
         setState(param.value);
     };
 
-    console.log('Updated Shipping information:', shippingInfo);
-
     return (
-
-        
-            <Grid celled='internally'>
-                <Grid.Column
+        <Grid celled='internally'>
+            <Grid.Column
                     className='column-one'
                     width={3}
                     style={{
@@ -70,6 +69,31 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                             }}
                         >
                             Edit Your Profile
+                            <Button animated compact={true}
+                                    size='mini'
+                                    floated='right'
+                                    onClick={e=>setStep('review')}>
+                                <Button.Content visible>Next</Button.Content>
+                                <Button.Content hidden>
+                                    <Icon name='thumbs up'/>
+                            </Button.Content>
+                            </Button>
+                        </Segment>
+                        <Segment>
+                            <p>Card Number:</p>
+                            <Input
+                                name='number'
+                                onChange={handleInput}
+                            >
+                            </Input>
+                            <p>CID:</p>
+                            <Input
+                                name='CID'
+                                onChange={handleInput}
+                            >
+                            </Input>
+                            <p>Card Type:</p>
+                            <Dropdown options={cardType} onChange={handleSelect}/>
                         </Segment>
 
                         <Segment>
@@ -82,7 +106,7 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                             </Input>
                         </Segment>
                         <Segment>
-                            <p>Last Name:</p>
+                            <p> Last Name:</p>
                             <Input
                                 name='lastname'
                                 defaultValue={lastname}
@@ -90,7 +114,6 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                             >
                             </Input>
                         </Segment>
-
                         <Segment>
                             <p>Street Address:</p>
                             <Input
@@ -145,18 +168,11 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                             </Segment>
                         </Segment.Group>
 
-                        <Segment>
-                            <p>Preferred Shipping Method:</p>
-                           <Dropdown options={shipOptions} onChange={handleSelect}/>
-                        </Segment>
+                
                     </Segment.Group>
 
                     <Segment>
-                        <Button
-                            onClick={e=>setEditMode(false)}
-                        >
-                            DONE
-                        </Button>
+
                     </Segment>
 
                 </Grid.Column>
@@ -164,9 +180,9 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                 <Grid.Column width={3}>
                    
                 </Grid.Column>
-            </Grid>
-    )
-
+        </Grid>
+)
+    
 }
 
-export { ShippingEdit} ;
+export default Payments;
