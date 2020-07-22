@@ -18,7 +18,8 @@ import {
     UserProfile,
     Wishlist,
     AboutUsPage,
-    Orders
+    Orders,
+    Shipping
 } from './components';
 
 const App = () => {
@@ -55,7 +56,7 @@ const App = () => {
                     login={login}
                     user={user}
                     setUser={setUser}
-                    cart={cart}/>
+                    cart={cart} />
             </Sticky>
             <Switch>
                 <Route path='/about'>
@@ -71,8 +72,7 @@ const App = () => {
                         user={user}
                         setUser={setUser}
                         editMode={editMode}
-                        setEditMode={setEditMode}
-                    />
+                        setEditMode={setEditMode} />
                 </Route>
                 <Route path="/productpage/:id">
                     <ProductPage
@@ -82,13 +82,13 @@ const App = () => {
                         cart={cart} />
                 </Route>
                 <Route path='/wishlist'>
-                    <Wishlist user={user} />
-
+                    <Wishlist
+                        user={user} />
                 </Route>
                 <Route path='/orders'>
                     <Orders cart={cart}
-                    setCart={setCart}
-                    user={user}/>
+                        setCart={setCart}
+                        user={user} />
                 </Route>
                 <Route path='/'>
                     <Hero
@@ -99,7 +99,6 @@ const App = () => {
                         setMerchandise={setMerchandise}
                         searchTerm={searchTerm} />
                 </Route>
-
                 <Redirect from='/home' to='/' />
             </Switch>
         </Router>
