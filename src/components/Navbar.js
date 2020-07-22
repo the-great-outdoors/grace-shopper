@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 
 import { BrowserRouter as Router, Route, Link, Switch, useHistory } from "react-router-dom";
-import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
+import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react';
 
 import {
   CreateUserModal,
@@ -94,8 +94,8 @@ const NavBar = ({
           onClick={handleItemClick}
         />
         <Menu.Item
-          name='contact us'
-          active={state.activeItem === 'contact us'}
+          name='contact'
+          active={state.activeItem === 'contact'}
           onClick={handleItemClick}
         />
 

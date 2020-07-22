@@ -3,12 +3,15 @@ const db = require('./database');
 async function getAllBlogs() {
 
     try {
-        const { rows } = await db.query(`
-            SELECT *
-            FROM blogs;
+        const { rows: blogs } = await db.query(`
+            SELECT blog_id, "merchId", title, "blogText", "authorId", username
+            FROM blogs
+            JOIN users
+            ON blogs."authorId"=users.user_id;
     `);
 
-        return rows;
+
+        return blogs;
     } catch (e) {
         console.error(e)
     };
