@@ -1,5 +1,6 @@
 import React from "react";
 import {Grid, Segment, Button, Icon} from "semantic-ui-react";
+import { DEFAULT_EXTENSIONS } from "@babel/core";
 
 
 const Shipping = ({setEditMode, shippingInfo, setStep}) =>{
@@ -105,4 +106,4 @@ const Shipping = ({setEditMode, shippingInfo, setStep}) =>{
 
 }
 
-export { Shipping} ;
+export default Shipping;

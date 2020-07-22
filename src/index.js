@@ -19,7 +19,8 @@ import {
     Wishlist,
     AboutUsPage,
     Orders,
-    Shipping
+    Shipping,
+    Stories
 } from './components';
 
 const App = () => {
@@ -47,17 +48,17 @@ const App = () => {
         }
     }, []);
 
-    useEffect(()=>{
-        if (!cart||!cart.length) {
-            
-            const savedCart= JSON.parse(localStorage.getItem('activeCart'));
+    useEffect(() => {
+        if (!cart || !cart.length) {
+
+            const savedCart = JSON.parse(localStorage.getItem('activeCart'));
             console.log(savedCart);
-             if (savedCart) {
-                 console.log('After parsing',savedCart);
-                 setCart(savedCart);
-             }
-         }
-    },[])
+            if (savedCart) {
+                console.log('After parsing', savedCart);
+                setCart(savedCart);
+            }
+        }
+    }, [])
 
     return (
         <Router>
@@ -71,13 +72,16 @@ const App = () => {
                     cart={cart} />
             </Sticky>
             <Switch>
-                <Route path='/about'>
-                    <AboutUsPage />
-                </Route>
                 <Route path='/categories'>
                     <Categories
                         setMerchandise={setMerchandise}
                         merchandise={merchandise} />
+                </Route>
+                <Route path='/stories'>
+                    <Stories />
+                </Route>
+                <Route path='/about'>
+                    <AboutUsPage />
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
@@ -98,10 +102,10 @@ const App = () => {
                         user={user} />
                 </Route>
                 <Route path='/orders'>
-                    <Orders 
-                    cart={cart}
-                    setCart={setCart}
-                    user={user}/>
+                    <Orders
+                        cart={cart}
+                        setCart={setCart}
+                        user={user} />
                 </Route>
                 <Route path='/'>
                     <Hero
