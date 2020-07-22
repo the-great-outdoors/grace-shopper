@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb, Container } from 'semantic-ui-react';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb, Container, Header } from 'semantic-ui-react';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import './ProductPage.css';
 
 const ProductPage = (props) => {
-    const [item, setItem] = useState({});
+    const [item, setItem, blogs, setBlog] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
 
@@ -28,11 +28,26 @@ const ProductPage = (props) => {
                 setItem(merch.merch);
                 console.log('item set?', item);
             })
-            
+
         } catch (error) {
             throw error;
         }
         
+    }, []);
+
+    useEffect(()=>{
+        try {
+           
+            axios.get(`/api/blog/${ MerchId }`, {merch_id})
+            .then(res => {
+              const blog = res.data.blogs;
+              setBlog(blog);
+            })
+
+        } catch (error) {
+            throw error;
+        }
+
     }, []);
 
     const basketTotal=()=>{
@@ -88,26 +103,19 @@ const ProductPage = (props) => {
             <Grid centered>
                 <Grid.Column textAlign='center' style={{ marginTop: '3rem' }}>
             <Container>
-                <p>
-                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-                ligula eget dolor. Aenean massa strong. Cum sociis natoque penatibus et
-                magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,
-                ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa
-                quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
-                arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-                Nullam dictum felis eu pede link mollis pretium. Integer tincidunt. Cras
-                dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
-                Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.
-                Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus
-                viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet.
-                Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi.
-                </p>
+                {blogs.map((blog) => {
+                return (
+                    <Fragment>
+                <Header className='blogtitle' as='h1'>{blog.title}</Header>
+                <p>{blog.blogText}</p>
+                </Fragment>
+                )})}
             </Container>
                 </Grid.Column>
             </Grid>
         </div>
     </>    
    )
-}
+
 
 export default ProductPage;
