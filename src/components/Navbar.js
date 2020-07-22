@@ -193,7 +193,7 @@ const NavBar = ({
         {cart.length? <Button name='orders' inverted style={{marginLeft:'0.5em'}} onClick={handleItemClick} Icon='shop'>
             <Button.Content visible>
               <span><Icon name='shop' /></span>
-              {quantity}
+              {cart.length}
             </Button.Content>
         </Button>:
           <Button name='orders' animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick={handleItemClick}>

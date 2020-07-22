@@ -5,21 +5,10 @@ import Axios from "axios";
 import {Shipping} from './Shipping';
 import {ShippingEdit} from './ShippingEdit';
 import { ShippingOptions } from "./ShippingOptions";
+import Payments from './Payments';
 
 const Orders = ({cart, setCart, user})=>{
    
-useEffect(()=>{
-    if (!cart.length || !cart) {
-        
-        const savedCart= JSON.parse(localStorage.getItem('activeCart'));
-        console.log(savedCart);
-         if (savedCart) {
-             console.log('After parsing',savedCart);
-             setCart(savedCart);
-         }
-     }
-},[])
-
     const [splice, setSplice]=useState({});
     const [step, setStep]=useState('truck')
     const handleClick=(event, data)=>{
@@ -64,30 +53,7 @@ useEffect(()=>{
     return (
         !cart?<div>NO CART FOR YOU</div>:
         <>
-         <List divided relaxed>
-         {cart.map((order, index)=>{
-             return(
-                <List.Item key={index}>
-                    <List.Icon name='idea' size='large' verticalAlign='middle' />
-                    <List.Content>
-                        <List.Header>{order.name}</List.Header>
-                        <List.Description>{order.description}</List.Description>
-                        <List.Description>{order.quantity}</List.Description>
-                        <List.Description>{order.price}</List.Description>
-                    </List.Content>
-                    <Button Icon='delete' onClick={handleDelete} id={index}>Delete</Button>
-                </List.Item>
-             )
-                 })
-             }  
-        </List>
-         <Button animated onClick={handleCheckout}>
-                <Button.Content visible>Next</Button.Content>
-                <Button.Content hidden>
-                    <Icon name='arrow right' />
-        </Button.Content>
-        </Button>
-        <Step.Group>
+         <Step.Group>
             <Step active name='truck' onClick={handleClick}>
             <Icon name='truck' />
             <Step.Content>
@@ -111,8 +77,34 @@ useEffect(()=>{
             </Step.Content>
             </Step>
         </Step.Group>
-        {step==='truck'?<ShippingOptions user={user}/>:
-        step==='payment'?'':''}
+         <List divided relaxed>
+         {cart.map((order, index)=>{
+             return(
+                 
+                <List.Item key={index}>
+                    <List.Icon name='idea' size='large' verticalAlign='middle' />
+                    <List.Content>
+                        <List.Header>{order.name}</List.Header>
+                        <List.Description>{order.description}</List.Description>
+                        <List.Description>{order.quantity}</List.Description>
+                        <List.Description>{order.price}</List.Description>
+                    </List.Content>
+                    <Button Icon='delete' onClick={handleDelete} id={index}>Delete</Button>
+                </List.Item>
+             )
+                 })
+             }  
+        </List>
+        {step==='truck'?
+        <ShippingOptions 
+            user={user}
+            setStep={setStep}
+        />:
+        step==='payment'?
+        <Payments user={user} setStep={setStep}/>:
+        <Button size='massive' icon animated onClick={handleCheckout}>
+                <Icon size='massive' name='free code camp' />
+        </Button>}
         </>
     )
 }

@@ -46,6 +46,18 @@ const App = () => {
         }
     }, []);
 
+    useEffect(()=>{
+        if (!cart||!cart.length) {
+            
+            const savedCart= JSON.parse(localStorage.getItem('activeCart'));
+            console.log(savedCart);
+             if (savedCart) {
+                 console.log('After parsing',savedCart);
+                 setCart(savedCart);
+             }
+         }
+    },[])
+
     return (
         <Router>
             <Sticky>
@@ -86,7 +98,8 @@ const App = () => {
 
                 </Route>
                 <Route path='/orders'>
-                    <Orders cart={cart}
+                    <Orders 
+                    cart={cart}
                     setCart={setCart}
                     user={user}/>
                 </Route>
