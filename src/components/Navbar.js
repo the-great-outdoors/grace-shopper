@@ -1,13 +1,13 @@
 import React, { Component, useState, useEffect } from "react";
 
 import { BrowserRouter as Router, Route, Link, Switch, useHistory } from "react-router-dom";
-import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react'
+import { Menu, Segment, Input, Icon, Button, Container, Item, Select } from 'semantic-ui-react';
 
 import {
   CreateUserModal,
   LoginModal,
   SearchBar,
-  UserProfile
+  UserProfile,
 } from '../components';
 
 const NavBar = ({
@@ -16,12 +16,19 @@ const NavBar = ({
   login,
   setLogin,
   setUser,
-  token,
-  setToken,
   setSearchTerm,
-  userPreferences,
-  setUserPreferences
+  cart
 }) => {
+
+  const [quantity, setQuantity] = useState('');
+
+  
+  // useEffect(()=>{
+  //   // setQuantity(cart.length);
+  //    setQuantity(cart.length);
+  // }, [cart.length])
+
+
 
   const [state, setState] = useState({ activeItem: 'home' });
   const history = useHistory();
@@ -38,12 +45,12 @@ const NavBar = ({
   ]
 
   const handleItemClick = (e, { name }) => {
+    e.preventDefault();
     console.log('In Navbar link: ', name);
     setState({ activeItem: name });
-    let path=`/${name}`;
+    let path = `/${name}`;
     history.push(path);
-
-  }
+  };
 
   const registerButtonClick = (e, data) => {
     console.log('Entered Register Button Click Handler!');
@@ -59,8 +66,9 @@ const NavBar = ({
     console.log('Entered Logout Button Click Handler!');
     setLogin(false);
     setUser({});
+    handleItemClick(e, name = 'home');
+    localStorage.clear('token');
   };
-
 
   return (
     <Segment inverted>
@@ -86,27 +94,30 @@ const NavBar = ({
           onClick={handleItemClick}
         />
         <Menu.Item
-          name='contact us'
-          active={state.activeItem === 'contact us'}
+          name='contact'
+          active={state.activeItem === 'contact'}
           onClick={handleItemClick}
         />
-          <Menu.Item position='right'>
-            <Icon inverted color='teal' name='facebook f' />
-          </Menu.Item>
-          <Menu.Item>
-            <Icon inverted color='teal' name='twitter' />
-          </Menu.Item>
-          <Menu.Item>
-            <Icon inverted color='teal' name='pinterest p' />
-          </Menu.Item>
-          <Menu.Item >
-            <Icon inverted color='teal' name='snapchat ghost' />
-          </Menu.Item>
+
+        <Menu.Item position='right'>
+          <a href='https://www.facebook.com'><Icon inverted color='teal' name='facebook f' /></a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href='https://twitter.com/explore'><Icon inverted color='teal' name='twitter' /></a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href='https://www.pinterest.com/'><Icon inverted color='teal' name='pinterest p' /></a>
+        </Menu.Item>
+        <Menu.Item >
+          <a href='https://www.snapchat.com/'><Icon inverted color='teal' name='snapchat ghost' /></a>
+        </Menu.Item>
+
+
       </Menu>
-      <Menu fixed inverted pointing secondary size='large'>
+      <Menu inverted pointing secondary size='large'>
         <Menu.Item>
           <SearchBar
-            setSearchTerm={setSearchTerm}/>
+            setSearchTerm={setSearchTerm} />
         </Menu.Item>
         <Menu.Item position='right'>
 
@@ -116,10 +127,7 @@ const NavBar = ({
               loginSetShow={loginSetShow}
               login={login}
               setLogin={setLogin}
-              setUser={setUser}
-              setUserPreferences={setUserPreferences}
-              token={token}
-              setToken={setToken} />
+              setUser={setUser} />
             : ''
           }
 
@@ -137,6 +145,8 @@ const NavBar = ({
             <Button
               as='a'
               inverted
+              name='home'
+              active={state.activeItem === 'home'}
               onClick={logoutButtonClick}
             >
               Log Out
@@ -149,47 +159,51 @@ const NavBar = ({
               registerShow={registerShow}
               registerSetShow={registerSetShow}
               setLogin={setLogin}
-              setUser={setUser}
-              token={token}
-              setToken={setToken} />
+              setUser={setUser} />
             : ''
           }
-    
-          {!login ? 
-          <Button
-            as='a'
-            animated
-            inverted
-            style={{ marginLeft: '0.5em' }}
-            onClick={registerButtonClick}
-          >
 
-            <Button.Content visible><Icon name='signup' /></Button.Content>
-            <Button.Content hidden>Sign Up</Button.Content>
-          </Button> :
-          <Button
-          as='a'
-          inverted
-          style={{ marginLeft: '0.5em' }}
-          name='userprofile'
-          active={state.activeItem === 'userprofile'}
-          onClick={handleItemClick}
-        >
-          Profile
+          {!login ?
+            <Button
+              as='a'
+              animated
+              inverted
+              style={{ marginLeft: '0.5em' }}
+              onClick={registerButtonClick}
+            >
+
+              <Button.Content visible><Icon name='signup' /></Button.Content>
+              <Button.Content hidden>Sign Up</Button.Content>
+            </Button> :
+            <Button
+              as='a'
+              inverted
+              style={{ marginLeft: '0.5em' }}
+              name='userprofile'
+              active={state.activeItem === 'userprofile'}
+              onClick={handleItemClick}
+            >
+              Profile
           </Button>
           }
-          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick = {() => {
+          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick={() => {
             history.push('/wishlist');
           }}>
             <Button.Content hidden>Wishlist</Button.Content>
             <Button.Content visible><Icon name='gift' /></Button.Content>
           </Button>
-          <Button animated='vertical' inverted style={{ marginLeft: '0.5em' }}>
-            <Button.Content hidden>Shop</Button.Content>
+          {cart.length ? <Button name='orders' inverted style={{ marginLeft: '0.5em' }} onClick={handleItemClick} Icon='shop'>
             <Button.Content visible>
-              <Icon name='shop' />
+              <span><Icon name='shop' /></span>
+              {cart.length}
             </Button.Content>
-          </Button>
+          </Button> :
+            <Button name='orders' animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick={handleItemClick}>
+              <Button.Content hidden>Cart</Button.Content>
+              <Button.Content visible>
+                <Icon name='shop' />
+              </Button.Content>
+            </Button>}
         </Menu.Item>
       </Menu>
     </Segment>

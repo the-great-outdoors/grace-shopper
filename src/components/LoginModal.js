@@ -38,16 +38,17 @@ const LoginModal = ({
                 console.log(localStorage.getItem('token'));
                 if (res.data.user) {
                     setLogin(true);
-                }
+                };
             })
             .catch(error => {
                 console.error('Error logging-in user!', error);
-            })
+            });
     };
     const clearForm = () => {
         setUsername("");
         setHashpassword("");
     };
+
     return (
         <div>
             <Modal open={loginShow} size='mini'>
@@ -114,7 +115,6 @@ const LoginModal = ({
                         }}
                         onClick={
                             (event) => {
-                                // event.preventDefault();
                                 loginUser();
                                 handleClose();
                                 clearForm();

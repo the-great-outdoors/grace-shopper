@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import faker from 'faker';
+import _ from 'lodash';
+
 import {
     Form,
     Input,
     Radio,
     Button,
     Modal,
-    Image
+    Image,
+    Dropdown
 } from 'semantic-ui-react'
 
 import './CreateUserModal.css';
@@ -14,10 +18,6 @@ import './CreateUserModal.css';
 const CreateUserModal = ({
     registerShow,
     registerSetShow,
-    // username,
-    // setUsername,
-    // hashpassword,
-    // setHashpassword,
     login,
     setLogin,
     user,
@@ -31,30 +31,43 @@ const CreateUserModal = ({
     const [confirmHashpassword, setConfirmHashpassword] = useState("");
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [streetAddress, setStreetAddress] = useState("");
+    const [street, setStreet] = useState("");
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zip, setZip] = useState("");
     const [shipping, setShipping] = useState('USPS');
 
+    const addressDefinitions = faker.definitions.address;
+    const stateOptions = _.map(addressDefinitions.state, (state, index) => ({
+        key: addressDefinitions.state_abbr[index],
+        text: state,
+        value: addressDefinitions.state_abbr[index],
+    }));
+
     const handleChange = (e, param) => {
         console.log('Handle Change', param.value)
-        setShipping(param.value)
+        setShipping(param.value);
     };
+
+    const handleStateChange = (e, param) => {
+        console.log('Handle State Change', param.value);
+        setState(param.value);
+    };
+
     const handleClose = () => { registerSetShow(false) };
     console.log('Shipping: ', shipping);
 
     const registerUser = () => {
         console.log('In register user!!')
 
-        if (!username || !hashpassword || !confirmHashpassword || !firstname || !lastname || !streetAddress || !city || !state || !zip) {
+        if (!username || !hashpassword || !confirmHashpassword || !firstname || !lastname || !street || !city || !state || !zip) {
             return;
         }
 
         if (hashpassword !== confirmHashpassword) return;
 
         console.log('Register User is being called!');
-        axios.post('/api/users/register', { username, hashpassword, firstname, lastname, street: streetAddress, city, state, zip, shipping })
+        axios.post('/api/users/register', { username, hashpassword, firstname, lastname, street, city, state, zip, shipping })
             .then(res => {
                 console.log('New User: ', res.data);
                 console.log('Token: ', res.data.token)
@@ -78,7 +91,7 @@ const CreateUserModal = ({
         setConfirmHashpassword("");
         setFirstname("");
         setLastname("");
-        setStreetAddress("");
+        setStreet("");
         setCity("");
         setState("");
         setZip("");
@@ -184,8 +197,8 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
-                                onChange={event => setStreetAddress(event.target.value)}
-                                value={streetAddress}
+                                onChange={event => setStreet(event.target.value)}
+                                value={street}
                             />
                         </Form.Field>
                         <Form.Group widths='equal'>
@@ -204,15 +217,16 @@ const CreateUserModal = ({
                             </Form.Field>
                             <Form.Field required>
                                 <label>State:</label>
-                                <Input
-                                    type='text'
-                                    placeholder='State'
-                                    style={{
-                                        border: '1px solid black',
-                                        borderRadius: '5px'
-                                    }}
-                                    onChange={event => setState(event.target.value)}
-                                    value={state}
+                                <Dropdown 
+                                placeholder='State'
+                                style={{
+                                    border: '1px solid black',
+                                    borderRadius: '5px'
+                                }}
+                                search 
+                                selection 
+                                options={stateOptions}
+                                onChange={handleStateChange}
                                 />
                             </Form.Field>
                             <Form.Field required>

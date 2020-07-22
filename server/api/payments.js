@@ -7,11 +7,12 @@ paymentsRouter.use((req, res, next) => {
     next();
 });
 
-paymentsRouter.get('/:userId', async(req, res, next)=>{
+paymentsRouter.get('/:userId', async (req, res, next) => {
     const { userId } = req.params;
 
     try {
         const payments = await getPaymentsByUserId(userId);
+        console.log("backend payments:", payments);
 
         if (payments) {
             res.send({
@@ -19,38 +20,38 @@ paymentsRouter.get('/:userId', async(req, res, next)=>{
                 status: true,
                 payments
             });
-        }else{
+        } else {
             next({
                 error: 'FailedToRetrievePaymentsByUserIdError',
-                message:`Unable to retrieve payments by id:${userId}`
+                message: `Unable to retrieve payments by id:${userId}`
             });
         }
-    } catch ({error, message}) {
-        next({error, message})
+    } catch ({ error, message }) {
+        next({ error, message })
     }
 });
 
-paymentsRouter.post('/', async (req, res, next)=>{
+paymentsRouter.post('/', async (req, res, next) => {
     try {
         const { userId, name, number, cid, expiration } = req.body;
-        const paymentData = { userId, name, number, cid, expiration }
-        
+        const paymentData = { userId, name, number, cid, expiration}
+
         const payment = await createPayment(paymentData);
 
-        if(payment){
+        if (payment) {
             res.send({
                 message: 'successfully created new payment',
                 status: true,
                 payment
             });
-        }else{
+        } else {
             next({
                 error: 'FailedToCreatePaymentError',
                 message: 'Unable to create new payment'
             });
         }
-    } catch ({error, message}) {
-        next({error, message});
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 });
 
@@ -78,13 +79,13 @@ paymentsRouter.patch('/:paymentId', requireUser, async (req, res, next) => {
     try {
         const updatedPayment = await updatePayments(paymentId, updateFields);
 
-        if(updatedPayment){
+        if (updatedPayment) {
             res.send({
                 message: 'Successfully updated payment',
                 status: true,
-                payment: updatedPayment 
+                payment: updatedPayment
             });
-        }else{
+        } else {
             next({
                 error: 'FailedToUpdatePaymentError',
                 message: 'Unable to update payment'
@@ -95,25 +96,24 @@ paymentsRouter.patch('/:paymentId', requireUser, async (req, res, next) => {
     }
 });
 
-paymentsRouter.delete('/:paymentId', requireUser, async(req, res, next)=>{
+paymentsRouter.delete('/:paymentId', async (req, res, next) => {
     const { paymentId } = req.params;
     try {
-        const deletedPayment = await deletePayment(paymentId)
+        await deletePayment(paymentId);
 
-        if (deletedPayment) {
+        if (deletePayment) {
             res.send({
                 message: 'Successfully deleted payment',
                 status: true,
-                deletedPayment
             });
-        } else{
+        } else {
             next({
                 error: 'FailedToDeletePaymentError',
                 message: 'Unable to delete payment'
             });
         }
-    } catch ({error, message}) {
-        next({error, message});
+    } catch ({ error, message }) {
+        next({ error, message });
     }
 });
 

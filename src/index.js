@@ -8,6 +8,7 @@ import axios from 'axios';
 import {
     Categories,
     CreateUserModal,
+    EditProfile,
     Hero,
     LoginModal,
     Merchandise,
@@ -16,6 +17,12 @@ import {
     ProductPage,
     UserProfile,
     Wishlist,
+    AboutUsPage,
+    Orders,
+    Stories,
+    Payments,
+    ContactUs,
+    Shipping
 } from './components';
 
 const App = () => {
@@ -25,6 +32,11 @@ const App = () => {
     const [user, setUser] = useState({});
     const [login, setLogin] = useState(false);
     const [searchTerm, setSearchTerm] = useState({ value: '', category: '' });
+    const [editMode, setEditMode] = useState(false);
+    const [item, setItem] = useState({});
+    const [cart, setCart] = useState([]);
+    const [userPayments, setUserPayments] = useState([]);
+    const [order, setOrder] = useState();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -40,6 +52,18 @@ const App = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (!cart || !cart.length) {
+
+            const savedCart = JSON.parse(localStorage.getItem('activeCart'));
+            console.log(savedCart);
+            if (savedCart) {
+                console.log('After parsing', savedCart);
+                setCart(savedCart);
+            }
+        }
+    }, [])
+
     return (
         <Router>
             <Sticky>
@@ -48,21 +72,57 @@ const App = () => {
                     setLogin={setLogin}
                     login={login}
                     user={user}
-                    setUser={setUser} />
+                    setUser={setUser}
+                    cart={cart} />
             </Sticky>
             <Switch>
+                <Route path='/contact'>
+                    <ContactUs />
+                </Route>
+                <Route path='/about'>
+                    <AboutUsPage />
+                </Route>
                 <Route path='/categories'>
-                    <Categories />
+                    <Categories
+                        setMerchandise={setMerchandise}
+                        merchandise={merchandise} />
+                </Route>
+                <Route path='/stories'>
+                    <Stories />
+                </Route>
+                <Route path='/about'>
+                    <AboutUsPage />
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
+                        userPayments={userPayments}
+                        setUserPayments={setUserPayments}
+                        user={user}
+                        setUser={setUser}
+                        editMode={editMode}
+                        setEditMode={setEditMode} />
+                </Route>
+                <Route path="/productpage/:id">
+                    <ProductPage
+                        item={item}
+                        setItem={setItem}
+                        setCart={setCart}
+                        cart={cart}
+                        user={user} 
+                        order={order}
+                        setOrder={setOrder}/>
+                </Route>
+                <Route path='/wishlist'>
+                    <Wishlist
                         user={user} />
                 </Route>
-                <Route path="/productpage/:id">    
-                    <ProductPage />  
-                </Route>
-                <Route path= '/wishlist'>
-                    <Wishlist user= {user} />
+                <Route path='/orders'>
+                    <Orders 
+                    cart={cart}
+                    setCart={setCart}
+                    user={user}
+                    order={order}
+                    setOrder={setOrder}/>
                 </Route>
                 <Route path='/'>
                     <Hero
@@ -73,7 +133,6 @@ const App = () => {
                         setMerchandise={setMerchandise}
                         searchTerm={searchTerm} />
                 </Route>
-
                 <Redirect from='/home' to='/' />
             </Switch>
         </Router>

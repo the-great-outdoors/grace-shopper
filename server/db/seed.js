@@ -18,7 +18,7 @@ const {
     updateUserPreferences,
     getUserPreferencesByUserId,
     createPayment,
-    createBlog, 
+    createBlog,
     createWishListByUserId,
     getWishListByUserId,
 
@@ -44,9 +44,12 @@ async function dropTables() {
             DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
+            DROP TABLE IF EXISTS users;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
+            DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS users;
+
         `);
 
         console.log('Successfully dropped all tables.');
@@ -71,6 +74,7 @@ async function createTables() {
                 hashpassword VARCHAR(255) NOT NULL,
                 firstname VARCHAR(255) NOT NULL,
                 lastname VARCHAR(255) NOT NULL,
+                save_pmt BOOLEAN DEFAULT false,
                 active BOOLEAN DEFAULT true
             );
         `);
@@ -142,7 +146,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
-                status BOOLEAN,
+                status BOOLEAN DEFAULT false,
                 price NUMERIC
             );
         `);
@@ -175,10 +179,11 @@ async function createTables() {
         console.log('Creating payments...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS payments(
-                "paymentId" SERIAL PRIMARY KEY,
+                payment_id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
+                cardType VARCHAR(255),
                 CID INTEGER NOT NULL,
                 expiration DATE NOT NULL
             );
@@ -383,7 +388,7 @@ async function createInitialBlogs() {
     };
 };
 
-async function createInitialWishlist () {
+async function createInitialWishlist() {
     try {
         const seedWishlist = [
             {
@@ -408,7 +413,7 @@ async function createInitialWishlist () {
     };
 };
 
-async function initializeSeansStuff(){
+async function initializeSeansStuff() {
 
     await createInitialUsers();
     await createInititialUserPrefs()
@@ -473,8 +478,7 @@ async function startDb() {
         await initializeSeansStuff();
         await createInitialBlogs();
         await createInitialWishlist();
-
-
+        await createInitialPayments();
     } catch (error) {
         console.error(chalk.red("Error during startDB"));
         throw error;

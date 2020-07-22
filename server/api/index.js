@@ -28,7 +28,7 @@ apiRouter.use(async (req, res, next) => {
     } else {
         next({
             name: 'AuthorizationHeaderError',
-            message: `Authorization token must start with ${ prefix }`
+            message: `Authorization token must start with ${prefix}`
         });
     }
 });
@@ -41,11 +41,11 @@ apiRouter.use((req, res, next) => {
 });
 
 apiRouter.get('/', (req, res, next) => {
-    res.send({ message: 'This is the base API route!'})
+    res.send({ message: 'This is the base API route!' })
 });
 
 apiRouter.get('/health', (req, res, next) => {
-    res.send({ message: 'Server is healthy!'});
+    res.send({ message: 'Server is healthy!' });
 });
 
 const usersRouter = require('./users');
@@ -66,8 +66,8 @@ apiRouter.use('/orders', ordersRouter);
 const wishlistRouter = require('./wishlist');
 apiRouter.use('/wishlist', wishlistRouter);
 
-const blogRouter = require('./blog');
-apiRouter.use('/blog', blogRouter);
+const blogsRouter = require('./blog');
+apiRouter.use('/blogs', blogsRouter);
 
 apiRouter.use((error, req, res, next) => {
     res.send(error);
