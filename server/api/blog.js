@@ -6,13 +6,14 @@ const {
     getBlogByUserId,
     getBlogByMerchId,
     // getBlogByCategoryId,
+    getBlogByBlogId,
     createBlog,
     updateBlog,
     deleteBlog,
 } = require('../db');
 
 blogsRouter.use((req, res, next) => {
-    console.log('A request is being made to /blog');
+    console.log('A request is being made to /blogs');
     next();
 });
 
@@ -30,13 +31,10 @@ blogsRouter.get('/', async (req, res, next) => {
 
 blogsRouter.get('/:userId', async (req, res, next) => {
     const { userId } = req.params;
-    const user = req.user;
     console.log("UserId: ", userId);
-    console.log('Req.user: ', req.user);
-    console.log("Req.user.id: ", req.user.user_id);
 
     try {
-        const userBlogs = await getBlogByUserId(user.user_id);
+        const userBlogs = await getBlogByUserId(userId);
 
         if (userBlogs) {
             res.send({
@@ -55,7 +53,7 @@ blogsRouter.get('/:userId', async (req, res, next) => {
     };
 });
 
-blogsRouter.get('/:merchId', async (req, res, next) => {
+blogsRouter.get('/merch/:merchId', async (req, res, next) => {
     const { merchId } = req.params;
 
     try {
@@ -63,13 +61,13 @@ blogsRouter.get('/:merchId', async (req, res, next) => {
 
         if (blog) {
             res.send({
-                message: 'Successfully retrieved blog',
+                message: 'Successfully retrieved blog by merchId',
                 blog
             })
         } else {
             next({
                 error: 'FailedToRetrieveBlogError',
-                message: `Unable to retrieve blog by id:${merchId} `
+                message: `Unable to retrieve blog by merchId: ${merchId} `
             })
         }
     } catch ({ error, message }) {
@@ -99,23 +97,27 @@ blogsRouter.get('/:merchId', async (req, res, next) => {
 //     }
 // });
 
-blogsRouter.patch('/', requireUser, async (req, res, next) => {
-    const { userId } = req.params;
-    const user = req.user;
-    console.log("UserId: ", userId)
-    console.log('Req.user: ', req.user)
-    console.log("Req.user.id: ", req.user.user_id)
+blogsRouter.patch('/:blogId', requireUser, async (req, res, next) => {
+    const { blogId } = req.params;
+    const { title, blogText } = req.body;
+    // const user = req.user;
     try {
-        if (user && user.user_id === Number(userId)) {
-            const activatedUser = await updateBlog(user.user_id, {
-                active: true
+        const blog = getBlogByBlogId(blogId);
+        if (blog) {
+            const updatedBlog = await updateBlog(blogId, {
+                title,
+                blogText
             });
-            res.send({ activatedUser });
-            console.log("Activated User: ", activatedUser);
+            res.send({
+                message: 'You have successfully updated your blog entry.',
+                updatedBlog,
+                status: true
+            });
+            console.log("Update blog: ", updatedBlog);
         } else {
             next({
-                name: "ActivateUserError",
-                message: "You cannot update a blog that is not yours"
+                name: "BlogUpdateError",
+                message: "You cannot update a blog that is not yours."
             })
         };
     } catch ({ error, message }) {
@@ -154,18 +156,24 @@ blogsRouter.post('/', async (req, res, next) => {
 
     } catch ({ error, message }) {
         next({ error, message });
-    }
+    };
 });
 
-blogsRouter.delete('/', async (req, res, next) => {
+blogsRouter.delete('/:blogId', requireUser, async (req, res, next) => {
     const { blogId } = req.params;
+    console.log('BlogId: ', blogId)
 
     try {
-        const blog = await deleteBlog(blogId);
+        const blog = await getBlogByBlogId(blogId);
+        console.log('Blog: ', blog);
+        
         if (blog) {
+            const deletedBlog = await deleteBlog(blogId);
+
             res.send({
                 message: `Successfully deleted blog: ${blogId}`,
-                blog
+                deletedBlog,
+                status: true
             })
         } else {
             next({
@@ -176,7 +184,7 @@ blogsRouter.delete('/', async (req, res, next) => {
 
     } catch ({ error, message }) {
         next({ error, message });
-    }
+    };
 });
 
 module.exports = blogsRouter;

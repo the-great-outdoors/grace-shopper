@@ -1,8 +1,5 @@
 const db = require('./database');
-const { getUserByUserId, } = require('./users')
-const { getMerchandiseById, getMerchandiseByCategory } = require('./merch')
 
-//getAllBlogs
 async function getAllBlogs() {
 
     try {
@@ -17,14 +14,13 @@ async function getAllBlogs() {
     };
 };
 
-//getBlogsByUserId(userId)
 async function getBlogByUserId(userId) {
     try {
 
         const { rows: [blog] } = await db.query(`
             SELECT *
             FROM blogs
-            WHERE "authorID"=$1;
+            WHERE "authorId"=$1;
         `, [userId]);
 
         return blog;
@@ -33,13 +29,12 @@ async function getBlogByUserId(userId) {
     };
 };
 
-//getBlogByMerchId(merchId)
 async function getBlogByMerchId(merchId) {
     try {
         const { rows } = await db.query(`
             SELECT *
             FROM blogs
-            WHERE "merchID"=$1;
+            WHERE "merchId"=$1;
         `, [merchId]);
 
         return rows;
@@ -65,7 +60,6 @@ async function getBlogByMerchId(merchId) {
 //     };
 // };
 
-//creatBlog(userId)
 async function createBlog({
     merchId,
     title,
@@ -85,15 +79,14 @@ async function createBlog({
     };
 };
 
-//updateBlog(blogId)
 async function updateBlog(blogId, fields = {}) {
 
     const setString = Object.keys(fields).map(
         (key, index) => `"${key}"=$${index + 1}`
     ).join(', ');
-    console.log(fields)
 
-    console.log(setString)
+    console.log(fields);
+    console.log(setString);
     //return early if this is called wihtout fields
     if (setString.length === 0) {
         return;
@@ -103,7 +96,7 @@ async function updateBlog(blogId, fields = {}) {
         const { rows: [result] } = await db.query(`
             UPDATE blogs
             SET ${ setString} 
-            WHERE blog_id=${blogId }
+            WHERE blog_id=${ blogId }
             RETURNING *;
         `, Object.values(fields));
 
@@ -113,12 +106,25 @@ async function updateBlog(blogId, fields = {}) {
     };
 };
 
-//deleteBlog(blogId)
+async function getBlogByBlogId(blogId) {
+    try {
+        const { rows: blog } = await db.query(`
+            SELECT *
+            FROM blogs
+            WHERE blog_id=$1;
+        `, [blogId])
+
+        return blog;
+    } catch (error) {
+        
+    }
+}
+
 async function deleteBlog(blogId) {
     try {
         await db.query(`
             DELETE FROM blogs
-            WHERE blog_id= ${blogId}
+            WHERE blog_id=$1
         `, [blogId]);
     } catch (e) {
         console.error(e);
@@ -130,6 +136,7 @@ module.exports = {
     getAllBlogs,
     getBlogByUserId,
     getBlogByMerchId,
+    getBlogByBlogId,
     // getBlogByCategoryId,
     createBlog,
     updateBlog,
