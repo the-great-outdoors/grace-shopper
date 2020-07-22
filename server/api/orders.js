@@ -1,5 +1,5 @@
 const ordersRouter = require('express').Router();
-const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername, createOrderItem, deleteItemByOrderId, deleteOrderByOrderId, getActiveOrderForUser } = require('../db');
+const { createOrder, getUserOrdersByUserId, updateUserOrderByOrderId, getUserOrdersByUsername, createOrderItem, deleteItemByOrderId, deleteOrderByOrderId, getActiveOrderForUser,findOrCreateActiveOrderByUserId } = require('../db');
 const { requireUser } = require('./utils');
 const { compareSync } = require('bcrypt');
 
@@ -8,14 +8,16 @@ ordersRouter.use((req, res, next) => {
     next();
 });
 
-ordersRouter.get('/cart', requireUser, async (req, res, next) => {
-    const user = req.user;
-    const { userId } = req.body;
-    // console.log('Entered GET /cart with userid:', userId);
+ordersRouter.post('/cart', requireUser, async (req, res, next) => {
 
-    if (user && user.user_id === userId) {
+    const {user} = req.user;
+    const {message} = req.body;
+
+    console.log('Entered POST /cart with:',user.user_id );
+
+    // if (user.user_id === userId) {
         try {
-            const orders = await getActiveOrderForUser(userId);
+            const orders = await getActiveOrderForUser(user.user_id);
 
             if (orders) {
                 res.send({
@@ -26,48 +28,46 @@ ordersRouter.get('/cart', requireUser, async (req, res, next) => {
             } else {
                 next({
                     error: 'FailedToRetrieveOrdersByUserNameError',
-                    message: `Unable to retrieve orders by username:${userName}`
+                    message: `Unable to retrieve Active orders`,
+                    status:false
                 });
             }
         } catch ({ error, message }) {
             next({ error, message })
         };
 
-    }
+    // }
 });
-ordersRouter.post('/', async (req, res, next) => {
+
+
+ordersRouter.post('/', requireUser, async (req, res, next) => {
+    const { merchId, quantity, price} = req.body;
+
+    const user=req.user;
+    console.log('Inside POST /orders with user:', user);
 
     try {
-        let order_id;
-        const { price, merchId, quantity, orderId } = req.body;
-        const orderData = { userId: 1, status: true };
 
-        console.log('Creating new order!');
+        console.log('Creating new order!', user.user_id);
 
-        if (!orderId) {
-            const order = await createOrder(orderData);
-            order_id = order.orderId;
-            console.log('Order: ', order);
+            const order = await findOrCreateActiveOrderByUserId(user.user_id);
+    
+            console.log('Cart created! Cart No.: ');
 
-            console.log('About to enter orderItem')
-            console.log(quantity)
-            console.log(merchId)
-            console.log(price)
-        };
 
-        const orderItem = await createOrderItem(order_id, {
+        console.log('Creating new item with:', merchId, quantity, price);
+        const orderItem = await createOrderItem(order.orderId, {
             merchId,
             quantity,
             price
         });
 
-        console.log('Order item: ', orderItem)
+        console.log('Item Created: ', orderItem)
 
         if (orderItem) {
             res.send({
                 message: 'successfully created new order',
                 status: true,
-                // order,
                 orderItem
             });
         } else {
@@ -76,35 +76,37 @@ ordersRouter.post('/', async (req, res, next) => {
                 message: 'Unable to create new order'
             });
         }
+        
     } catch ({ error, message }) {
         next({ error, message });
     }
-});
-
-ordersRouter.post('/:orderId', async (req, res, next) => {
-    const { orderId } = req.params;
-    const { merchId, quantity, price } = req.body;
-    const orderItemData = { merchId, quantity, price }
-    console.log('welcome to POST /orderId!', orderItemData);
-    try {
-        const orderItem = await createOrderItem(orderId, orderItemData);
-        console.log('Success!');
-        if (orderItem) {
-            res.send({
-                message: 'Successfully retrieved orderItems',
-                status: true,
-                orderItem
-            });
-        } else {
-            next({
-                error: 'FailedToRetrieveOrdersItems',
-                message: `Unable to retrieve orderItems`
-            });
-        }
-    } catch ({ error, message }) {
-        next({ error, message })
     }
-});
+);
+
+// ordersRouter.post('/:orderId', async (req, res, next) => {
+//     const { orderId } = req.params;
+//     const { merchId, quantity, price } = req.body;
+//     const orderItemData = { merchId, quantity, price }
+//     console.log('welcome to POST /orderId!', orderItemData);
+//     try {
+//         const orderItem = await createOrderItem(orderId, orderItemData);
+//         console.log('Success!');
+//         if (orderItem) {
+//             res.send({
+//                 message: 'Successfully retrieved orderItems',
+//                 status: true,
+//                 orderItem
+//             });
+//         } else {
+//             next({
+//                 error: 'FailedToRetrieveOrdersItems',
+//                 message: `Unable to retrieve orderItems`
+//             });
+//         }
+//     } catch ({ error, message }) {
+//         next({ error, message })
+//     }
+// });
 
 ordersRouter.get('/:userId', requireUser, async (req, res, next) => {
     const { userId } = req.params;

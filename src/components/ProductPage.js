@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb } from 'semantic-ui-react';
+import { Grid, Header, Rating, Icon, Button, Input, Breadcrumb } from 'semantic-ui-react';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import './ProductPage.css';
-import Axios from 'axios';
 
 const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
@@ -50,26 +49,25 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
         }
 
         const cartArray = [...cart, merch];
-
-        setCart(cartArray);
-
-        let orderId;
+        
+        console.log('User:', user.user_id);
+        //Check for logged in user
+        let activeCart;
         if (user.user_id) {
-            if (!order) {
-                const res = await Axios.post('/api/orders', {userId:user.user_id,status:true});
-                orderId = res.data.order.orderId;
-                setOrder(orderId);
-            }else{
-                orderId=order;
-            }
+            console.log('inside IF statement...');
 
-            const orderItem = await Axios.post(`/api/orders/${orderId}`,merch);
-                return orderItem;
-
-        }else{
+            console.log('creating new merch:', merch);
+            const orderItems = await axios.post('/api/orders',merch, {headers:{Authorization: `Bearer ${localStorage.getItem('token')}` }});
+            console.log('new merch created!', orderItems);
             
-            localStorage.setItem('activeCart', JSON.stringify(cartArray));
+        }else{
+
+            localStorage.setItem('activeCart', JSON.stringify(cart))
+            setCart(cartArray);
         }
+        
+
+
 
         
 

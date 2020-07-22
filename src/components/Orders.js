@@ -21,8 +21,10 @@ const Orders = ({ cart, setCart, user, order, setOrder }) => {
     useEffect(() => {
         //check for logged in user.
         if (user.user_id) {
-            //check for active cart
-            Axios.get('/api/orders/cart')
+
+            Axios.post(`/api/orders/cart`,{ message:'Im here!'} ,{headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }})
                 .then((res => {
                     console.log('retrieved active order:', res.data.Orders)
                     return res.data.orders
@@ -31,7 +33,7 @@ const Orders = ({ cart, setCart, user, order, setOrder }) => {
                     console.log('data:', data);
                 })
         } else {
-
+            
         }
 
     }, []);

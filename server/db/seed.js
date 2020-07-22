@@ -146,8 +146,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
-                status BOOLEAN DEFAULT false,
-                price NUMERIC
+                status BOOLEAN DEFAULT true
             );
         `);
 

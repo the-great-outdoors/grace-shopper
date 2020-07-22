@@ -1,15 +1,25 @@
 const db = require('./database');
 
-async function createOrder({ userId, status = true }) {
-    console.log('db createOrder');
+async function findOrCreateActiveOrderByUserId( userId) {
+    console.log('db createOrder with userID:',userId);
     try {
-        const { rows: [order] } = await db.query(`
-        INSERT INTO orders("userId", status)
-        VALUES($1, $2)
-        RETURNING *;
-    `, [userId, status]);
+        const {rows:[activeCart]} = await db.query(`
+            SELECT * FROM orders
+            WHERE "userId"=$1 AND status = true;
+        `, [userId]);
 
-        console.log('Successfully created db order:', order);
+        if (activeCart) {
+            console.log('Cart Retrieved:', activeCart);
+            return activeCart;
+        }
+
+        const { rows: [newCart] } = await db.query(`
+        INSERT INTO orders("userId")
+        VALUES($1)
+        RETURNING *;
+    `, [userId]);
+
+        console.log('Successfully created db new cart:', newCart);
         return order;
     } catch (error) {
         throw error;
@@ -140,6 +150,10 @@ async function getActiveOrderForUser(userId) {
         AND status = true;
     `, [userId]);
 
+        if (!order||!order.length) {
+            console.log('no active orders')
+            return;
+        }
         const orderId = order.orderId;
 
         const { rows: items } = await db.query(`
@@ -162,9 +176,8 @@ module.exports = {
     getUserOrdersByUsername,
     getUserOrdersByUserId,
     updateUserOrderByOrderId,
-    createOrder,
     createOrderItem,
     deleteItemByOrderId,
     deleteOrderByOrderId,
-    getActiveOrderForUser
+    findOrCreateActiveOrderByUserId
 }
