@@ -12,6 +12,7 @@ paymentsRouter.get('/:userId', async (req, res, next) => {
 
     try {
         const payments = await getPaymentsByUserId(userId);
+        console.log("backend payments:", payments);
 
         if (payments) {
             res.send({
@@ -33,7 +34,7 @@ paymentsRouter.get('/:userId', async (req, res, next) => {
 paymentsRouter.post('/', async (req, res, next) => {
     try {
         const { userId, name, number, cid, expiration } = req.body;
-        const paymentData = { userId, name, number, cid, expiration }
+        const paymentData = { userId, name, number, cid, expiration}
 
         const payment = await createPayment(paymentData);
 
@@ -95,16 +96,15 @@ paymentsRouter.patch('/:paymentId', requireUser, async (req, res, next) => {
     }
 });
 
-paymentsRouter.delete('/:paymentId', requireUser, async (req, res, next) => {
+paymentsRouter.delete('/:paymentId', async (req, res, next) => {
     const { paymentId } = req.params;
     try {
-        const deletedPayment = await deletePayment(paymentId)
+        await deletePayment(paymentId);
 
-        if (deletedPayment) {
+        if (deletePayment) {
             res.send({
                 message: 'Successfully deleted payment',
                 status: true,
-                deletedPayment
             });
         } else {
             next({

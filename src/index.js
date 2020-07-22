@@ -19,6 +19,8 @@ import {
     Wishlist,
     AboutUsPage,
     Orders,
+    Payments,
+    ContactUs,
     Shipping
 } from './components';
 
@@ -32,6 +34,7 @@ const App = () => {
     const [editMode, setEditMode] = useState(false);
     const [item, setItem] = useState({});
     const [cart, setCart] = useState([]);
+    const [userPayments, setUserPayments] = useState([]);
     const [order, setOrder] = useState();
 
     useEffect(() => {
@@ -72,6 +75,9 @@ const App = () => {
                     cart={cart} />
             </Sticky>
             <Switch>
+                <Route path='/contact us'>
+                    <ContactUs />
+                </Route>
                 <Route path='/about'>
                     <AboutUsPage />
                 </Route>
@@ -82,6 +88,8 @@ const App = () => {
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
+                        userPayments={userPayments}
+                        setUserPayments={setUserPayments}
                         user={user}
                         setUser={setUser}
                         editMode={editMode}

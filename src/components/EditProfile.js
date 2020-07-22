@@ -57,6 +57,7 @@ const EditProfile = ({
         setShipping(param.value)
     };
 
+
     const toggleEditMode = (e) => {
         console.log('Toggle Edit Mode', e);
         setEditMode(false);

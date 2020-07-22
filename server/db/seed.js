@@ -47,6 +47,9 @@ async function dropTables() {
             DROP TABLE IF EXISTS users;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
+            DROP TABLE IF EXISTS orders;
+            DROP TABLE IF EXISTS users;
+
         `);
 
         console.log('Successfully dropped all tables.');
@@ -176,7 +179,7 @@ async function createTables() {
         console.log('Creating payments...')
         await db.query(`
             CREATE TABLE IF NOT EXISTS payments(
-                "paymentId" SERIAL PRIMARY KEY,
+                payment_id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
@@ -475,8 +478,7 @@ async function startDb() {
         await initializeSeansStuff();
         await createInitialBlogs();
         await createInitialWishlist();
-
-
+        await createInitialPayments();
     } catch (error) {
         console.error(chalk.red("Error during startDB"));
         throw error;
