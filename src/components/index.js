@@ -1,5 +1,3 @@
-
-
 export { default as Categories } from './Categories';
 export { default as CreateUserModal } from './CreateUserModal';
 export { default as EditProfile } from './EditProfile';
@@ -11,8 +9,7 @@ export { default as ProductPage } from './ProductPage';
 export { default as SearchBar } from './SearchBar';
 export { default as UserProfile } from './UserProfile';
 export { default as Wishlist } from './Wishlist';
-
 export { default as AboutUsPage } from './AboutUs';
-
 export { default as Orders } from './Orders';
-
+export { default as Payments } from './UserPayment';
+export { default as ContactUs } from './ContactUs';

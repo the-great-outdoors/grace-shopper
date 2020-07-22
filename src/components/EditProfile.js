@@ -49,7 +49,10 @@ const EditProfile = ({
         setShipping(param.value)
     };
 
-    // const handleClose = () => { editProfileSetShow(false) };
+    const toggleEditMode = (e, data) => {
+        console.log('Toggle Edit Mode', data);
+        setEditMode(false);
+    };
 
     const editUserProfile = () => {
         console.log('In edit user preferences!!')
@@ -176,7 +179,9 @@ const EditProfile = ({
                     </Segment.Group>
 
                     <Segment>
-                        <Button>Cancel</Button>
+                        <Button
+                            onClick={toggleEditMode}
+                        >Cancel</Button>
                         <Button>Submit</Button>
                     </Segment>
 

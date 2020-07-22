@@ -18,7 +18,9 @@ import {
     UserProfile,
     Wishlist,
     AboutUsPage,
-    Orders
+    Orders,
+    Payments,
+    ContactUs
 } from './components';
 
 const App = () => {
@@ -31,6 +33,7 @@ const App = () => {
     const [editMode, setEditMode] = useState(false);
     const [item, setItem] = useState({});
     const [cart, setCart] = useState([]);
+    const [userPayments, setUserPayments] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -57,6 +60,9 @@ const App = () => {
                     setUser={setUser}/>
             </Sticky>
             <Switch>
+                <Route path='/contact us'>
+                    <ContactUs />
+                </Route>
                 <Route path='/about'>
                     <AboutUsPage />
                 </Route>
@@ -67,6 +73,8 @@ const App = () => {
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
+                        userPayments={userPayments}
+                        setUserPayments={setUserPayments}
                         user={user}
                         setUser={setUser}
                         editMode={editMode}

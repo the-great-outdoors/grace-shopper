@@ -2,7 +2,7 @@ const db = require('./database');
 
 //createPayment(userId)
 
-async function createPayment({userId, name, number, cid, expiration}) {
+async function createPayment({userId, name, number, cid, expiration, billingStreet, city, state, zip}) {
     try {
         const { rows: [payment] } = await db.query(`
         INSERT INTO payments("userId", name, number, cid, expiration)
@@ -20,9 +20,10 @@ async function createPayment({userId, name, number, cid, expiration}) {
 
 async function getPaymentsByUserId(userId) {
     try {
-        const { rows: [ payments ] } = await db.query(`
-        SELECT * FROM payments
-        WHERE id=$1;
+        const { rows: payments } = await db.query(`
+        SELECT * 
+        FROM payments
+        WHERE "userId"=$1;
     `, [userId]);
 
         return payments;  
@@ -33,15 +34,15 @@ async function getPaymentsByUserId(userId) {
 
 //deletePayment(userId)
 
-async function deletePayment(userId) {
+async function deletePayment(paymentId) {
     try {
-        const {rows: [paymnets]} = await db.query(`
+        const {rows} = await db.query(`
         DELETE FROM payments
-        WHERE "userId"=$1
+        WHERE payment_id=$1
         RETURNING *;
-        `, [userId]);
+        `, [paymentId]);
 
-        return paymnets;
+        return rows;
 
     } catch (error) {
         throw error;
