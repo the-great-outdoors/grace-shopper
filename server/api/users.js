@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers, getAllMerchandise, getUserPreferencesByUserId, createUserPreferences } = require('../db');
 const { requireUser, requireActiveUser } = require('./utils');
+const { useLayoutEffect } = require('react');
 
 usersRouter.use((req, res, next) => {
     console.log('A request is being made to /users');
@@ -16,18 +17,23 @@ usersRouter.get('/', async (req, res) => {
     });
 });
 
-usersRouter.get('/:userId', async (req, res, next) => {
+usersRouter.get('/:userId', requireUser, async (req, res, next) => {
     const { userId } = req.params;
-    try {
-        const user = await getUserByUserId(userId);
-        res.send({
-            message: 'Here is the fetched user!',
-            user,
-            status: true
-        })
-    } catch ({ name, message }) {
-        next({ name, message })
-    };
+    user = req.user;
+    console.log('User Object: ', user);
+
+    if (user && user.user_id === Number(userId)) {
+        try {
+            const user = await getUserByUserId(userId);
+            res.send({
+                message: 'Here is the fetched user!',
+                user,
+                status: true
+            })
+        } catch ({ name, message }) {
+            next({ name, message })
+        };    
+    }
 });
 
 usersRouter.post('/register', async (req, res, next) => {

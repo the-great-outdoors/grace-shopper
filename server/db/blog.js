@@ -111,11 +111,12 @@ async function updateBlog(blogId, fields = {}) {
 
 async function getBlogByBlogId(blogId) {
     try {
-        const { rows: blog } = await db.query(`
+        const { rows: [blog] } = await db.query(`
             SELECT *
             FROM blogs
             WHERE blog_id=$1;
         `, [blogId])
+
 
         return blog;
     } catch (error) {
