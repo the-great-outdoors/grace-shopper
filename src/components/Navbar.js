@@ -7,7 +7,7 @@ import {
   CreateUserModal,
   LoginModal,
   SearchBar,
-  UserProfile
+  UserProfile,
 } from '../components';
 
 const NavBar = ({
@@ -16,10 +16,17 @@ const NavBar = ({
   login,
   setLogin,
   setUser,
-  token,
-  setToken,
   setSearchTerm,
+  cart
 }) => {
+
+  const [quantity, setQuantity] = useState('');
+  
+  // useEffect(()=>{
+  //   // setQuantity(cart.length);
+  //    setQuantity(cart.length);
+  // }, [cart.length])
+
 
   const [state, setState] = useState({ activeItem: 'home' });
   const history = useHistory();
@@ -41,8 +48,7 @@ const NavBar = ({
     setState({ activeItem: name });
     let path = `/${name}`;
     history.push(path);
-
-  }
+  };
 
   const registerButtonClick = (e, data) => {
     console.log('Entered Register Button Click Handler!');
@@ -58,8 +64,10 @@ const NavBar = ({
     console.log('Entered Logout Button Click Handler!');
     setLogin(false);
     setUser({});
+    handleItemClick(e, name = 'home');
+    localStorage.clear('token');
   };
-  
+
   return (
     <Segment inverted>
       <Menu inverted pointing secondary>
@@ -89,18 +97,18 @@ const NavBar = ({
           onClick={handleItemClick}
         />
 
-          <Menu.Item position='right'>
-            <a href='https://www.facebook.com'><Icon inverted color='teal' name='facebook f' /></a>
-          </Menu.Item>
-          <Menu.Item>
-            <a href='https://twitter.com/explore'><Icon inverted color='teal' name='twitter' /></a>
-          </Menu.Item>
-          <Menu.Item>
-            <a href='https://www.pinterest.com/'><Icon inverted color='teal' name='pinterest p' /></a>
-          </Menu.Item>
-          <Menu.Item >
-            <a href='https://www.snapchat.com/'><Icon inverted color='teal' name='snapchat ghost' /></a>
-          </Menu.Item>
+        <Menu.Item position='right'>
+          <a href='https://www.facebook.com'><Icon inverted color='teal' name='facebook f' /></a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href='https://twitter.com/explore'><Icon inverted color='teal' name='twitter' /></a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href='https://www.pinterest.com/'><Icon inverted color='teal' name='pinterest p' /></a>
+        </Menu.Item>
+        <Menu.Item >
+          <a href='https://www.snapchat.com/'><Icon inverted color='teal' name='snapchat ghost' /></a>
+        </Menu.Item>
 
 
       </Menu>
@@ -135,6 +143,8 @@ const NavBar = ({
             <Button
               as='a'
               inverted
+              name='home'
+              active={state.activeItem === 'home'}
               onClick={logoutButtonClick}
             >
               Log Out
@@ -180,12 +190,18 @@ const NavBar = ({
             <Button.Content hidden>Wishlist</Button.Content>
             <Button.Content visible><Icon name='gift' /></Button.Content>
           </Button>
+        {cart.length? <Button name='orders' inverted style={{marginLeft:'0.5em'}} onClick={handleItemClick} Icon='shop'>
+            <Button.Content visible>
+              <span><Icon name='shop' /></span>
+              {cart.length}
+            </Button.Content>
+        </Button>:
           <Button name='orders' animated='vertical' inverted style={{ marginLeft: '0.5em' }} onClick={handleItemClick}>
             <Button.Content hidden>Cart</Button.Content>
             <Button.Content visible>
               <Icon name='shop' />
             </Button.Content>
-          </Button>
+          </Button>}
         </Menu.Item>
       </Menu>
     </Segment>

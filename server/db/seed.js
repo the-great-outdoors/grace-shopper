@@ -40,9 +40,11 @@ async function dropTables() {
             DROP TABLE IF EXISTS blogs;
             DROP TABLE IF EXISTS wishlist;
             DROP TABLE IF EXISTS userPreferences;
+            DROP TABLE IF EXISTS orderItem;
+            DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS images;
             DROP TABLE IF EXISTS reviews;
-            DROP TABLE IF EXISTS orderItem;
+            DROP TABLE IF EXISTS users;
             DROP TABLE IF EXISTS merchandise;
             DROP TABLE IF EXISTS categories;
             DROP TABLE IF EXISTS orders;
@@ -72,6 +74,7 @@ async function createTables() {
                 hashpassword VARCHAR(255) NOT NULL,
                 firstname VARCHAR(255) NOT NULL,
                 lastname VARCHAR(255) NOT NULL,
+                save_pmt BOOLEAN DEFAULT false,
                 active BOOLEAN DEFAULT true
             );
         `);
@@ -180,6 +183,7 @@ async function createTables() {
                 "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
+                cardType VARCHAR(255) NOT NULL,
                 CID INTEGER NOT NULL,
                 expiration DATE NOT NULL
             );

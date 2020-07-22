@@ -1,6 +1,6 @@
 const userPrefsRouter = require('express').Router();
 
-const { updateUserPreferences, getUserPreferencesByUserId } = require('../db');
+const { updateUserPreferences, getUserPreferencesByUserId, updateUser, getUserByUserId } = require('../db');
 const { requireUser } = require('./utils');
 
 userPrefsRouter.use((req, res, next) => {
@@ -16,24 +16,32 @@ userPrefsRouter.get('/:userId', async (req, res, next) => {
         const userPreferences = await getUserPreferencesByUserId(userId);
         console.log('Retrieved User Preferences: ', userPreferences);
 
-        res.send( userPreferences );
+        res.send(userPreferences);
     } catch ({ name, message }) {
         next({ name, message });
     };
 
 });
 
-userPrefsRouter.patch('/:userId', requireUser, async (req, res, next) => {
+userPrefsRouter.patch('/:userId', async (req, res, next) => {
+    console.log('You are in the update user profile route!');
     const { userId } = req.params;
-    const { street, city, state, zip, save_pmt, shipping } = req.body
-    const user = req.user;
+    const { firstname, lastname, street, city, state, zip, save_pmt, shipping } = req.body
+    user = await getUserByUserId(userId);
     console.log("UserId: ", userId);
-    console.log('Req.user: ', req.user);
-    console.log("Req.user.id: ", req.user.user_id);
+    // console.log('Req.user: ', req.user);
+    // console.log("Req.user.id: ", req.user.user_id);
 
     try {
         if (user && user.user_id === Number(userId)) {
-            const updatedUserPreferences = await updateUserPreferences(user.user_id, {
+            const updatedUserInfo = await updateUser(userId, {
+                firstname,
+                lastname
+            });
+
+            delete updatedUserInfo.hashpassword;
+
+            const updatedUserPreferences = await updateUserPreferences(userId, {
                 street,
                 city,
                 state,
@@ -42,7 +50,13 @@ userPrefsRouter.patch('/:userId', requireUser, async (req, res, next) => {
                 shipping
             });
 
-            res.send({ updatedUserPreferences });
+            res.send({ 
+                message: "You have successfully updated your user profile.",
+                updatedUserInfo, 
+                updatedUserPreferences,
+                status: true
+            });
+            console.log("Updated UserInfo: ", updatedUserInfo);
             console.log("Updated UserPreferences: ", updatedUserPreferences);
         } else {
             next({

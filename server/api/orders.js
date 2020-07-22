@@ -7,8 +7,9 @@ ordersRouter.use((req, res, next) => {
     next();
 });
 
-ordersRouter.get('/cart', async(req, res, next) => {
+ordersRouter.get('/cart', requireUser, async(req, res, next) => {
     const {userId} = req.userId;
+    console.log('Entered GET /cart with userid:', userId);
 
     try {
         const orders = await getActiveOrderForUser(userId);
@@ -58,7 +59,7 @@ ordersRouter.post('/:orderId', async (req, res, next) => {
     const { orderId } = req.params;
     const { merchId, quantity, price } = req.body;
     const orderItemData = {merchId, quantity, price }
-    console.log('welcome to POST /orderId!');
+    console.log('welcome to POST /orderId!', orderItemData);
     try {
         const orderItem = await createOrderItem(orderId, orderItemData);
         console.log('Success!');

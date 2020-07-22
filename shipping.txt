@@ -1,0 +1,49 @@
+    <Form>
+      <Header>Shipping</Header>
+      <Form.Field>
+        <label>First Name</label>
+        <Input name='firstname' placeholder={firstname} onChange={handleInput} />
+      </Form.Field>
+      <Form.Field>
+        <label>Last Name</label>
+        <Input name='lastname' placeholder={lastname} onChange={handleInput} />
+      </Form.Field>
+      <Form.Field>
+        <label>Street Address</label>
+        <Input name='street' placeholder={street} onChange={handleInput} />
+      </Form.Field>  <Form.Field>
+        <label>City</label>
+        <Input name='city' placeholder={city} onChange={handleInput} />
+      </Form.Field>
+      <Form.Field>
+        <label>State</label>
+        <Input name='state' placeholder={state} onChange={handleInput} />
+      </Form.Field>
+      <Form.Field>
+        <label>Zip Code</label>
+        <Input name='zip' placeholder={zip} onChange={handleInput} />
+      </Form.Field>
+      <Dropdown options={shipOptions} onChange={handleSelect} />
+      <Form.Field>
+        <Checkbox label='I agree to the Terms and Conditions' />
+      </Form.Field>
+      <Button onClick={handleClick}>Submit</Button>
+    </Form>
+
+
+  const shipOptions = [
+    { key: 'UPS', text: 'UPS', value: 'UPS' },
+    { key: 'USPS', text: 'USPS', value: 'USPS' },
+    { key: 'FEDEX', text: 'FEDEX', value: 'FEDEX' }
+  ]
+
+  const handleClick = (e, data) => {
+    e.preventDefault();
+    console.log('clicked save button:', e.target);
+    setEditMode(false);
+  }
+
+  const handleSelect = (e, data) => {
+    console.log('New shipping option chosen:', data.value);
+    setShipMethod(data.value);
+  }

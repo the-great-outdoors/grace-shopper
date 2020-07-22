@@ -16,18 +16,32 @@ usersRouter.get('/', async (req, res) => {
     });
 });
 
+usersRouter.get('/:userId', async (req, res, next) => {
+    const { userId } = req.params;
+    try {
+        const user = await getUserByUserId(userId);
+        res.send({
+            message: 'Here is the fetched user!',
+            user,
+            status: true
+        })
+    } catch ({ name, message }) {
+        next({ name, message })
+    };
+});
+
 usersRouter.post('/register', async (req, res, next) => {
-    const { 
-        username, 
-        hashpassword, 
-        firstname, 
-        lastname, 
-        street, 
-        city, 
-        state, 
-        zip, 
-        save_pmt, 
-        shipping 
+    const {
+        username,
+        hashpassword,
+        firstname,
+        lastname,
+        street,
+        city,
+        state,
+        zip,
+        save_pmt,
+        shipping
     } = req.body;
     console.log('Req.body: ', req.body);
     const SALT_COUNT = 10;
@@ -77,7 +91,8 @@ usersRouter.post('/register', async (req, res, next) => {
             res.send({
                 message: "Thank you for signing up!",
                 user,
-                token
+                token,
+                status: true
             });
         });
     } catch ({ name, message }) {
@@ -94,7 +109,7 @@ usersRouter.post('/login', async (req, res, next) => {
             message: "Please supply both a username and password"
         });
     };
-    
+
     try {
         const user = await getUserByUsername(username);
         console.log('USER: ', user);
@@ -107,10 +122,10 @@ usersRouter.post('/login', async (req, res, next) => {
                 const token = jwt.sign({ id: user.user_id, username: user.username }, process.env.JWT_SECRET)
                 delete user.hashpassword;
                 res.send({
-                message: "you're logged in!",
-                user, 
-                token: `${token}` 
-            });
+                    message: "you're logged in!",
+                    user,
+                    token: `${token}`
+                });
                 return token;
             } else {
                 next({
@@ -125,7 +140,7 @@ usersRouter.post('/login', async (req, res, next) => {
     }
 });
 
-usersRouter.post('/token', async(req, res, next) => {
+usersRouter.post('/token', async (req, res, next) => {
     console.log('In users token.')
     try {
         const token = req.body.token;
@@ -158,12 +173,12 @@ usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
 
     try {
         if (user && user.user_id === Number(userId)) {
-        const updatedUser = await updateUser(user.user_id, {
-            firstname,
-            lastname
-        });
-        res.send({ updatedUser });
-        console.log("Updated User: ", updatedUser);
+            const updatedUser = await updateUser(user.user_id, {
+                firstname,
+                lastname
+            });
+            res.send({ updatedUser });
+            console.log("Updated User: ", updatedUser);
         } else {
             next({
                 name: "UpdateUserError",
@@ -173,7 +188,7 @@ usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
     } catch ({ name, message }) {
         next({ name, message });
     };
-});  
+});
 
 usersRouter.patch('/:userId/activate', requireUser, async (req, res, next) => {
     const { userId } = req.params;

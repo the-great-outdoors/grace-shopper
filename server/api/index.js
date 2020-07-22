@@ -66,8 +66,8 @@ apiRouter.use('/orders', ordersRouter);
 const wishlistRouter = require('./wishlist');
 apiRouter.use('/wishlist', wishlistRouter);
 
-const blogRouter = require('./blog');
-apiRouter.use('/blog', blogRouter);
+const blogsRouter = require('./blog');
+apiRouter.use('/blogs', blogsRouter);
 
 apiRouter.use((error, req, res, next) => {
     res.send(error);

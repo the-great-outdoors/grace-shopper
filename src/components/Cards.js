@@ -1,5 +1,5 @@
 import React, {} from "react";
-import {Card, Rating, Icon, Item,Image} from "semantic-ui-react";
+import {Card, Rating, Icon, Item,Image, Button} from "semantic-ui-react";
 import {useHistory} from "react-router-dom";
 
 const MerchCards = ({merchandise})=>{
@@ -8,6 +8,7 @@ const MerchCards = ({merchandise})=>{
     const history=useHistory();
 
     const handleSelect = async (e, data) => {
+      e.preventDefault();
       console.log('entered handle select', data.id);
       history.push(`/productpage/${data.id}`);
   
