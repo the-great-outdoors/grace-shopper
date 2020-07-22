@@ -19,6 +19,7 @@ import {
     Wishlist,
     AboutUsPage,
     Orders,
+    Stories,
     Payments,
     ContactUs,
     Shipping
@@ -51,17 +52,17 @@ const App = () => {
         }
     }, []);
 
-    useEffect(()=>{
-        if (!cart||!cart.length) {
-            
-            const savedCart= JSON.parse(localStorage.getItem('activeCart'));
+    useEffect(() => {
+        if (!cart || !cart.length) {
+
+            const savedCart = JSON.parse(localStorage.getItem('activeCart'));
             console.log(savedCart);
-             if (savedCart) {
-                 console.log('After parsing',savedCart);
-                 setCart(savedCart);
-             }
-         }
-    },[])
+            if (savedCart) {
+                console.log('After parsing', savedCart);
+                setCart(savedCart);
+            }
+        }
+    }, [])
 
     return (
         <Router>
@@ -75,7 +76,7 @@ const App = () => {
                     cart={cart} />
             </Sticky>
             <Switch>
-                <Route path='/contact us'>
+                <Route path='/contactus'>
                     <ContactUs />
                 </Route>
                 <Route path='/about'>
@@ -85,6 +86,12 @@ const App = () => {
                     <Categories
                         setMerchandise={setMerchandise}
                         merchandise={merchandise} />
+                </Route>
+                <Route path='/stories'>
+                    <Stories />
+                </Route>
+                <Route path='/about'>
+                    <AboutUsPage />
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile

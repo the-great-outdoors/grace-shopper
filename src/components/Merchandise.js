@@ -9,7 +9,7 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
   useEffect(() => {
 
     if (searchTerm.value.length) {
-        
+
       try {
         axios.post('/api/merchandise/search', searchTerm)
           .then((res) => {
@@ -23,14 +23,14 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
       } catch (error) {
         throw error;
       }
-    
-    }else{
+
+    } else {
       try {
         axios.get('/api/merchandise')
-      .then((res) => {
-        const merch = res.data.merch;
-        return setMerchandise(merch)
-      })
+          .then((res) => {
+            const merch = res.data.merch;
+            return setMerchandise(merch)
+          })
       } catch (error) {
         throw error;
       }
@@ -41,8 +41,8 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
 
   return (
     <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
-      {merchandise? <MerchCards merchandise={merchandise}/>:
-      ''}
+      {merchandise ? <MerchCards merchandise={merchandise} /> :
+        ''}
     </Card.Group>
 
   )
