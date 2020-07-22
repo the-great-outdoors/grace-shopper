@@ -31,6 +31,7 @@ const App = () => {
     const [editMode, setEditMode] = useState(false);
     const [item, setItem] = useState({});
     const [cart, setCart] = useState([]);
+    const [order, setOrder] = useState();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -91,7 +92,10 @@ const App = () => {
                         item={item}
                         setItem={setItem}
                         setCart={setCart}
-                        cart={cart} />
+                        cart={cart}
+                        user={user} 
+                        order={order}
+                        setOrder={setOrder}/>
                 </Route>
                 <Route path='/wishlist'>
                     <Wishlist user={user} />
@@ -101,7 +105,9 @@ const App = () => {
                     <Orders 
                     cart={cart}
                     setCart={setCart}
-                    user={user}/>
+                    user={user}
+                    order={order}
+                    setOrder={setOrder}/>
                 </Route>
                 <Route path='/'>
                     <Hero

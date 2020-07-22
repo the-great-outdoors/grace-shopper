@@ -7,14 +7,33 @@ import {ShippingEdit} from './ShippingEdit';
 import { ShippingOptions } from "./ShippingOptions";
 import Payments from './Payments';
 
-const Orders = ({cart, setCart, user})=>{
+const Orders = ({cart, setCart, user, order, setOrder})=>{
    
     const [splice, setSplice]=useState({});
     const [step, setStep]=useState('truck')
+
     const handleClick=(event, data)=>{
         console.log('Entered step onclick:', data.name);
         setStep(data.name);
     }
+
+    useEffect(()=>{
+        //check for logged in user.
+        if (user.user_id) {
+            //check for active cart
+            Axios.get('/api/orders/cart')
+                .then((res=>{
+                    console.log('retrieved active order:', res.data.Orders)
+                    return res.data.orders
+                }))
+                .then((data)=>{
+                    console.log('data:', data);
+                })
+        }else{
+            
+        }
+
+    },[]);
 
       const handleDelete= (event, data)=>{
         console.log('handleDelete clicked. Target:', event.target, 'data:', data);
@@ -31,21 +50,13 @@ const Orders = ({cart, setCart, user})=>{
       const handleCheckout= async(event, target)=>{
           event.preventDefault();
 
-            const res = await Axios.post('/api/orders', {userId:1,status:true});
+          console.log('order number:', order);
+          if (order) {
+              const res = await Axios.patch(`/api/orders/${order}`, {status:false})
+              console.log('Placed order:', res.data.payment);
+          }
 
-            console.log('order:', res);
-
-            const orderId = res.data.order.orderId;
-            console.log(orderId);
-
-            cart.map(async(item)=>{
-
-                const {merchId, quantity, price} = item;
-
-                const orderItem = await Axios.post(`/api/orders/${orderId}`,{merchId, quantity, price});
-                console.log('new order item:', orderItem);
-                return orderItem;
-            })
+          alert('Successfully placed order!');
          
       }
 
