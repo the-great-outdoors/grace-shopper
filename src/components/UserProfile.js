@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Segment, Image, Button, Dimmer, Loader } from 'semantic-ui-react'
 import axios from 'axios';
 import './UserProfile.css'
-
-import { EditProfile } from '../components';
+import { EditProfile, Payments } from '../components';
 
 const UserProfile = ({
     user,
     editMode,
     setEditMode,
     editUserProfile,
+    userPayments,
+    setUserPayments
+
 }) => {
 
     if (!user.user_id) {
@@ -24,6 +26,27 @@ const UserProfile = ({
         </div>;
     };
 
+
+    console.log('Logged-in User: ', user);
+    const { user_id, firstname, lastname, userPreferences } = user;
+
+    useEffect(() => {
+        axios.get(`/api/payments/${user.user_id}`)
+            .then(res => {
+            const fetchedPayments = res.data.payments
+            console.log('These are the payments:', fetchedPayments);
+
+            if (fetchedPayments) {
+              setUserPayments(fetchedPayments);  
+            } else {
+                console.log('No Payments to fetch!')
+            }
+            
+          }).catch(error => console.error("payments error", error)) 
+    }, []);
+
+
+    console.log('User Preferences: ', userPreferences);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [street, setStreet] = useState("");
@@ -49,9 +72,6 @@ const UserProfile = ({
             .catch(error => console.error(error));
     }, []);
 
-    // console.log('Logged-in User: ', user);
-    // const { firstname, lastname, userPreferences } = user;
-    // console.log('User Preferences: ', firstname, lastname, userPreferences);
 
     const editProfileButtonClick = (e, data) => {
         console.log('Entered Edit Profile Click Handler!');
@@ -59,9 +79,7 @@ const UserProfile = ({
     };
 
     if (editMode === true) {
-
         return (
-
             <EditProfile
                 user={user}
                 setEditMode={setEditMode}
@@ -82,11 +100,8 @@ const UserProfile = ({
                 setShipping={setShipping}
             />
         )
-
     } else {
-
         return (
-
             <div
                 style={{
                     backgroundColor: 'lightgrey'
@@ -176,6 +191,12 @@ const UserProfile = ({
                                 <p>{shipping}</p>
                             </Segment>
                         </Segment.Group>
+
+                        {userPayments ? <Payments
+                            user={user} 
+                            userPayments={userPayments} />
+                        : <h1>You have no payment options on file!</h1>
+                        } 
 
                     </Grid.Column>
 

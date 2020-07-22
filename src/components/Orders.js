@@ -7,16 +7,36 @@ import { ShippingEdit } from './ShippingEdit';
 import { ShippingOptions } from "./ShippingOptions";
 import Payments from './Payments';
 
-const Orders = ({ cart, setCart, user }) => {
 
-    const [splice, setSplice] = useState({});
-    const [step, setStep] = useState('truck')
-    const handleClick = (event, data) => {
+const Orders = ({cart, setCart, user, order, setOrder})=>{
+   
+    const [splice, setSplice]=useState({});
+    const [step, setStep]=useState('truck')
+
+    const handleClick=(event, data)=>{
         console.log('Entered step onclick:', data.name);
         setStep(data.name);
     }
 
-    const handleDelete = (event, data) => {
+    useEffect(()=>{
+        //check for logged in user.
+        if (user.user_id) {
+            //check for active cart
+            Axios.get('/api/orders/cart')
+                .then((res=>{
+                    console.log('retrieved active order:', res.data.Orders)
+                    return res.data.orders
+                }))
+                .then((data)=>{
+                    console.log('data:', data);
+                })
+        }else{
+            
+        }
+
+    },[]);
+
+      const handleDelete= (event, data)=>{
         console.log('handleDelete clicked. Target:', event.target, 'data:', data);
         const removeElement = data.id;
         const cartArray = cart;
@@ -48,6 +68,16 @@ const Orders = ({ cart, setCart, user }) => {
         })
 
     }
+
+          console.log('order number:', order);
+          if (order) {
+              const res = await Axios.patch(`/api/orders/${order}`, {status:false})
+              console.log('Placed order:', res.data.payment);
+          }
+
+          alert('Successfully placed order!');
+         
+      }
 
     console.log('new cart:', cart);
     return (

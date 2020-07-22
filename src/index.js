@@ -19,8 +19,10 @@ import {
     Wishlist,
     AboutUsPage,
     Orders,
-    Shipping,
-    Stories
+    Stories,
+    Payments,
+    ContactUs,
+    Shipping
 } from './components';
 
 const App = () => {
@@ -33,6 +35,8 @@ const App = () => {
     const [editMode, setEditMode] = useState(false);
     const [item, setItem] = useState({});
     const [cart, setCart] = useState([]);
+    const [userPayments, setUserPayments] = useState([]);
+    const [order, setOrder] = useState();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -72,6 +76,12 @@ const App = () => {
                     cart={cart} />
             </Sticky>
             <Switch>
+                <Route path='/contactus'>
+                    <ContactUs />
+                </Route>
+                <Route path='/about'>
+                    <AboutUsPage />
+                </Route>
                 <Route path='/categories'>
                     <Categories
                         setMerchandise={setMerchandise}
@@ -85,6 +95,8 @@ const App = () => {
                 </Route>
                 <Route path='/userprofile'>
                     <UserProfile
+                        userPayments={userPayments}
+                        setUserPayments={setUserPayments}
                         user={user}
                         setUser={setUser}
                         editMode={editMode}
@@ -95,17 +107,22 @@ const App = () => {
                         item={item}
                         setItem={setItem}
                         setCart={setCart}
-                        cart={cart} />
+                        cart={cart}
+                        user={user} 
+                        order={order}
+                        setOrder={setOrder}/>
                 </Route>
                 <Route path='/wishlist'>
                     <Wishlist
                         user={user} />
                 </Route>
                 <Route path='/orders'>
-                    <Orders
-                        cart={cart}
-                        setCart={setCart}
-                        user={user} />
+                    <Orders 
+                    cart={cart}
+                    setCart={setCart}
+                    user={user}
+                    order={order}
+                    setOrder={setOrder}/>
                 </Route>
                 <Route path='/'>
                     <Hero

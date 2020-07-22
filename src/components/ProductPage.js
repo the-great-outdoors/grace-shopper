@@ -4,14 +4,16 @@ import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import './ProductPage.css';
+import Axios from 'axios';
 
-const ProductPage = ({ item, setItem, cart, setCart }) => {
+const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
     const [addItem, setAddItem] = useState(false);
     const { id } = useParams();
     
+    console.log('merch id:', id);
 
     const history = useHistory();
     const handleClick = (event, data) => {
@@ -33,25 +35,43 @@ const ProductPage = ({ item, setItem, cart, setCart }) => {
 
     }, []);
 
-    const AddItem = () => {
-        console.log('clicked addItem')
+    const AddItem = async() => {
+
         const qty = quantity;
         const price = item.price;
-        console.log('qty:', qty, 'price:', price);
+        const merchId = item.merch;
+        console.log('qty:', qty, 'price:', price, 'id:',id);
         const merch = {
             merchId: id,
             quantity: qty,
             price,
             name: item.name,
             description: item.description
-
         }
 
         const cartArray = [...cart, merch];
-        // cartArray.push(merch);
 
         setCart(cartArray);
-        localStorage.setItem('activeCart', JSON.stringify(cartArray));
+
+        let orderId;
+        if (user.user_id) {
+            if (!order) {
+                const res = await Axios.post('/api/orders', {userId:user.user_id,status:true});
+                orderId = res.data.order.orderId;
+                setOrder(orderId);
+            }else{
+                orderId=order;
+            }
+
+            const orderItem = await Axios.post(`/api/orders/${orderId}`,merch);
+                return orderItem;
+
+        }else{
+            
+            localStorage.setItem('activeCart', JSON.stringify(cartArray));
+        }
+
+        
 
     }
 
