@@ -29,31 +29,29 @@ const Stories = () => {
                     width: '100vw',
                     backgroundImage: `url('/resources/hiker_lake-tree.jpg')`,
                     backgroundSize: 'cover',
-                    // width: '100vw'
                 }}>
                     <Header inverted color='orange' textAlign='right' style={{ fontFamily: 'Ultra', fontSize: '6rem', paddingRight: '50px', paddingTop: '50px' }}>Your Stories</Header>
                 </Container>
             </Container>
+            <Item.Group>
+                {blogs ?
+                    blogs.map((blog, index) => {
+                        const { title, authorId, blogText, username } = blog;
+                        return (
+                            <Item key={index}>
+                                <Item.Content>
+                                    <Item.Header as='a'>{title}</Item.Header>
+                                    <Item.Meta>By: {username}</Item.Meta>
+                                    <Item.Extra>{blogText}</Item.Extra>
+                                </Item.Content>
+                            </Item>
+                        )
+                    })
 
-            {blogs ?
-                blogs.map((blog) => {
-                    const { title, authorId, blogText} = blog;
-                    return (
-                        <>
-                            <Item.Group>
-                                <Item>
-                                    <Item.Content>
-                                        <Item.Header as='a'>{title}</Item.Header>
-                                        <Item.Meta>By: {authorId}</Item.Meta>
-                                        <Item.Extra>{blogText}</Item.Extra>
-                                    </Item.Content>
-                                </Item>
-                            </Item.Group>
-                        </>
-                    )
-                })
-                : ''
-            }
+                    : ''
+                }
+            </Item.Group>
+
         </>
     )
 

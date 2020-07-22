@@ -76,7 +76,7 @@ const App = () => {
                     cart={cart} />
             </Sticky>
             <Switch>
-                <Route path='/contactus'>
+                <Route path='/contact'>
                     <ContactUs />
                 </Route>
                 <Route path='/about'>

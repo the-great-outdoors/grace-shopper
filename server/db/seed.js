@@ -183,7 +183,7 @@ async function createTables() {
                 "userId" INTEGER REFERENCES users(user_id),
                 name VARCHAR(255) NOT NULL,
                 number INTEGER UNIQUE NOT NULL,
-                cardType VARCHAR(255) NOT NULL,
+                cardType VARCHAR(255),
                 CID INTEGER NOT NULL,
                 expiration DATE NOT NULL
             );

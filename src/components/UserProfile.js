@@ -26,27 +26,21 @@ const UserProfile = ({
         </div>;
     };
 
-
-    console.log('Logged-in User: ', user);
-    const { user_id, firstname, lastname, userPreferences } = user;
-
     useEffect(() => {
         axios.get(`/api/payments/${user.user_id}`)
             .then(res => {
-            const fetchedPayments = res.data.payments
-            console.log('These are the payments:', fetchedPayments);
+                const fetchedPayments = res.data.payments
+                console.log('These are the payments:', fetchedPayments);
 
-            if (fetchedPayments) {
-              setUserPayments(fetchedPayments);  
-            } else {
-                console.log('No Payments to fetch!')
-            }
-            
-          }).catch(error => console.error("payments error", error)) 
+                if (fetchedPayments) {
+                    setUserPayments(fetchedPayments);
+                } else {
+                    console.log('No Payments to fetch!')
+                }
+
+            }).catch(error => console.error("payments error", error))
     }, []);
 
-
-    console.log('User Preferences: ', userPreferences);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [street, setStreet] = useState("");
@@ -193,10 +187,10 @@ const UserProfile = ({
                         </Segment.Group>
 
                         {userPayments ? <Payments
-                            user={user} 
+                            user={user}
                             userPayments={userPayments} />
-                        : <h1>You have no payment options on file!</h1>
-                        } 
+                            : <h1>You have no payment options on file!</h1>
+                        }
 
                     </Grid.Column>
 
