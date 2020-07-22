@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {Grid, Segment, Button, Icon} from "semantic-ui-react";
 
 
-const Shipping = ({user, setEditMode, shippingInfo}) =>{
+const Shipping = ({setEditMode, shippingInfo, setStep}) =>{
     //get user shipping information and populate
 
     const handleClick=(e)=>{
@@ -39,11 +39,22 @@ const Shipping = ({user, setEditMode, shippingInfo}) =>{
                                 }}
                             >
                             Shipping Information
-                            <Button onClick={handleClick}>
-                                <Button.Content visible>
-                                    <Icon name='shop' />
-                                </Button.Content>
+                            <Button animated compact={true}
+                                    size='mini'
+                                    floated='right'
+                                    onClick={e=>setStep('payment')}>
+                                <Button.Content visible>Next</Button.Content>
+                                <Button.Content hidden>
+                                    <Icon name='payment' />
+                            </Button.Content>
                             </Button>
+                            <Button
+                                    icon='edit'
+                                    compact={true}
+                                    size='mini'
+                                    floated='right'
+                                    onClick={handleClick} >
+                                </Button>
                             
                             </Segment>
 

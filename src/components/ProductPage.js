@@ -47,8 +47,9 @@ const ProductPage = ({ item, setItem, cart, setCart }) => {
 
         }
 
-        const cartArray = cart;
-        cartArray.push(merch);
+        const cartArray = [...cart, merch];
+        // cartArray.push(merch);
+
         setCart(cartArray);
         localStorage.setItem('activeCart', JSON.stringify(cartArray));
 
