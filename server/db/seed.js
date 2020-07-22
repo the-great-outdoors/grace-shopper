@@ -158,7 +158,7 @@ async function createTables() {
                 "orderId" INTEGER REFERENCES orders("orderId"),
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
                 quantity INTEGER DEFAULT 1,
-                price VARCHAR(255) NOT NULL
+                price NUMERIC NOT NULL
             );
         `);
 

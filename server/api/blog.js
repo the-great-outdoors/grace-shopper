@@ -99,75 +99,87 @@ blogsRouter.get('/merch/:merchId', async (req, res, next) => {
 
 blogsRouter.patch('/:blogId', requireUser, async (req, res, next) => {
     const { blogId } = req.params;
-    const { title, blogText } = req.body;
-    // const user = req.user;
-    try {
-        const blog = getBlogByBlogId(blogId);
-        if (blog) {
-            const updatedBlog = await updateBlog(blogId, {
-                title,
-                blogText
-            });
-            res.send({
-                message: 'You have successfully updated your blog entry.',
-                updatedBlog,
-                status: true
-            });
-            console.log("Update blog: ", updatedBlog);
-        } else {
-            next({
-                name: "BlogUpdateError",
-                message: "You cannot update a blog that is not yours."
-            })
+    const { title, blogText, authorId } = req.body;
+    const user = req.user;
+
+    if (user && user.user_id === authorId) {
+        try {
+            const blog = getBlogByBlogId(blogId);
+            if (blog) {
+                const updatedBlog = await updateBlog(blogId, {
+                    title,
+                    blogText
+                });
+                res.send({
+                    message: 'You have successfully updated your blog entry.',
+                    updatedBlog,
+                    status: true
+                });
+                console.log("Update blog: ", updatedBlog);
+            } else {
+                next({
+                    name: "BlogUpdateError",
+                    message: "You cannot update a blog that is not yours."
+                })
+            };
+        } catch ({ error, message }) {
+            next({ error, message });
         };
-    } catch ({ error, message }) {
-        next({ error, message });
-    };
+    }
 });
 
-blogsRouter.post('/', async (req, res, next) => {
+blogsRouter.post('/', requireUser, async (req, res, next) => {
+    const user = req.user;
+
     const {
         merchId,
         title,
         blogText,
         authorId } = req.body;
 
-    try {
-        const blog = await createBlog({
-            merchId,
-            title,
-            blogText,
-            authorId
-        });
-
-        if (blog) {
-            res.send({
-                message: 'Successfully created new blog',
-                blog,
-                status: true
+    if (user) {
+        try {
+            const blog = await createBlog({
+                merchId,
+                title,
+                blogText,
+                authorId
             });
 
-        } else {
-            next({
-                error: 'CreateNewBlogError',
-                message: 'Error creating new blog'
-            });
-        }
+            if (blog) {
+                res.send({
+                    message: 'Successfully created new blog',
+                    blog,
+                    status: true
+                });
 
-    } catch ({ error, message }) {
-        next({ error, message });
-    };
+            } else {
+                next({
+                    error: 'CreateNewBlogError',
+                    message: 'Error creating new blog'
+                });
+            }
+
+        } catch ({ error, message }) {
+            next({ error, message });
+        };
+    }
 });
 
 blogsRouter.delete('/:blogId', requireUser, async (req, res, next) => {
     const { blogId } = req.params;
-    console.log('BlogId: ', blogId)
+    console.log('Delete route BlogId: ', blogId);
+    user = req.user;
+    console.log('Delete route user', user)
 
     try {
         const blog = await getBlogByBlogId(blogId);
         console.log('Blog: ', blog);
-        
-        if (blog) {
+        const { authorId } = blog;
+        console.log("AUTHORID:", authorId)
+
+        if (blog && user.user_id === authorId) {
+            console.log('In the first if statement!!')
             const deletedBlog = await deleteBlog(blogId);
 
             res.send({
