@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
+import { Card, Icon, Item, Image, Rating, Container, Segment, Dimmer, Loader } from "semantic-ui-react";
 import axios from 'axios';
 
 import { MerchCards } from '../components';
 
-const Wishlist = ({ user }) => {
+const Wishlist = ({ user, wishlist, setWishlist }) => {
 
   if (!user.user_id) {
     return <div>
@@ -14,9 +14,11 @@ const Wishlist = ({ user }) => {
         <Dimmer active inverted>
           <Loader inverted active>Loading</Loader>
         </Dimmer>
-
         <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
       </Segment>
+      <Container> 
+      <h2> Guest Users cannot have a wishlist. Please create an Account or Login</h2>
+      </Container>
     </div>;
   };
 
@@ -24,7 +26,7 @@ const Wishlist = ({ user }) => {
 
   const history = useHistory();
 
-  const [wishlist, setWishlist] = useState([]);
+  
 
   const handleSelect = async (e, data) => {
     history.push(`/wishlist/${data.id}`);
@@ -44,21 +46,22 @@ const Wishlist = ({ user }) => {
 
     }
 
-  }, [])
+  }, []) 
 
-  return (
-    user.user_id && wishlist ?
-      <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
-        <MerchCards
-          merchandise={wishlist}
-        />
-      </Card.Group>
-      :
-      <div>
-        <h1> "Guest Users cannot have a wishlist. Or if you are logged in please create a wishlist to proceed." </h1>
-      </div>
-  )
+  
+    return (
+      user.user_id && wishlist ?
+        <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
+          <MerchCards
+            merchandise={wishlist}
+          />
+        </Card.Group>
+        :
+        <Container>
+          <h2> "No wishlist items on list." </h2>
+        </Container>
+    )
+  } 
 
-}
 
 export default Wishlist;

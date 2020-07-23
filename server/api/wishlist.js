@@ -77,7 +77,7 @@ wishlistRouter.post('/:userId', requireUser, async (req, res, next) => {
 wishlistRouter.patch('/:userId', requireUser, async (req, res, next) => {
     const { userId } = req.params;
     const user = req.user;
-    const { title } = req.body;
+    const { title, merchId } = req.body;
     console.log("UserId: ", userId);
     console.log('Req.user: ', req.user);
     console.log("Req.user.user_id: ", req.user.user_id);

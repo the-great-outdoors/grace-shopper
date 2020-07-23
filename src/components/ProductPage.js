@@ -7,7 +7,7 @@ import './ProductPage.css';
 
 // const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
-const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
+const ProductPage = ({ cart, setCart, user, order, setOrder, setWishlist, wishlist }) => {
     const [item, setItem] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
@@ -88,6 +88,28 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
 
     }
 
+    const AddWishlist = async () => {
+        // console.log(user.user_id);
+        // setWishlist([...wishlist, item]
+        console.log( 'stuff to send to post', item);
+
+        const wishlist = {
+            title: "",
+            merchId: item.merch_id,
+            userId: user.user_id
+        }
+        console.log("items to post", wishlist);
+
+
+        if (user.user_id) {
+            console.log("adding to wishlist?")
+            const wishListItem = await axios.post(`/api/wishlist/${user.user_id}`, wishlist, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }});
+            console.log("ProductPage: setting wishlist");
+            
+        }
+    };
+
+
     const registerChange = (e, data) => {
         const qty = data.value;
         setQuantity(qty);
@@ -131,7 +153,10 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
                                         icon='remove'
                                         content='Remove'
                                         onClick={removeItem} />}
-                                <Button size='huge' basic style={{ marginTop: '1rem', marginLeft: '1rem' }}>Add to wishlist</Button>
+                                { !user.user_id ? "" :       
+                                <Button size='huge' basic style={{ marginTop: '1rem', marginLeft: '1rem' }} onClick={AddWishlist}>
+                                    Add to wishlist
+                                </Button> }
                             </div>
                         </Grid.Column>
                     </Grid.Row>
@@ -141,7 +166,7 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
                         (blog) => {
                             return (
                                 <Fragment>
-                                    <Header className='blogtitle' as='h1'>
+                                    <Header className='blogtitle' as='h2'>
                                         {blog.title}</Header>
                                     <p>{blog.blogText}</p>
                                 </Fragment>
