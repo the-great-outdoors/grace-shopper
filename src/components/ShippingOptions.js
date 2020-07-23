@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Segment, Button, Input, Dropdown } from "semantic-ui-react";
 import { ShippingEdit } from './ShippingEdit';
 import { Shipping } from '../components';
 
-const ShippingOptions = ({ user, setStep }) => {
+const ShippingOptions = ({ user, setStep}) => {
+    const [editMode, setEditMode] = useState(false);
+    const[shippingInfo, setShipping] = useState({})
 
-    const { firstname, lastname, userPreferences: { street, city, state, zip, shipping } } = user;
+    useEffect(()=>{
+        if (user.user_id) {
+            console.log('setting setShipping');
+            const { firstname, lastname, userPreferences: { street, city, state, zip, shipping } } = user;
+    
+            setShipping({ firstname, lastname, street, city, state, zip, shipping });
+        }else{
+            console.log('guest user');
+        }
 
-    const [shippingInfo, setShipping] = useState({ firstname, lastname, street, city, state, zip, shipping });
-
-    const [editMode, setEditMode] = useState(false)
-
-
-
+    }, []);
+  
+   
     return (
         <Grid celled='internally'>
             {editMode ?

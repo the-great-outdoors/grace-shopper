@@ -20,26 +20,49 @@ const Orders = ({ cart, setCart, user, order, setOrder }) => {
 
     useEffect(() => {
         //check for logged in user.
+        console.log('checking for active carts');
         if (user.user_id) {
-            //check for active cart
-            Axios.get('/api/orders/cart')
+
+            Axios.post(`/api/orders/cart`,{ message:'Im here!'} ,{headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }})
                 .then((res => {
-                    console.log('retrieved active order:', res.data.Orders)
+                    console.log('retrieved active order:', res.data.orders.items)
                     return res.data.orders
                 }))
                 .then((data) => {
-                    console.log('data:', data);
+                    console.log('data:', data.items);
+                    setOrder(data.orderId);
+                    setCart(data.items);
+                    localStorage.removeItem('activeCart');
                 })
-        } else {
-
+        }else{
+            console.log('Guest user');
+            const localCart= localStorage.getItem('activeCart');
+            if (localCart) {
+                setCart(JSON.parse(localCart));
+                console.log('guest user. Items retrieved from memory:', localCart);
+            }
         }
 
     }, []);
 
     const handleDelete = (event, data) => {
-        console.log('handleDelete clicked. Target:', event.target, 'data:', data);
-        const removeElement = data.id;
-        const cartArray = cart;
+        console.log('from order:', data);
+
+        const removeArrayElement = data.index;
+        const itemId = data.id;
+
+        if (user.user_id) {
+            Axios.delete(`/api/orders/cart/${itemId}`,{headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },data: {order} })
+            .then(data=>{
+                console.log('Deleted item: ',data);
+            })
+
+        }
+        const cartArray = [...cart];
         const deletedItem = cartArray.splice(removeElement, 1);
         console.log('Items remaining:', cartArray);
         setCart(cartArray);
@@ -50,34 +73,20 @@ const Orders = ({ cart, setCart, user, order, setOrder }) => {
 
     const handleCheckout = async (event, target) => {
         event.preventDefault();
-
-        const res = await Axios.post('/api/orders', { userId: 1, status: true });
-
+        if (!cart||!cart.length) {
+            alert('Nothing in cart. Time to Splurge!');
+        }
+        console.log("entered order")
+        const res = await Axios.patch('/api/orders/cart', {status: false, orderId:order}, {headers:{
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }});
+        localStorage.removeItem('activeCart');
         console.log('order:', res);
+        setCart([]);
+        alert('Successfully placed order!');
 
-        const orderId = res.data.order.orderId;
-        console.log(orderId);
+        }
 
-        cart.map(async (item) => {
-
-            const { merchId, quantity, price } = item;
-
-            const orderItem = await Axios.post(`/api/orders/${orderId}`, { merchId, quantity, price });
-            console.log('new order item:', orderItem);
-            return orderItem;
-        })
-
-    console.log('order number:', order);
-    if (order) {
-        const res = await Axios.patch(`/api/orders/${order}`, { status: false })
-        console.log('Placed order:', res.data.payment);
-    }
-
-    alert('Successfully placed order!');
-
-}
-
-console.log('new cart:', cart);
 return (
     !cart ? <div>NO CART FOR YOU</div> :
         <>
@@ -117,7 +126,7 @@ return (
                                 <List.Description>{order.quantity}</List.Description>
                                 <List.Description>{order.price}</List.Description>
                             </List.Content>
-                            <Button Icon='delete' onClick={handleDelete} id={index}>Delete</Button>
+                            <Button Icon='delete' onClick={handleDelete} id={order.item_id}index={index}>Delete</Button>
                         </List.Item>
                     )
                 })
@@ -134,7 +143,7 @@ return (
                         <Icon size='massive' name='free code camp' />
                     </Button>}
         </>
-)
+    )
 }
 
 export default Orders;

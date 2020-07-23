@@ -4,7 +4,7 @@ import faker from 'faker';
 
 
 const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
-    const [shipMethod, setShipMethod] = useState(user.userPreferences.shipping);
+    const [shipMethod, setShipMethod] = useState();
 
     const { firstname, lastname, street, city, state, zip, shipping } = shippingInfo;
 
@@ -76,7 +76,7 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                             <p> First Name:</p>
                             <Input
                                 name='firstname'
-                                defaultValue={firstname}
+                               
                                 onChange={handleInput}
                             >
                             </Input>
@@ -85,7 +85,7 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                             <p>Last Name:</p>
                             <Input
                                 name='lastname'
-                                defaultValue={lastname}
+                                
                                 onChange={handleInput}
                             >
                             </Input>
@@ -95,7 +95,7 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                             <p>Street Address:</p>
                             <Input
                                 name='street'
-                                defaultValue={street}
+                                
                                 onChange={handleInput}
                             >
                             </Input>
@@ -111,7 +111,7 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                                 <p>City:</p>
                                 <Input
                                     name='city'
-                                    defaultValue={city}
+                                    
                                     onChange={handleInput}
                                 >
                                 </Input>
@@ -122,7 +122,7 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                                 <Dropdown
                                     name='state'
                                     placeholder='State'
-                                    defaultValue={state}
+                                   
                                     style={{
                                         border: '1px solid black',
                                         borderRadius: '5px'
@@ -138,7 +138,7 @@ const ShippingEdit = ({user, setShipping, shippingInfo, setEditMode}) =>{
                                 <p>Zip Code:</p>
                                 <Input
                                     name='zip'
-                                    defaultValue={zip}
+                                    
                                     onChange={handleInput}
                                 >
                                 </Input>
