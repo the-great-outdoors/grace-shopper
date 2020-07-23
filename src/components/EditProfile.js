@@ -4,14 +4,9 @@ import { Form, Input, Radio, Button, Modal, Grid, Segment, Dimmer, Loader, Image
 import faker from 'faker';
 import _ from 'lodash';
 
-import { UserProfile } from '../components';
-import './EditProfile.css';
-
 
 const EditProfile = ({
     user,
-    setUser,
-    editMode,
     setEditMode,
     firstname,
     setFirstname,
@@ -52,9 +47,9 @@ const EditProfile = ({
         setState(param.value);
     };
 
-    const handleChange = (e, param) => {
+    const handleShippingChange = (e, param) => {
         console.log('Handle Change', param.value)
-        setShipping(param.value)
+        setShipping(param.value);
     };
 
 
@@ -206,21 +201,21 @@ const EditProfile = ({
                                 label='USPS'
                                 value='USPS'
                                 checked={shipping === 'USPS'}
-                                onClick={handleChange}
+                                onClick={handleShippingChange}
                                 style={{ padding: '0 5px' }}
                             />
                             <Radio
                                 label='UPS'
                                 value='UPS'
                                 checked={shipping === 'UPS'}
-                                onClick={handleChange}
+                                onClick={handleShippingChange}
                                 style={{ padding: '0 5px' }}
                             />
                             <Radio
                                 label='FedEx'
                                 value='FedEx'
                                 checked={shipping === 'FedEx'}
-                                onClick={handleChange}
+                                onClick={handleShippingChange}
                                 style={{ padding: '0 5px' }}
                             />
                         </Segment>

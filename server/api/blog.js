@@ -169,7 +169,7 @@ blogsRouter.post('/', requireUser, async (req, res, next) => {
 blogsRouter.delete('/:blogId', requireUser, async (req, res, next) => {
     const { blogId } = req.params;
     console.log('Delete route BlogId: ', blogId);
-    user = req.user;
+    const user = req.user;
     console.log('Delete route user', user)
 
     try {

@@ -360,7 +360,7 @@ async function createInitialBlogs() {
             {
                 blog_id: 1,
                 merchId: 1,
-                title: 'camping at Big Dalton Canyon Wilderness Park',
+                title: 'Camping at Big Dalton Canyon Wilderness Park',
                 blogText: 'Big Dalton Canyon Park in Glendora, CA. Steep trails are the Upper Mystic and Wren Meacham trails.  The Big Dalton trail is easier and scenic. It runs parallel to the paved road and creek but is far enough that sounds of traffic are blocked off. Includes bridges over the mostly year-round creek. Campground does not have RV hookups.',
                 authorId: 1,
             },
@@ -368,8 +368,8 @@ async function createInitialBlogs() {
             {
                 blog_id: 2,
                 merchId: 2,
-                title: 'hiking at Eaton Canyon',
-                blogText: 'Eaton Canyon is a fairyly easy trail. Recommend that you get there early because of the heat and to avoid crowds. Depending on if it has rained recently you may have to cross the creek a few times. Worth it to reach the waterfall at the end.',
+                title: 'Hiking at Eaton Canyon',
+                blogText: 'Eaton Canyon is a fairly easy trail. Recommend that you get there early because of the heat and to avoid crowds. Depending on if it has rained recently you may have to cross the creek a few times. Worth it to reach the waterfall at the end.',
                 authorId: 2,
             }
         ]

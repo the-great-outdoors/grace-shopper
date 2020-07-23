@@ -108,7 +108,7 @@ ordersRouter.post('/:orderId', async (req, res, next) => {
 
 ordersRouter.get('/:userId', requireUser, async (req, res, next) => {
     const { userId } = req.params;
-    user = req.user;
+    const user = req.user;
 
     if (user && user.user_id === Number(userId)) {
         try {
@@ -230,7 +230,7 @@ ordersRouter.get('/:userId', requireUser, async (req, res, next) => {
 ordersRouter.delete('/:orderId', requireUser, async (req, res, next) => {
     console.log('Entered DELETE /orderID to DELETE ENTIRE ORDER')
     const { orderId } = req.params;
-    user = req.user;
+    const user = req.user;
 
     if (user && user.user_id === userId) {
         try {
