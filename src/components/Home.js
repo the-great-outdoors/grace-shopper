@@ -1,4 +1,4 @@
 import React from 'react';
-import {Hero, Merchandise} from "./index";
+import { Hero, Merchandise } from "./index";
 
 

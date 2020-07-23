@@ -20,7 +20,7 @@ wishlistRouter.get('/:userId', async (req, res, next) => {
 
     try {
         const wishlistItem = await getWishListByUserId(userId);
-        console.log('Retrieved wishlist item: ', wishlistitem);
+        console.log('Retrieved wishlist item: ', wishlistItem);
         if (wishlistItem) {
             console.log('Begin res.send in wishlist...');
             res.send({
@@ -83,6 +83,7 @@ wishlistRouter.patch('/:userId', requireUser, async (req, res, next) => {
     console.log("Req.user.user_id: ", req.user.user_id);
     try {
         if (user && user.user_id === Number(userId)) {
+
             const updatedWishlistItem = await updateWishListByUserId(user.user_id, {
                 title
             });
@@ -90,6 +91,7 @@ wishlistRouter.patch('/:userId', requireUser, async (req, res, next) => {
                 message: 'Successfully updated user wishlist item.',
                 updatedWishlistItem,
                 status: true,
+
             });
             console.log("Updated wishlist item: ", updatedWishlistItem);
         } else {

@@ -71,7 +71,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS users(
                 user_id SERIAL PRIMARY KEY,
                 username VARCHAR(255) UNIQUE NOT NULL,
-                hashpassword VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
                 firstname VARCHAR(255) NOT NULL,
                 lastname VARCHAR(255) NOT NULL,
                 save_pmt BOOLEAN DEFAULT false,
@@ -124,7 +124,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS blogs(
                 blog_id SERIAL PRIMARY KEY,
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
-                title VARCHAR(255) UNIQUE NOT NULL,
+                title VARCHAR(255) NOT NULL,
                 "blogText" TEXT NOT NULL,
                 "authorId" INTEGER REFERENCES users(user_id)
             );
@@ -137,7 +137,7 @@ async function createTables() {
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
                 title VARCHAR(255),
                 "userId" INTEGER REFERENCES users(user_id),
-                UNIQUE (wish_id, "merchId")
+                CONSTRAINT UC_wishlist UNIQUE ("userId", "merchId")
             );
         `);
 
@@ -146,14 +146,13 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS orders(
                 "orderId" SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(user_id),
-                status BOOLEAN DEFAULT false,
-                price NUMERIC
+                status BOOLEAN DEFAULT true
             );
         `);
 
         console.log('Creating orderItem...')
         await db.query(`
-            CREATE TABLE IF NOT EXISTS orderItem(
+            CREATE TABLE IF NOT EXISTS orderitem(
                 item_id SERIAL PRIMARY KEY,
                 "orderId" INTEGER REFERENCES orders("orderId"),
                 "merchId" INTEGER REFERENCES merchandise(merch_id),
@@ -231,20 +230,20 @@ async function createInitialUsers() {
         const seededUsers = [
             {
                 username: 'groovyash',
-                hashpassword: 'hailtotheking',
+                password: 'hailtotheking',
                 firstname: 'Ashley',
                 lastname: 'Williams'
             },
 
             {
                 username: 'batman',
-                hashpassword: 'thedarkknight',
+                password: 'thedarkknight',
                 firstname: 'Bruce',
                 lastname: 'Wayne'
             },
             {
                 username: 'turdferguson',
-                hashpassword: 'uraturd99',
+                password: 'uraturd99',
                 firstname: 'Thomas',
                 lastname: 'Ferguson'
             }
@@ -256,7 +255,7 @@ async function createInitialUsers() {
             const hashedPassword = bcrypt.hashSync(user.username, SALT_COUNT);
             const seededUser = await createUser({
                 ...user,
-                hashpassword: hashedPassword
+                password: hashedPassword
             });
             return seededUser;
         }));
@@ -360,7 +359,7 @@ async function createInitialBlogs() {
             {
                 blog_id: 1,
                 merchId: 1,
-                title: 'camping at Big Dalton Canyon Wilderness Park',
+                title: 'Camping at Big Dalton Canyon Wilderness Park',
                 blogText: 'Big Dalton Canyon Park in Glendora, CA. Steep trails are the Upper Mystic and Wren Meacham trails.  The Big Dalton trail is easier and scenic. It runs parallel to the paved road and creek but is far enough that sounds of traffic are blocked off. Includes bridges over the mostly year-round creek. Campground does not have RV hookups.',
                 authorId: 1,
             },
@@ -368,8 +367,8 @@ async function createInitialBlogs() {
             {
                 blog_id: 2,
                 merchId: 2,
-                title: 'hiking at Eaton Canyon',
-                blogText: 'Eaton Canyon is a fairyly easy trail. Recommend that you get there early because of the heat and to avoid crowds. Depending on if it has rained recently you may have to cross the creek a few times. Worth it to reach the waterfall at the end.',
+                title: 'Hiking at Eaton Canyon',
+                blogText: 'Eaton Canyon is a fairly easy trail. Recommend that you get there early because of the heat and to avoid crowds. Depending on if it has rained recently you may have to cross the creek a few times. Worth it to reach the waterfall at the end.',
                 authorId: 2,
             }
         ]

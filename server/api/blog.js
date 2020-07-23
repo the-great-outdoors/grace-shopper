@@ -5,7 +5,6 @@ const {
     getAllBlogs,
     getBlogByUserId,
     getBlogByMerchId,
-    // getBlogByCategoryId,
     getBlogByBlogId,
     createBlog,
     updateBlog,
@@ -53,16 +52,18 @@ blogsRouter.get('/:userId', async (req, res, next) => {
     };
 });
 
+
 blogsRouter.get('/merch/:merchId', async (req, res, next) => {
+
     const { merchId } = req.params;
 
     try {
-        const blog = await getBlogByMerchId(merchId);
+        const blogs = await getBlogByMerchId(merchId);
 
-        if (blog) {
+        if (blogs) {
             res.send({
                 message: 'Successfully retrieved blog by merchId',
-                blog
+                blogs
             })
         } else {
             next({
@@ -169,7 +170,7 @@ blogsRouter.post('/', requireUser, async (req, res, next) => {
 blogsRouter.delete('/:blogId', requireUser, async (req, res, next) => {
     const { blogId } = req.params;
     console.log('Delete route BlogId: ', blogId);
-    user = req.user;
+    const user = req.user;
     console.log('Delete route user', user)
 
     try {

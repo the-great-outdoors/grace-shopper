@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { createUser, updateUser, getUserByUserId, getUserByUsername, getAllUsers, getAllMerchandise, getUserPreferencesByUserId, createUserPreferences } = require('../db');
 const { requireUser, requireActiveUser } = require('./utils');
-const { useLayoutEffect } = require('react');
+// const { useLayoutEffect } = require('react');
 
 usersRouter.use((req, res, next) => {
     console.log('A request is being made to /users');
@@ -37,7 +37,7 @@ usersRouter.get('/me', requireUser, async (req, res, next) => {
 usersRouter.post('/register', async (req, res, next) => {
     const {
         username,
-        hashpassword,
+        password,
         firstname,
         lastname,
         street,
@@ -54,20 +54,22 @@ usersRouter.post('/register', async (req, res, next) => {
         if (_user) {
             next({
                 name: 'UserExistsError',
-                message: 'A user by that username already exists'
+                message: 'A user by that username already exists',
+                status: 'UserExists'
             });
         };
-        if (hashpassword.length < 8) {
+        if (password.length < 8) {
             next({
                 name: 'PasswordTooShort',
-                message: 'Password must be at least 8 characters'
+                message: 'Password must be at least 8 characters',
+                status: 'PasswordShort'
             })
             return;
         };
-        bcrypt.hash(hashpassword, SALT_COUNT, async function (err, hashedPassword) {
+        bcrypt.hash(password, SALT_COUNT, async function (err, hashedPassword) {
             const user = await createUser({
                 username,
-                hashpassword: hashedPassword,
+                password: hashedPassword,
                 firstname,
                 lastname,
             });
@@ -90,7 +92,7 @@ usersRouter.post('/register', async (req, res, next) => {
             });
             console.log('New User Preference: ', userPreferences);
             user.userPreferences = userPreferences;
-            delete user.hashpassword
+            delete user.password
             console.log('New User: ', user);
             res.send({
                 message: "Thank you for signing up!",
@@ -105,9 +107,9 @@ usersRouter.post('/register', async (req, res, next) => {
 });
 
 usersRouter.post('/login', async (req, res, next) => {
-    const { username, hashpassword } = req.body;
+    const { username, password } = req.body;
 
-    if (!username || !hashpassword) {
+    if (!username || !password) {
         next({
             name: "MissingCredentialsError",
             message: "Please supply both a username and password"
@@ -116,15 +118,15 @@ usersRouter.post('/login', async (req, res, next) => {
 
     try {
         const user = await getUserByUsername(username);
-        console.log('USER: ', user);
-        const hashedPassword = user.hashpassword;
-        console.log('HASHEDPASSWORD: ', hashedPassword);
-        console.log('HASHPASSWORD', hashpassword);
+
+        const hashedPassword = user.password;
+        console.log('HASHED PASSWORD: ', hashedPassword);
+        console.log('PASSWORD', password);
         console.log('<><>', hashedPassword == hashedPassword);
-        bcrypt.compare(hashpassword, hashedPassword, function (err, passwordsMatch) {
+        bcrypt.compare(password, hashedPassword, function (err, passwordsMatch) {
             if (passwordsMatch) {
                 const token = jwt.sign({ id: user.user_id, username: user.username }, process.env.JWT_SECRET)
-                delete user.hashpassword;
+                delete user.password;
                 res.send({
                     message: "you're logged in!",
                     user,
@@ -134,7 +136,8 @@ usersRouter.post('/login', async (req, res, next) => {
             } else {
                 next({
                     name: 'IncorrectCredentialsError',
-                    message: 'Username or password is incorrect'
+                    message: 'Username or password is incorrect',
+                    status: 'UsernamePasswordIncorrect'
                 });
             };
         });

@@ -74,7 +74,8 @@ const App = () => {
                     login={login}
                     user={user}
                     setUser={setUser}
-                    cart={cart} />
+                    cart={cart} 
+                    setEditMode={setEditMode} />
             </Sticky>
             <Switch>
                 <Route path='/contact'>

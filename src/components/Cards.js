@@ -11,7 +11,6 @@ const MerchCards = ({ merchandise }) => {
     e.preventDefault();
     console.log('entered handle select', data.id);
     history.push(`/productpage/${data.id}`);
-
   }
 
   return (

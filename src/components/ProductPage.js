@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb } from 'semantic-ui-react';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb, Container } from 'semantic-ui-react';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import './ProductPage.css';
-import Axios from 'axios';
 
-const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
+// const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
+const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
+    const [item, setItem] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
     const [addItem, setAddItem] = useState(false);
     const { id } = useParams();
-    
+    const [blogs, setBlogs] = useState([]);
+
     console.log('merch id:', id);
 
     const history = useHistory();
@@ -35,12 +37,28 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
 
     }, []);
 
-    const AddItem = async() => {
+
+    useEffect(() => {
+        try {
+
+            axios.get(`/api/blogs/merch/${id}`)
+                .then(res => {
+                    console.log('are blogs here', res.data)
+                    setBlogs(res.data.blogs);
+                })
+
+        } catch (error) {
+            throw error;
+        }
+
+    }, []);
+
+
+    const AddItem = async () => {
 
         const qty = quantity;
         const price = item.price;
-        const merchId = item.merch;
-        console.log('qty:', qty, 'price:', price, 'id:',id);
+        console.log('qty:', qty, 'price:', price, 'id:', id);
         const merch = {
             merchId: id,
             quantity: qty,
@@ -48,30 +66,25 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
             name: item.name,
             description: item.description
         }
-
-        const cartArray = [...cart, merch];
-
-        setCart(cartArray);
-
-        let orderId;
+        console.log('cart:', cart);
+        let cartArray = [...cart];
+        console.log('CartArray:', cartArray);
+        let activeCart;
         if (user.user_id) {
-            if (!order) {
-                const res = await Axios.post('/api/orders', {userId:user.user_id,status:true});
-                orderId = res.data.order.orderId;
-                setOrder(orderId);
-            }else{
-                orderId=order;
-            }
 
-            const orderItem = await Axios.post(`/api/orders/${orderId}`,merch);
-                return orderItem;
+            const orderItems = await axios.post('/api/orders', merch, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+            console.log('orderItem:', orderItems.data.orderItem);
+            cartArray.push(orderItems.data.orderItem);
+            console.log('CartArray', cartArray);
 
-        }else{
-            
-            localStorage.setItem('activeCart', JSON.stringify(cartArray));
+        } else {
+            console.log('No user. Adding merch to array');
+            cartArray.push(merch);
+            console.log('cartArray:', cartArray);
         }
-
-        
+        console.log('ProductPage: setting cart');
+        setCart(cartArray);
+        localStorage.setItem('activeCart', JSON.stringify(cartArray))
 
     }
 
@@ -82,6 +95,7 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
 
 
     console.log('items in cart:', cart)
+    console.log('blogs', blogs);
 
     return (
         <>
@@ -122,9 +136,24 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                <Container>
+                    {blogs.map(
+                        (blog) => {
+                            return (
+                                <Fragment>
+                                    <Header className='blogtitle' as='h1'>
+                                        {blog.title}</Header>
+                                    <p>{blog.blogText}</p>
+                                </Fragment>
+                            )
+                        })
+                    }
+                </Container>
             </div>
         </>
     )
 }
+
+
 
 export default ProductPage;

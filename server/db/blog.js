@@ -10,7 +10,6 @@ async function getAllBlogs() {
             ON blogs."authorId"=users.user_id;
     `);
 
-
         return blogs;
     } catch (e) {
         console.error(e)
@@ -90,7 +89,7 @@ async function updateBlog(blogId, fields = {}) {
 
     console.log(fields);
     console.log(setString);
-    //return early if this is called wihtout fields
+
     if (setString.length === 0) {
         return;
     };
@@ -99,7 +98,7 @@ async function updateBlog(blogId, fields = {}) {
         const { rows: [result] } = await db.query(`
             UPDATE blogs
             SET ${ setString} 
-            WHERE blog_id=${ blogId }
+            WHERE blog_id=${ blogId}
             RETURNING *;
         `, Object.values(fields));
 
@@ -120,7 +119,7 @@ async function getBlogByBlogId(blogId) {
 
         return blog;
     } catch (error) {
-        
+
     }
 }
 
@@ -135,13 +134,11 @@ async function deleteBlog(blogId) {
     };
 };
 
-
 module.exports = {
     getAllBlogs,
     getBlogByUserId,
     getBlogByMerchId,
     getBlogByBlogId,
-    // getBlogByCategoryId,
     createBlog,
     updateBlog,
     deleteBlog,

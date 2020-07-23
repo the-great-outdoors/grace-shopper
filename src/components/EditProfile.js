@@ -4,14 +4,9 @@ import { Form, Input, Radio, Button, Modal, Grid, Segment, Dimmer, Loader, Image
 import faker from 'faker';
 import _ from 'lodash';
 
-import { UserProfile } from '../components';
-import './EditProfile.css';
-
 
 const EditProfile = ({
     user,
-    setUser,
-    editMode,
     setEditMode,
     firstname,
     setFirstname,
@@ -52,9 +47,9 @@ const EditProfile = ({
         setState(param.value);
     };
 
-    const handleChange = (e, param) => {
+    const handleShippingChange = (e, param) => {
         console.log('Handle Change', param.value)
-        setShipping(param.value)
+        setShipping(param.value);
     };
 
 
@@ -66,7 +61,12 @@ const EditProfile = ({
     const editUserProfile = () => {
         console.log('Edit User Preferences is being called!');
         const { user_id } = user;
-        axios.patch(`/api/userprefs/${user_id}`, { user_id, firstname, lastname, street, city, state, zip, shipping })
+        axios.patch(`/api/userprefs/${user_id}`, { user_id, firstname, lastname, street, city, state, zip, shipping },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             .then(res => {
                 console.log('New User Profile: ', res.data);
                 const upUser = res.data.updatedUserInfo;
@@ -206,38 +206,53 @@ const EditProfile = ({
                                 label='USPS'
                                 value='USPS'
                                 checked={shipping === 'USPS'}
-                                onClick={handleChange}
+                                onClick={handleShippingChange}
                                 style={{ padding: '0 5px' }}
                             />
                             <Radio
                                 label='UPS'
                                 value='UPS'
                                 checked={shipping === 'UPS'}
-                                onClick={handleChange}
+                                onClick={handleShippingChange}
                                 style={{ padding: '0 5px' }}
                             />
                             <Radio
                                 label='FedEx'
                                 value='FedEx'
                                 checked={shipping === 'FedEx'}
-                                onClick={handleChange}
+                                onClick={handleShippingChange}
                                 style={{ padding: '0 5px' }}
                             />
                         </Segment>
+
+                        <Segment
+                            style={{
+                                display: "flex",
+                                justifyContent: 'flex-end'
+                            }}
+                        >
+                            <Button
+                                color='red'
+                                style={{
+                                    margin: '0 1px'
+                                }}
+                                onClick={toggleEditMode}
+                            >
+                                Cancel
+                        </Button>
+                            <Button
+                                style={{
+                                    backgroundColor: 'olivedrab',
+                                    color: 'white',
+                                    margin: '0 1px'
+                                }}
+                                onClick={editUserProfile}
+                            >
+                                Submit
+                        </Button>
+                        </Segment>
                     </Segment.Group>
 
-                    <Segment>
-                        <Button
-                            onClick={toggleEditMode}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={editUserProfile}
-                        >
-                            Submit
-                        </Button>
-                    </Segment>
 
                 </Grid.Column>
 

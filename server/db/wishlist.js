@@ -8,6 +8,7 @@ async function createWishListByUserId({ merchId, title, userId }) {
         const { rows: result } = await db.query(`
         INSERT INTO wishlist ("merchId", title, "userId")
         VALUES ($1, $2, $3)
+        ON CONFLICT ("userId", "merchId") DO NOTHING
         RETURNING *;
         `, [merchId, title, userId]);
         console.log('New wishlist item: ', result)
@@ -18,7 +19,6 @@ async function createWishListByUserId({ merchId, title, userId }) {
     };
 };
 
-//updateWishlistByUserId(userId, fields={'merchIds'})
 async function updateWishListByUserId(userId, fields = {}) {
 
     const setString = Object.keys(fields).map(
@@ -39,7 +39,6 @@ async function updateWishListByUserId(userId, fields = {}) {
     };
 };
 
-//getWishlistByUserId(userId)
 async function getWishListByUserId(userId) {
 
     try {
@@ -76,7 +75,7 @@ async function deleteWishListItem(wishId) {
     try {
         await db.query(`
         DELETE FROM wishlist
-        WHERE wish_id=${ wishId }
+        WHERE wish_id=${ wishId}
         `, [wishId]);
 
     } catch (e) {

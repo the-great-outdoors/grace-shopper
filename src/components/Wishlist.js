@@ -1,17 +1,25 @@
-// /wishlist route  compentent takes in user as a prop. 
-// userId inside API request. fetch data with use effect from API route. then map over for list
-// item.
-
-//if don't have a user render div message, guest users can't have a wish list. Please log in or create
-//an account.  in the useeffect the dependency should have a user in it. then if user in useeffect callback
-//fetch the data.
 
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
+import { Card, Icon, Item, Image, Rating, Segment, Loader, Dimmer, Container, Header } from "semantic-ui-react";
 import axios from 'axios';
 
+import { MerchCards } from '../components';
+
 const Wishlist = ({ user }) => {
+
+  if (!user.user_id) {
+    // return <div>
+    //   <Segment>
+    //     <Dimmer active inverted>
+    //       <Loader inverted active>Loading</Loader>
+    //     </Dimmer>
+
+    //     <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+    //   </Segment>
+    // </div>;
+  }
+
   const { user_id } = user;
 
   const history = useHistory();
@@ -26,15 +34,11 @@ const Wishlist = ({ user }) => {
   useEffect(() => {
 
     if (user_id) {
-      console.log('user', user_id)
 
-      axios.get(`/api/wishlist/${user_id}`, { user_id })
+      axios.get(`/api/wishlist/${user_id}`)
         .then(res => {
-          console.log(res.data);
-          const list = res.data.wishlistitem;
-          console.log("list", res.data.wishlistitem);
+          const list = res.data.wishlistItem;
           setWishlist(list);
-          console.log("setlist", list)
         })
         .catch(error => console.error("wishlist error", error))
 
@@ -44,30 +48,43 @@ const Wishlist = ({ user }) => {
 
   return (
     user.user_id && wishlist ?
-      <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
-        {wishlist.map((item) => {
-          return (
-            <Card onClick={handleSelect} key={item.merch_id} id={item.merch_id}>
-              <Image src='http://placeimg.com/300/300/nature' wrapped ui={false} />
-              <Card.Content>
-                <Card.Header>{item.name}</Card.Header>
-                <Card.Meta>
-                  {item.price}
-                </Card.Meta>
-                <Card.Description>
-                  {item.description}
-                </Card.Description>
-              </Card.Content>
-              <Card.Content extra>
-                <Rating icon='star' defaultRating={3} maxRating={4} />
-              </Card.Content>
-            </Card>
-          )
-        })}
-      </Card.Group>
-      : <div>
-          <h1> "Guest Users cannot have a wishlist. Please create an account or a wishlist to proceed." </h1>
-        </div>
+      <Container
+        style={{
+          backgroundColor: 'lightgrey',
+          height: '100vh',
+          width: '100vw'
+        }}>
+        <Container fluid>
+          <Container style={{
+            background: 'purple',
+            height: '150px',
+            width: '100vw',
+            backgroundImage: `url('/resources/hammocks.jpg')`,
+            backgroundSize: 'cover',
+          }}>
+            <Header inverted color='orange' textAlign='center' style={{ fontFamily: 'Ultra', fontSize: '5rem', paddingTop: '25px' }}>Wishlist for {user.username}</Header>
+          </Container>
+        </Container>
+        <Card.Group itemsPerRow={10} style={{ padding: '.75em .75em', display: 'flex', justifyContent: 'center' }}>
+          <MerchCards
+            merchandise={wishlist}
+          />
+        </Card.Group>
+      </Container>
+      :
+      <>
+        <Container fluid>
+          <Container style={{
+            background: 'purple',
+            height: '100vh',
+            width: '100vw',
+            backgroundImage: `url('/resources/hammocks.jpg')`,
+            backgroundSize: 'cover',
+          }}>
+            <Header inverted color='orange' textAlign='center' style={{ fontFamily: 'Ultra', fontSize: '5rem', paddingTop: '25px' }}>Login Required to View Wishlists</Header>
+          </Container>
+        </Container>
+      </>
   )
 
 }
