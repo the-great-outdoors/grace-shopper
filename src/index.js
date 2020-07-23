@@ -37,6 +37,7 @@ const App = () => {
     const [cart, setCart] = useState([]);
     const [userPayments, setUserPayments] = useState([]);
     const [order, setOrder] = useState();
+    const [paymentModalShow, setPaymentModalShow] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -100,7 +101,9 @@ const App = () => {
                         user={user}
                         setUser={setUser}
                         editMode={editMode}
-                        setEditMode={setEditMode} />
+                        setEditMode={setEditMode} 
+                        paymentModalShow={paymentModalShow}
+                        setPaymentModalShow={setPaymentModalShow} />
                 </Route>
                 <Route path="/productpage/:id">
                     <ProductPage

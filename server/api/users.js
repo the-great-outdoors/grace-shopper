@@ -17,17 +17,15 @@ usersRouter.get('/', async (req, res) => {
     });
 });
 
-usersRouter.get('/:userId', requireUser, async (req, res, next) => {
-    const { userId } = req.params;
-    user = req.user;
+usersRouter.get('/me', requireUser, async (req, res, next) => {
+    const user = req.user;
     console.log('User Object: ', user);
 
-    if (user && user.user_id === Number(userId)) {
+    if (user && user.user_id) {
         try {
-            const user = await getUserByUserId(userId);
             res.send({
                 message: 'Here is the fetched user!',
-                user,
+                user: await getUserByUserId(user.user_id),
                 status: true
             })
         } catch ({ name, message }) {
