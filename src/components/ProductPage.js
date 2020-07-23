@@ -4,7 +4,6 @@ import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import './ProductPage.css';
-import Axios from 'axios';
 
 // const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
@@ -59,7 +58,6 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
 
         const qty = quantity;
         const price = item.price;
-        const merchId = item.merch;
         console.log('qty:', qty, 'price:', price, 'id:',id);
         const merch = {
             merchId: id,
@@ -68,30 +66,25 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
             name: item.name,
             description: item.description
         }
-
-        const cartArray = [...cart, merch];
-
-        setCart(cartArray);
-
-        let orderId;
+        console.log('cart:', cart);
+        let cartArray = [...cart];
+        console.log('CartArray:', cartArray);
+        let activeCart;
         if (user.user_id) {
-            if (!order) {
-                const res = await Axios.post('/api/orders', {userId:user.user_id,status:true});
-                orderId = res.data.order.orderId;
-                setOrder(orderId);
-            }else{
-                orderId=order;
-            }
 
-            const orderItem = await Axios.post(`/api/orders/${orderId}`,merch);
-                return orderItem;
-
-        }else{
+            const orderItems = await axios.post('/api/orders',merch, {headers:{Authorization: `Bearer ${localStorage.getItem('token')}` }});
+            console.log('orderItem:', orderItems.data.orderItem);
+            cartArray.push(orderItems.data.orderItem);
+            console.log('CartArray', cartArray);
             
-            localStorage.setItem('activeCart', JSON.stringify(cartArray));
+        }else{
+            console.log('No user. Adding merch to array');
+            cartArray.push(merch);
+            console.log('cartArray:', cartArray);
         }
-
-        
+            console.log('ProductPage: setting cart');
+            setCart(cartArray);
+            localStorage.setItem('activeCart', JSON.stringify(cartArray))
 
     }
 

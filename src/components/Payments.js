@@ -4,10 +4,22 @@ import faker from 'faker';
 
 const Payments =({setStep, editMode, setEditMode, user}) =>{
 
-    const { firstname, lastname, userPreferences:{street, city, state,zip} } = user;
+    const [savePayment, setSavePayment] = useState({});
+
+useEffect(()=>{
+    if (user.user_id) {
+        const { firstname, lastname, userPreferences:{street, city, state,zip} } = user;
+        setSavePayment({firstname, lastname, street, city, state, zip });
+    }else{
+        console.log('guest user');
+    }
+
+}, []);
+    
+    
 
 
-    const [savePayment, setSavePayment] = useState({firstname, lastname, street, city, state, zip });
+   
 
     
     const cardType = [
@@ -100,7 +112,7 @@ const Payments =({setStep, editMode, setEditMode, user}) =>{
                             <p> First Name:</p>
                             <Input
                                 name='firstname'
-                                defaultValue={firstname}
+                                
                                 onChange={handleInput}
                             >
                             </Input>
@@ -109,7 +121,7 @@ const Payments =({setStep, editMode, setEditMode, user}) =>{
                             <p> Last Name:</p>
                             <Input
                                 name='lastname'
-                                defaultValue={lastname}
+                                
                                 onChange={handleInput}
                             >
                             </Input>
@@ -118,7 +130,7 @@ const Payments =({setStep, editMode, setEditMode, user}) =>{
                             <p>Street Address:</p>
                             <Input
                                 name='street'
-                                defaultValue={street}
+                                
                                 onChange={handleInput}
                             >
                             </Input>
@@ -134,7 +146,7 @@ const Payments =({setStep, editMode, setEditMode, user}) =>{
                                 <p>City:</p>
                                 <Input
                                     name='city'
-                                    defaultValue={city}
+                                    
                                     onChange={handleInput}
                                 >
                                 </Input>
@@ -145,7 +157,7 @@ const Payments =({setStep, editMode, setEditMode, user}) =>{
                                 <Dropdown
                                     name='state'
                                     placeholder='State'
-                                    defaultValue={state}
+                                    
                                     style={{
                                         border: '1px solid black',
                                         borderRadius: '5px'
@@ -161,7 +173,7 @@ const Payments =({setStep, editMode, setEditMode, user}) =>{
                                 <p>Zip Code:</p>
                                 <Input
                                     name='zip'
-                                    defaultValue={zip}
+                                    
                                     onChange={handleInput}
                                 >
                                 </Input>

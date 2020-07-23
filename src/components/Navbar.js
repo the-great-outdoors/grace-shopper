@@ -22,14 +22,6 @@ const NavBar = ({
 
   const [quantity, setQuantity] = useState('');
 
-  
-  // useEffect(()=>{
-  //   // setQuantity(cart.length);
-  //    setQuantity(cart.length);
-  // }, [cart.length])
-
-
-
   const [state, setState] = useState({ activeItem: 'home' });
   const history = useHistory();
   const [registerShow, registerSetShow] = useState(false);

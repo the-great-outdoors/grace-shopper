@@ -8,7 +8,7 @@ const ContactUs = () => {
             <Container fluid>
                 <Container style={{
                     background: 'purple',
-                    height: '800px',
+                    height: '600px',
                     width: '100vw',
                     backgroundImage: `url('/resources/maps.jpg')`,
                     backgroundSize: 'cover'
@@ -52,11 +52,11 @@ const ContactUs = () => {
                         </Card.Description>
                         <Divider />
                         <Card.Content style={{ textAlign: 'center' }} extra>
-                            <a href='https://www.linkedin.com'>LinkedIn</a>
+                            <a href='https://www.linkedin.com/in/levijplant1979' target='_blank'>LinkedIn</a>
                         </Card.Content>
                         <Divider />
                         <Card.Content style={{ textAlign: 'center' }} extra>
-                            <a href='https://github.com'>Github</a>
+                            <a href='https://github.com/levijplant' target='_blank'>Github</a>
                         </Card.Content>
                         </Card.Content>
                     </Card>
