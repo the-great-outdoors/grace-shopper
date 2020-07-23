@@ -16,6 +16,18 @@ const Wishlist = ({ user }) => {
 
   const history = useHistory();
 
+<<<<<<< HEAD
+    const [wishlist, setWishlist] = useState([]);
+  
+    const handleSelect = async (e, data) => {
+      history.push(`/wishlist/${data.id}`);
+  
+    }
+  
+    useEffect(() => {
+      
+      if (user_id) {
+=======
   const [wishlist, setWishlist] = useState([]);
 
   const handleSelect = async (e, data) => {
@@ -27,14 +39,12 @@ const Wishlist = ({ user }) => {
 
     if (user_id) {
       console.log('user', user_id)
+>>>>>>> 342181db256c2b3b865181051163edbe5863ae7f
 
       axios.get(`/api/wishlist/${user_id}`, { user_id })
         .then(res => {
-          console.log(res.data);
           const list = res.data.wishlistitem;
-          console.log("list", res.data.wishlistitem);
           setWishlist(list);
-          console.log("setlist", list)
         })
         .catch(error => console.error("wishlist error", error))
 
@@ -66,6 +76,15 @@ const Wishlist = ({ user }) => {
         })}
       </Card.Group>
       : <div>
+<<<<<<< HEAD
+      <h1> "Guest Users cannot have a wishlist. Or if you are logged in please create a wishlist to proceed." </h1>
+      </div>
+    )
+  
+  }
+  
+  export default Wishlist;
+=======
           <h1> "Guest Users cannot have a wishlist. Please create an account or a wishlist to proceed." </h1>
         </div>
   )
@@ -73,3 +92,4 @@ const Wishlist = ({ user }) => {
 }
 
 export default Wishlist;
+>>>>>>> 342181db256c2b3b865181051163edbe5863ae7f

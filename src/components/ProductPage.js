@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Header, Rating, Icon, Button, Input, Breadcrumb } from 'semantic-ui-react';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb, Container, Header } from 'semantic-ui-react';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
@@ -7,6 +7,8 @@ import './ProductPage.css';
 
 const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
+const ProductPage = (props) => {
+    const [item, setItem, blogs, setBlog] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
     const [addItem, setAddItem] = useState(false);
@@ -33,6 +35,23 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
         }
 
     }, []);
+
+
+    useEffect(()=>{
+        try {
+           
+            axios.get(`/api/blog/${ MerchId }`, {merch_id})
+            .then(res => {
+              const blog = res.data.blogs;
+              setBlog(blog);
+            })
+
+        } catch (error) {
+            throw error;
+        }
+
+    }, []);
+
 
     const AddItem = async() => {
 
@@ -115,9 +134,19 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                <Container>
+                {blogs.map((blog) => {
+                return (
+                    <Fragment>
+                <Header className='blogtitle' as='h1'>{blog.title}</Header>
+                <p>{blog.blogText}</p>
+                </Fragment>
+                )})}
+            </Container>
             </div>
         </>
     )
 }
+
 
 export default ProductPage;

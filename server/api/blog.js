@@ -53,16 +53,20 @@ blogsRouter.get('/:userId', async (req, res, next) => {
     };
 });
 
+
 blogsRouter.get('/merch/:merchId', async (req, res, next) => {
+
     const { merchId } = req.params;
 
     try {
-        const blog = await getBlogByMerchId(merchId);
+        const blogs = await getBlogByMerchId(merchId);
 
-        if (blog) {
+        if (blogs) {
             res.send({
+
                 message: 'Successfully retrieved blog by merchId',
                 blog
+
             })
         } else {
             next({
