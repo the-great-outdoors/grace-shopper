@@ -1,16 +1,26 @@
 const db = require('./database');
 
-async function createOrder({ userId, status = true }) {
-    console.log('db createOrder');
+async function findOrCreateActiveOrderByUserId( userId) {
+    console.log('db createOrder with userID:',userId);
     try {
-        const { rows: [order] } = await db.query(`
-        INSERT INTO orders("userId", status)
-        VALUES($1, $2)
-        RETURNING *;
-    `, [userId, status]);
+        const {rows:[activeCart]} = await db.query(`
+            SELECT * FROM orders
+            WHERE "userId"=$1 AND status = true;
+        `, [userId]);
 
-        console.log('Successfully created db order:', order);
-        return order;
+        if (activeCart) {
+            console.log('Cart Retrieved:', activeCart);
+            return activeCart;
+        }
+
+        const { rows: [newCart] } = await db.query(`
+        INSERT INTO orders("userId")
+        VALUES($1)
+        RETURNING *;
+    `, [userId]);
+
+        console.log('Successfully created db new cart:', newCart);
+        return newCart;
     } catch (error) {
         throw error;
     }
@@ -65,6 +75,9 @@ async function getUserOrdersByUserId(userId) {
 //updateUserOrderByOrderId(orderId)
 
 async function updateUserOrderByOrderId(orderId, fields = {}) {
+
+    console.log('db updateUserOrder', orderId, fields);
+
     const setString = Object.keys(fields).map(
         (key, index) => `"${key}"=$${index + 1}`
     ).join(', ');
@@ -74,13 +87,14 @@ async function updateUserOrderByOrderId(orderId, fields = {}) {
     };
 
     try {
-        const { rows: [order] } = await client.query(`
+        const { rows: [order] } = await db.query(`
             UPDATE orders
             SET ${ setString}
-            WHERE id=${ orderId}
+            WHERE "orderId"=${ orderId}
             RETURNING *;
         `, Object.values(fields));
 
+        console.log('db successfully updated order:', order);
         return order;
     } catch (error) {
         throw error;
@@ -140,16 +154,21 @@ async function getActiveOrderForUser(userId) {
         AND status = true;
     `, [userId]);
 
-        const orderId = order.orderId;
+        if (!order) {
+            console.log('no active orders')
+            return;
+        }
 
+        const orderId = order.orderId;
+        console.log('order retrieved!:',orderId)
         const { rows: items } = await db.query(`
-        SELECT * FROM orderItems
+        SELECT * FROM "orderitem"
         WHERE "orderId" = $1;
     `, [orderId])
 
         order.items = items
         console.log('Successfully retrieved active order:', order);
-        return order
+        return order;
 
     } catch (error) {
         throw error;
@@ -162,9 +181,9 @@ module.exports = {
     getUserOrdersByUsername,
     getUserOrdersByUserId,
     updateUserOrderByOrderId,
-    createOrder,
     createOrderItem,
     deleteItemByOrderId,
     deleteOrderByOrderId,
+    findOrCreateActiveOrderByUserId,
     getActiveOrderForUser
 }
