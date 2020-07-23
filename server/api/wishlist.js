@@ -20,7 +20,7 @@ wishlistRouter.get('/:userId', async (req, res, next) => {
 
     try {
         const wishlistItem = await getWishListByUserId(userId);
-        console.log('Retrieved wishlist item: ', wishlistitem);
+        console.log('Retrieved wishlist item: ', wishlistItem);
         if (wishlistItem) {
             console.log('Begin res.send in wishlist...');
             res.send({
