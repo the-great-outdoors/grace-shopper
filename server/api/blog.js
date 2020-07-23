@@ -63,10 +63,8 @@ blogsRouter.get('/merch/:merchId', async (req, res, next) => {
 
         if (blogs) {
             res.send({
-
                 message: 'Successfully retrieved blog by merchId',
-                blog
-
+                blogs
             })
         } else {
             next({
