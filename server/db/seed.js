@@ -152,7 +152,7 @@ async function createTables() {
 
         console.log('Creating orderItem...')
         await db.query(`
-            CREATE TABLE IF NOT EXISTS orderItem(
+            CREATE TABLE IF NOT EXISTS orderitem(
                 item_id SERIAL PRIMARY KEY,
                 "orderId" INTEGER REFERENCES orders("orderId"),
                 "merchId" INTEGER REFERENCES merchandise(merch_id),

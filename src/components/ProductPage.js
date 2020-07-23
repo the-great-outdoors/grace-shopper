@@ -38,7 +38,6 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
 
         const qty = quantity;
         const price = item.price;
-        const merchId = item.merch;
         console.log('qty:', qty, 'price:', price, 'id:',id);
         const merch = {
             merchId: id,
@@ -47,29 +46,25 @@ const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => 
             name: item.name,
             description: item.description
         }
-
-        const cartArray = [...cart, merch];
-        
-        console.log('User:', user.user_id);
-        //Check for logged in user
+        console.log('cart:', cart);
+        let cartArray = [...cart];
+        console.log('CartArray:', cartArray);
         let activeCart;
         if (user.user_id) {
-            console.log('inside IF statement...');
 
-            console.log('creating new merch:', merch);
             const orderItems = await axios.post('/api/orders',merch, {headers:{Authorization: `Bearer ${localStorage.getItem('token')}` }});
-            console.log('new merch created!', orderItems);
+            console.log('orderItem:', orderItems.data.orderItem);
+            cartArray.push(orderItems.data.orderItem);
+            console.log('CartArray', cartArray);
             
         }else{
-
-            localStorage.setItem('activeCart', JSON.stringify(cart))
-            setCart(cartArray);
+            console.log('No user. Adding merch to array');
+            cartArray.push(merch);
+            console.log('cartArray:', cartArray);
         }
-        
-
-
-
-        
+            console.log('ProductPage: setting cart');
+            setCart(cartArray);
+            localStorage.setItem('activeCart', JSON.stringify(cartArray))
 
     }
 

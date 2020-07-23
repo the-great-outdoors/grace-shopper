@@ -20,7 +20,7 @@ async function findOrCreateActiveOrderByUserId( userId) {
     `, [userId]);
 
         console.log('Successfully created db new cart:', newCart);
-        return order;
+        return newCart;
     } catch (error) {
         throw error;
     }
@@ -75,6 +75,9 @@ async function getUserOrdersByUserId(userId) {
 //updateUserOrderByOrderId(orderId)
 
 async function updateUserOrderByOrderId(orderId, fields = {}) {
+
+    console.log('db updateUserOrder', orderId, fields);
+
     const setString = Object.keys(fields).map(
         (key, index) => `"${key}"=$${index + 1}`
     ).join(', ');
@@ -84,13 +87,14 @@ async function updateUserOrderByOrderId(orderId, fields = {}) {
     };
 
     try {
-        const { rows: [order] } = await client.query(`
+        const { rows: [order] } = await db.query(`
             UPDATE orders
             SET ${ setString}
-            WHERE id=${ orderId}
+            WHERE "orderId"=${ orderId}
             RETURNING *;
         `, Object.values(fields));
 
+        console.log('db successfully updated order:', order);
         return order;
     } catch (error) {
         throw error;
@@ -150,20 +154,21 @@ async function getActiveOrderForUser(userId) {
         AND status = true;
     `, [userId]);
 
-        if (!order||!order.length) {
+        if (!order) {
             console.log('no active orders')
             return;
         }
-        const orderId = order.orderId;
 
+        const orderId = order.orderId;
+        console.log('order retrieved!:',orderId)
         const { rows: items } = await db.query(`
-        SELECT * FROM orderItems
+        SELECT * FROM "orderitem"
         WHERE "orderId" = $1;
     `, [orderId])
 
         order.items = items
         console.log('Successfully retrieved active order:', order);
-        return order
+        return order;
 
     } catch (error) {
         throw error;
@@ -179,5 +184,6 @@ module.exports = {
     createOrderItem,
     deleteItemByOrderId,
     deleteOrderByOrderId,
-    findOrCreateActiveOrderByUserId
+    findOrCreateActiveOrderByUserId,
+    getActiveOrderForUser
 }
