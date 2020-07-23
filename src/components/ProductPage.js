@@ -8,13 +8,13 @@ import './ProductPage.css';
 // const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
 const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
-    const [item, setItem ] = useState({});
+    const [item, setItem] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
     const [addItem, setAddItem] = useState(false);
     const { id } = useParams();
-    const [ blogs, setBlogs ]= useState([]);
-    
+    const [blogs, setBlogs] = useState([]);
+
     console.log('merch id:', id);
 
     const history = useHistory();
@@ -38,14 +38,14 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
     }, []);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         try {
-           
-            axios.get(`/api/blogs/merch/${ id }`)
-            .then(res => {
-                console.log('are blogs here', res.data)
-              setBlogs(res.data.blogs);
-            })
+
+            axios.get(`/api/blogs/merch/${id}`)
+                .then(res => {
+                    console.log('are blogs here', res.data)
+                    setBlogs(res.data.blogs);
+                })
 
         } catch (error) {
             throw error;
@@ -54,11 +54,11 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
     }, []);
 
 
-    const AddItem = async() => {
+    const AddItem = async () => {
 
         const qty = quantity;
         const price = item.price;
-        console.log('qty:', qty, 'price:', price, 'id:',id);
+        console.log('qty:', qty, 'price:', price, 'id:', id);
         const merch = {
             merchId: id,
             quantity: qty,
@@ -72,19 +72,19 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
         let activeCart;
         if (user.user_id) {
 
-            const orderItems = await axios.post('/api/orders',merch, {headers:{Authorization: `Bearer ${localStorage.getItem('token')}` }});
+            const orderItems = await axios.post('/api/orders', merch, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
             console.log('orderItem:', orderItems.data.orderItem);
             cartArray.push(orderItems.data.orderItem);
             console.log('CartArray', cartArray);
-            
-        }else{
+
+        } else {
             console.log('No user. Adding merch to array');
             cartArray.push(merch);
             console.log('cartArray:', cartArray);
         }
-            console.log('ProductPage: setting cart');
-            setCart(cartArray);
-            localStorage.setItem('activeCart', JSON.stringify(cartArray))
+        console.log('ProductPage: setting cart');
+        setCart(cartArray);
+        localStorage.setItem('activeCart', JSON.stringify(cartArray))
 
     }
 
@@ -137,17 +137,18 @@ const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
                     </Grid.Row>
                 </Grid>
                 <Container>
-                {blogs.map(
-                    (blog) => {
-                return (
-                    <Fragment>
-                <Header className='blogtitle' as='h1'>
-                    {blog.title}</Header>
-                <p>{blog.blogText}</p>
-                </Fragment>
-                )})
-                }
-            </Container>
+                    {blogs.map(
+                        (blog) => {
+                            return (
+                                <Fragment>
+                                    <Header className='blogtitle' as='h1'>
+                                        {blog.title}</Header>
+                                    <p>{blog.blogText}</p>
+                                </Fragment>
+                            )
+                        })
+                    }
+                </Container>
             </div>
         </>
     )

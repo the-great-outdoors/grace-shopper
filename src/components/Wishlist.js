@@ -1,64 +1,64 @@
 
 import React, { useState, useEffect } from 'react';
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Card, Icon, Item, Image, Rating } from "semantic-ui-react";
 import axios from 'axios';
 
+import { MerchCards } from '../components';
+
 const Wishlist = ({ user }) => {
-    const { user_id } = user;
 
-    const history=useHistory();
+  if (!user.user_id) {
+    return <div>
+      <Segment>
+        <Dimmer active inverted>
+          <Loader inverted active>Loading</Loader>
+        </Dimmer>
 
-    const [wishlist, setWishlist] = useState([]);
-  
-    const handleSelect = async (e, data) => {
-      history.push(`/wishlist/${data.id}`);
-  
-    }
-  
-    useEffect(() => {
-      
-      if (user_id) {
+        <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+      </Segment>
+    </div>;
+  };
 
-          axios.get(`/api/wishlist/${ user_id }`, {user_id})
+  const { user_id } = user;
+
+  const history = useHistory();
+
+  const [wishlist, setWishlist] = useState([]);
+
+  const handleSelect = async (e, data) => {
+    history.push(`/wishlist/${data.id}`);
+
+  }
+
+  useEffect(() => {
+
+    if (user_id) {
+
+      axios.get(`/api/wishlist/${user_id}`)
         .then(res => {
-          const list = res.data.wishlistitem;
+          const list = res.data.wishlistItem;
           setWishlist(list);
         })
-        .catch(error => console.error("wishlist error", error)) 
-       
-    } 
-        
-},[])
+        .catch(error => console.error("wishlist error", error))
 
-    return ( 
-      user.user_id && wishlist ? 
+    }
+
+  }, [])
+
+  return (
+    user.user_id && wishlist ?
       <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
-        {wishlist.map((item) => {
-          return (
-            <Card onClick={handleSelect} key={item.merch_id} id={item.merch_id}>
-              <Image src='http://placeimg.com/300/300/nature' wrapped ui={false} />
-              <Card.Content>
-                <Card.Header>{item.name}</Card.Header>
-                <Card.Meta>
-                  {item.price}
-                </Card.Meta>
-                <Card.Description>
-                  {item.description}
-                </Card.Description>
-              </Card.Content>
-              <Card.Content extra>
-                <Rating icon='star' defaultRating={3} maxRating={4} />
-              </Card.Content>
-            </Card>
-          )
-        })}
+        <MerchCards
+          merchandise={wishlist}
+        />
       </Card.Group>
-      : <div>
-      <h1> "Guest Users cannot have a wishlist. Or if you are logged in please create a wishlist to proceed." </h1>
+      :
+      <div>
+        <h1> "Guest Users cannot have a wishlist. Or if you are logged in please create a wishlist to proceed." </h1>
       </div>
-    )
-  
-  }
-  
-  export default Wishlist;
+  )
+
+}
+
+export default Wishlist;

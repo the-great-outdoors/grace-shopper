@@ -8,7 +8,7 @@ async function createWishListByUserId({ merchId, title, userId }) {
         const { rows: result } = await db.query(`
         INSERT INTO wishlist ("merchId", title, "userId")
         VALUES ($1, $2, $3)
-        ON CONFLICT (wish_id, "merchId") DO NOTHING
+        ON CONFLICT ("userId", "merchId") DO NOTHING
         RETURNING *;
         `, [merchId, title, userId]);
         console.log('New wishlist item: ', result)

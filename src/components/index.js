@@ -5,6 +5,7 @@ export { default as EditProfile } from './EditProfile';
 export { default as Hero } from './Hero';
 export { default as LoginModal } from './LoginModal';
 export { default as Merchandise } from './Merchandise';
+export { default as MerchCards } from './Cards';
 export { default as NavBar } from './NavBar';
 export { default as Orders } from './Orders';
 export { default as ProductPage } from './ProductPage';
