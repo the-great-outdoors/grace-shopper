@@ -6,9 +6,10 @@ import axios from 'axios';
 
 import { MerchCards } from '../components';
 
-const Wishlist = ({ user }) => {
+const Wishlist = ({ user, wishlist, setWishlist }) => {
 
   if (!user.user_id) {
+    
     // return <div>
     //   <Segment>
     //     <Dimmer active inverted>
@@ -18,13 +19,14 @@ const Wishlist = ({ user }) => {
     //     <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
     //   </Segment>
     // </div>;
+    
   }
 
   const { user_id } = user;
 
   const history = useHistory();
 
-  const [wishlist, setWishlist] = useState([]);
+  
 
   const handleSelect = async (e, data) => {
     history.push(`/wishlist/${data.id}`);
@@ -43,6 +45,7 @@ const Wishlist = ({ user }) => {
         .catch(error => console.error("wishlist error", error))
 
     }
+
 
   }, [])
 
@@ -67,8 +70,7 @@ const Wishlist = ({ user }) => {
         </Container>
         <Card.Group itemsPerRow={10} style={{ padding: '.75em .75em', display: 'flex', justifyContent: 'center' }}>
           <MerchCards
-            merchandise={wishlist}
-          />
+            merchandise={wishlist}/>
         </Card.Group>
       </Container>
       :

@@ -26,7 +26,7 @@ import {
 } from './components';
 
 const App = () => {
-
+    const [wishlist, setWishlist] = useState([]);
     const [merchandise, setMerchandise] = useState([]);
     const [results, setResults] = useState([]);
     const [user, setUser] = useState({});
@@ -114,10 +114,14 @@ const App = () => {
                         cart={cart}
                         user={user} 
                         order={order}
-                        setOrder={setOrder}/>
+                        setOrder={setOrder}
+                        wishlist={wishlist}
+                        setWishlist={setWishlist}/>
                 </Route>
                 <Route path='/wishlist'>
                     <Wishlist
+                        wishlist={wishlist}
+                        setWishlist={setWishlist}
                         user={user} />
                 </Route>
                 <Route path='/orders'>
