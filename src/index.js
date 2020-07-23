@@ -37,6 +37,7 @@ const App = () => {
     const [cart, setCart] = useState([]);
     const [userPayments, setUserPayments] = useState([]);
     const [order, setOrder] = useState();
+    const [paymentModalShow, setPaymentModalShow] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -73,7 +74,8 @@ const App = () => {
                     login={login}
                     user={user}
                     setUser={setUser}
-                    cart={cart} />
+                    cart={cart} 
+                    setEditMode={setEditMode} />
             </Sticky>
             <Switch>
                 <Route path='/contact'>
@@ -100,7 +102,9 @@ const App = () => {
                         user={user}
                         setUser={setUser}
                         editMode={editMode}
-                        setEditMode={setEditMode} />
+                        setEditMode={setEditMode} 
+                        paymentModalShow={paymentModalShow}
+                        setPaymentModalShow={setPaymentModalShow} />
                 </Route>
                 <Route path="/productpage/:id">
                     <ProductPage

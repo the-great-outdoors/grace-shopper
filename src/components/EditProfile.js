@@ -61,7 +61,12 @@ const EditProfile = ({
     const editUserProfile = () => {
         console.log('Edit User Preferences is being called!');
         const { user_id } = user;
-        axios.patch(`/api/userprefs/${user_id}`, { user_id, firstname, lastname, street, city, state, zip, shipping })
+        axios.patch(`/api/userprefs/${user_id}`, { user_id, firstname, lastname, street, city, state, zip, shipping },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             .then(res => {
                 console.log('New User Profile: ', res.data);
                 const upUser = res.data.updatedUserInfo;
@@ -219,20 +224,35 @@ const EditProfile = ({
                                 style={{ padding: '0 5px' }}
                             />
                         </Segment>
+
+                        <Segment
+                            style={{
+                                display: "flex",
+                                justifyContent: 'flex-end'
+                            }}
+                        >
+                            <Button
+                                color='red'
+                                style={{
+                                    margin: '0 1px'
+                                }}
+                                onClick={toggleEditMode}
+                            >
+                                Cancel
+                        </Button>
+                            <Button
+                                style={{
+                                    backgroundColor: 'olivedrab',
+                                    color: 'white',
+                                    margin: '0 1px'
+                                }}
+                                onClick={editUserProfile}
+                            >
+                                Submit
+                        </Button>
+                        </Segment>
                     </Segment.Group>
 
-                    <Segment>
-                        <Button
-                            onClick={toggleEditMode}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={editUserProfile}
-                        >
-                            Submit
-                        </Button>
-                    </Segment>
 
                 </Grid.Column>
 

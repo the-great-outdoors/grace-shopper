@@ -19,7 +19,6 @@ async function createWishListByUserId({ merchId, title, userId }) {
     };
 };
 
-//updateWishlistByUserId(userId, fields={'merchIds'})
 async function updateWishListByUserId(userId, fields = {}) {
 
     const setString = Object.keys(fields).map(
@@ -40,7 +39,6 @@ async function updateWishListByUserId(userId, fields = {}) {
     };
 };
 
-//getWishlistByUserId(userId)
 async function getWishListByUserId(userId) {
 
     try {
@@ -77,7 +75,7 @@ async function deleteWishListItem(wishId) {
     try {
         await db.query(`
         DELETE FROM wishlist
-        WHERE wish_id=${ wishId }
+        WHERE wish_id=${ wishId}
         `, [wishId]);
 
     } catch (e) {

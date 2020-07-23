@@ -1,9 +1,9 @@
 const db = require('./database');
 
-async function findOrCreateActiveOrderByUserId( userId) {
-    console.log('db createOrder with userID:',userId);
+async function findOrCreateActiveOrderByUserId(userId) {
+    console.log('db createOrder with userID:', userId);
     try {
-        const {rows:[activeCart]} = await db.query(`
+        const { rows: [activeCart] } = await db.query(`
             SELECT * FROM orders
             WHERE "userId"=$1 AND status = true;
         `, [userId]);
@@ -160,7 +160,7 @@ async function getActiveOrderForUser(userId) {
         }
 
         const orderId = order.orderId;
-        console.log('order retrieved!:',orderId)
+        console.log('order retrieved!:', orderId)
         const { rows: items } = await db.query(`
         SELECT * FROM "orderitem"
         WHERE "orderId" = $1;

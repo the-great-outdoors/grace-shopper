@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 
 server.use(morgan('dev'));
 server.use(bodyParser.json());
-server.use(bodyParser.urlencoded({extended: true}));
+server.use(bodyParser.urlencoded({ extended: true }));
 server.use(express.json());
 
 server.use((req, res, next) => {
@@ -27,15 +27,15 @@ server.use((req, res, next) => {
 
 server.use(express.static(path.join(__dirname, '../dist')))
 
-server.use("/resources",express.static(path.join(__dirname, '../resources')))
+server.use("/resources", express.static(path.join(__dirname, '../resources')))
 
 server.use('/api', apiRouter);
 
-server.get('*', (req, res, next)=>{
+server.get('*', (req, res, next) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'))
 })
 
 server.listen(PORT, () => {
     console.log(chalk.green(`Server is listening on PORT: ${PORT}`))
-    })
+})
 
