@@ -34,7 +34,7 @@ paymentsRouter.get('/:userId', async (req, res, next) => {
 paymentsRouter.post('/', async (req, res, next) => {
     try {
         const { userId, name, number, cid, expiration } = req.body;
-        const paymentData = { userId, name, number, cid, expiration}
+        const paymentData = { userId, name, number, cid, expiration }
 
         const payment = await createPayment(paymentData);
 

@@ -63,7 +63,7 @@ const Orders = ({ cart, setCart, user, order, setOrder }) => {
 
         }
         const cartArray = [...cart];
-        const deletedItem = cartArray.splice(removeElement, 1);
+        const deletedItem = cartArray.splice(removeArrayElement, 1);
         console.log('Items remaining:', cartArray);
         setCart(cartArray);
         setSplice(deletedItem);
@@ -74,7 +74,8 @@ const Orders = ({ cart, setCart, user, order, setOrder }) => {
     const handleCheckout = async (event, target) => {
         event.preventDefault();
         if (!cart||!cart.length) {
-            alert('Nothing in cart. Time to Splurge!');
+            alert('Nothing in cart. Time to Splurge!')
+            return;
         }
         console.log("entered order")
         const res = await Axios.patch('/api/orders/cart', {status: false, orderId:order}, {headers:{

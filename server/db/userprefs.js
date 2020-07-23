@@ -1,15 +1,5 @@
 const db = require('./database');
 
-// CREATE TABLE IF NOT EXISTS userPreferences(
-//     preference_id SERIAL PRIMARY KEY,
-//     userId INTEGER REFERENCES users(user_id),
-//     street VARCHAR(255) NOT NULL,
-//     city TEXT NOT NULL,
-//     state TEXT NOT NULL,
-//     zip INTEGER NOT NULL,
-//     save_pmt BOOLEAN DEFAULT FALSE,
-//     shipping VARCHAR(255)
-
 async function createUserPreferences({ userId, street, city, state, zip, save_pmt, shipping }) {
 
     try {

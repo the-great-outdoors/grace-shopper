@@ -17,7 +17,8 @@ const NavBar = ({
   setLogin,
   setUser,
   setSearchTerm,
-  cart
+  cart,
+  setEditMode
 }) => {
 
   const [quantity, setQuantity] = useState('');
@@ -54,10 +55,16 @@ const NavBar = ({
     loginSetShow(true);
   };
 
+  const toggleEditMode = (e) => {
+    console.log('Toggle Edit Mode', e);
+    setEditMode(false);
+};
+
   const logoutButtonClick = (e, data) => {
     console.log('Entered Logout Button Click Handler!');
     setLogin(false);
     setUser({});
+    toggleEditMode();
     handleItemClick(e, name = 'home');
     localStorage.clear('token');
   };

@@ -226,3 +226,22 @@ const EditProfile = ({
 }
 
 export default EditProfile;
+
+usersRouter.get('/:userId', requireUser, async (req, res, next) => {
+    const { userId } = req.params;
+    user = req.user;
+    console.log('User Object: ', user);
+
+    if (user && user.user_id === Number(userId)) {
+        try {
+            const user = await getUserByUserId(userId);
+            res.send({
+                message: 'Here is the fetched user!',
+                user,
+                status: true
+            })
+        } catch ({ name, message }) {
+            next({ name, message })
+        };    
+    }
+});

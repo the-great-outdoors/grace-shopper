@@ -48,7 +48,7 @@ const ContactUs = () => {
                             <span className='date'>Fullstack Web Developer</span>
                         </Card.Meta>
                         <Card.Description>
-                            Levi is a cool web developer
+                            Levi is the coolest web developer
                         </Card.Description>
                         <Divider />
                         <Card.Content style={{ textAlign: 'center' }} extra>

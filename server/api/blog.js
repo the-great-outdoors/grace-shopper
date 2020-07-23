@@ -5,7 +5,6 @@ const {
     getAllBlogs,
     getBlogByUserId,
     getBlogByMerchId,
-    // getBlogByCategoryId,
     getBlogByBlogId,
     createBlog,
     updateBlog,

@@ -71,7 +71,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS users(
                 user_id SERIAL PRIMARY KEY,
                 username VARCHAR(255) UNIQUE NOT NULL,
-                hashpassword VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
                 firstname VARCHAR(255) NOT NULL,
                 lastname VARCHAR(255) NOT NULL,
                 save_pmt BOOLEAN DEFAULT false,
@@ -230,20 +230,20 @@ async function createInitialUsers() {
         const seededUsers = [
             {
                 username: 'groovyash',
-                hashpassword: 'hailtotheking',
+                password: 'hailtotheking',
                 firstname: 'Ashley',
                 lastname: 'Williams'
             },
 
             {
                 username: 'batman',
-                hashpassword: 'thedarkknight',
+                password: 'thedarkknight',
                 firstname: 'Bruce',
                 lastname: 'Wayne'
             },
             {
                 username: 'turdferguson',
-                hashpassword: 'uraturd99',
+                password: 'uraturd99',
                 firstname: 'Thomas',
                 lastname: 'Ferguson'
             }
@@ -255,7 +255,7 @@ async function createInitialUsers() {
             const hashedPassword = bcrypt.hashSync(user.username, SALT_COUNT);
             const seededUser = await createUser({
                 ...user,
-                hashpassword: hashedPassword
+                password: hashedPassword
             });
             return seededUser;
         }));
