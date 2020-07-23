@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import './AboutUs.css';
 
 const AboutUsPage = () => {
-    return(
+    return (
         <>
             <Container fluid>
                 <Container style={{
