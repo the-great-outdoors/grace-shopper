@@ -1,19 +1,20 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb, Container, Header } from 'semantic-ui-react';
+import { Grid, Header, Rating, Divider, Button, Input, Breadcrumb, Container } from 'semantic-ui-react';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import './ProductPage.css';
 import Axios from 'axios';
 
-const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
+// const ProductPage = ({ item, setItem, cart, setCart, user,order, setOrder }) => {
 
-const ProductPage = (props) => {
-    const [item, setItem, blogs, setBlog] = useState({});
+const ProductPage = ({ cart, setCart, user, order, setOrder }) => {
+    const [item, setItem ] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState('');
     const [addItem, setAddItem] = useState(false);
     const { id } = useParams();
+    const [ blogs, setBlogs ]= useState([]);
     
     console.log('merch id:', id);
 
@@ -41,10 +42,10 @@ const ProductPage = (props) => {
     useEffect(()=>{
         try {
            
-            axios.get(`/api/blog/${ MerchId }`, {merch_id})
+            axios.get(`/api/blogs/merch/${ id }`)
             .then(res => {
-              const blog = res.data.blogs;
-              setBlog(blog);
+                console.log('are blogs here', res.data)
+              setBlogs(res.data.blogs);
             })
 
         } catch (error) {
@@ -101,6 +102,7 @@ const ProductPage = (props) => {
 
 
     console.log('items in cart:', cart)
+    console.log('blogs', blogs);
 
     return (
         <>
@@ -142,18 +144,22 @@ const ProductPage = (props) => {
                     </Grid.Row>
                 </Grid>
                 <Container>
-                {blogs.map((blog) => {
+                {blogs.map(
+                    (blog) => {
                 return (
                     <Fragment>
-                <Header className='blogtitle' as='h1'>{blog.title}</Header>
+                <Header className='blogtitle' as='h1'>
+                    {blog.title}</Header>
                 <p>{blog.blogText}</p>
                 </Fragment>
-                )})}
+                )})
+                }
             </Container>
             </div>
         </>
     )
 }
+
 
 
 export default ProductPage;
