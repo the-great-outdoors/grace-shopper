@@ -40,7 +40,7 @@ const Merchandise = ({ merchandise, setMerchandise, searchTerm }) => {
   }, [searchTerm])
 
   return (
-    <Card.Group itemsPerRow={4} style={{ marginTop: '1em' }}>
+    <Card.Group itemsPerRow={5} style={{ marginTop: '1em' }}>
       {merchandise ? <MerchCards merchandise={merchandise} /> :
         ''}
     </Card.Group>

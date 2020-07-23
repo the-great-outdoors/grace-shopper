@@ -41,7 +41,7 @@ userPrefsRouter.patch('/:userId', requireUser, async (req, res, next) => {
                 lastname
             });
 
-            delete updatedUserInfo.hashpassword;
+            delete updatedUserInfo.password;
 
             const updatedUserPreferences = await updateUserPreferences(userId, {
                 street,

@@ -27,8 +27,8 @@ const CreateUserModal = ({
 }) => {
 
     const [username, setUsername] = useState("");
-    const [hashpassword, setHashpassword] = useState("");
-    const [confirmHashpassword, setConfirmHashpassword] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [street, setStreet] = useState("");
@@ -60,22 +60,31 @@ const CreateUserModal = ({
     const registerUser = () => {
         console.log('In register user!!')
 
-        if (!username || !hashpassword || !confirmHashpassword || !firstname || !lastname || !street || !city || !state || !zip) {
+        if (!username || !password || !confirmPassword || !firstname || !lastname || !street || !city || !state || !zip) {
             return;
         }
 
-        if (hashpassword !== confirmHashpassword) return;
+        if (password !== confirmPassword) return;
 
         console.log('Register User is being called!');
-        axios.post('/api/users/register', { username, hashpassword, firstname, lastname, street, city, state, zip, shipping })
+        axios.post('/api/users/register', { username, password, firstname, lastname, street, city, state, zip, shipping })
             .then(res => {
                 console.log('New User: ', res.data);
-                console.log('Token: ', res.data.token)
-                setUser(res.data.user);
-                localStorage.setItem('token', res.data.token);
-                console.log(localStorage.getItem('token'));
-                if (res.data.user) {
-                    setLogin(true);
+                console.log('Token: ', res.data.token);
+
+                if (res.data.status === 'PasswordShort') {
+                    alert('Password is too short. Please create a password at least eight characters long.');
+                } else if (res.data.status === 'UserExists') {
+                    alert('That username already exists. Please pick a different username.');
+                } else {
+                    setUser(res.data.user);
+
+                    localStorage.setItem('token', res.data.token);
+                    console.log(localStorage.getItem('token'));
+
+                    if (res.data.user) {
+                        setLogin(true);
+                    }
                 }
             })
             .catch(error => {
@@ -87,8 +96,8 @@ const CreateUserModal = ({
 
     const clearForm = () => {
         setUsername("");
-        setHashpassword("");
-        setConfirmHashpassword("");
+        setPassword("");
+        setConfirmPassword("");
         setFirstname("");
         setLastname("");
         setStreet("");
@@ -143,8 +152,8 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
-                                onChange={event => setHashpassword(event.target.value)}
-                                value={hashpassword}
+                                onChange={event => setPassword(event.target.value)}
+                                value={password}
                             />
                         </Form.Field>
                         <Form.Field required>
@@ -156,8 +165,8 @@ const CreateUserModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
-                                onChange={event => setConfirmHashpassword(event.target.value)}
-                                value={confirmHashpassword}
+                                onChange={event => setConfirmPassword(event.target.value)}
+                                value={confirmPassword}
                             />
                         </Form.Field>
                         <Form.Group widths='equal'>
@@ -217,16 +226,16 @@ const CreateUserModal = ({
                             </Form.Field>
                             <Form.Field required>
                                 <label>State:</label>
-                                <Dropdown 
-                                placeholder='State'
-                                style={{
-                                    border: '1px solid black',
-                                    borderRadius: '5px'
-                                }}
-                                search 
-                                selection 
-                                options={stateOptions}
-                                onChange={handleStateChange}
+                                <Dropdown
+                                    placeholder='State'
+                                    style={{
+                                        border: '1px solid black',
+                                        borderRadius: '5px'
+                                    }}
+                                    search
+                                    selection
+                                    options={stateOptions}
+                                    onChange={handleStateChange}
                                 />
                             </Form.Field>
                             <Form.Field required>
@@ -279,7 +288,8 @@ const CreateUserModal = ({
                         color: 'white',
                         borderTop: '2px solid black'
                     }}>
-                    <Button negative
+                    <Button
+                        negative
                         style={{
                             boxShadow: '3px 3px 5px black'
                         }}
@@ -292,24 +302,44 @@ const CreateUserModal = ({
                     >
                         Cancel
                     </Button>
-                    <Button
-                        positive
-                        icon='checkmark'
-                        labelPosition='right'
-                        content='Submit'
-                        style={{
-                            backgroundColor: 'olivedrab',
-                            boxShadow: '3px 3px 5px black'
-                        }}
-                        onClick={
-                            (event) => {
-                                // event.preventDefault();
-                                registerUser();
-                                handleClose();
-                                clearForm();
-                            }
-                        }
-                    />
+                    {
+                        (!username || !password || !confirmPassword || !firstname || !lastname || !street || !city || !state || !zip) || (password !== confirmPassword)
+
+                            ?
+
+                            <Button
+                                positive
+                                icon='checkmark'
+                                labelPosition='right'
+                                content='Submit'
+                                disabled={true}
+                                style={{
+                                    backgroundColor: 'grey',
+                                    boxShadow: '3px 3px 5px black'
+                                }}
+                            />
+
+                            :
+
+                            <Button
+                                positive
+                                icon='checkmark'
+                                labelPosition='right'
+                                content='Submit'
+                                style={{
+                                    backgroundColor: 'olivedrab',
+                                    boxShadow: '3px 3px 5px black'
+                                }}
+                                onClick={
+                                    (event) => {
+                                        event.preventDefault();
+                                        registerUser();
+                                        handleClose();
+                                        clearForm();
+                                    }
+                                }
+                            />
+                    }
                 </Modal.Actions>
             </Modal>
         </div>

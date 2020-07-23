@@ -6,38 +6,41 @@ import {
     Button,
     Modal,
 } from 'semantic-ui-react'
-import './LoginModal.css';
+
 const LoginModal = ({
     loginShow,
     loginSetShow,
-    login,
     setLogin,
-    user,
     setUser,
-    token,
-    setToken
 }) => {
     const [username, setUsername] = useState("");
-    const [hashpassword, setHashpassword] = useState("");
+    const [password, setPassword] = useState("");
 
     const handleClose = () => { loginSetShow(false) };
 
     const loginUser = () => {
         console.log('In login user!');
 
-        if (!username && !hashpassword) {
+        if (!username && !password) {
             return;
         }
 
         console.log('Login User is being called!');
-        axios.post('/api/users/login', { username, hashpassword, })
+        axios.post('/api/users/login', { username, password, })
             .then(res => {
                 console.log('Logged-in User: ', res.data);
-                setUser(res.data.user);
-                localStorage.setItem('token', res.data.token);
-                console.log(localStorage.getItem('token'));
-                if (res.data.user) {
-                    setLogin(true);
+
+                if (res.data.status === 'UsernamePasswordIncorrect') {
+                    return alert('Username or passord incorrect. Please re-enter credentials.');
+                } else {
+
+                    setUser(res.data.user);
+                    localStorage.setItem('token', res.data.token);
+                    console.log(localStorage.getItem('token'));
+                    if (res.data.user) {
+                        setLogin(true);
+                    };
+
                 };
             })
             .catch(error => {
@@ -46,7 +49,7 @@ const LoginModal = ({
     };
     const clearForm = () => {
         setUsername("");
-        setHashpassword("");
+        setPassword("");
     };
 
     return (
@@ -85,8 +88,8 @@ const LoginModal = ({
                                     border: '1px solid black',
                                     borderRadius: '5px'
                                 }}
-                                onChange={event => setHashpassword(event.target.value)}
-                                value={hashpassword}
+                                onChange={event => setPassword(event.target.value)}
+                                value={password}
                             />
                         </Form.Field>
                     </Form>

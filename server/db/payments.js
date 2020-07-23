@@ -1,8 +1,6 @@
 const db = require('./database');
 
-//createPayment(userId)
-
-async function createPayment({userId, name, number, cid, expiration, billingStreet, city, state, zip}) {
+async function createPayment({ userId, name, number, cid, expiration, billingStreet, city, state, zip }) {
     try {
         const { rows: [payment] } = await db.query(`
         INSERT INTO payments("userId", name, number, cid, expiration)
@@ -13,10 +11,8 @@ async function createPayment({userId, name, number, cid, expiration, billingStre
         return payment;
     } catch (error) {
         throw error;
-    }     
+    }
 }
-
-//getPaymentByUserId(userId)
 
 async function getPaymentsByUserId(userId) {
     try {
@@ -26,17 +22,16 @@ async function getPaymentsByUserId(userId) {
         WHERE "userId"=$1;
     `, [userId]);
 
-        return payments;  
+        return payments;
     } catch (error) {
         throw error;
     }
 };
 
-//deletePayment(userId)
 
 async function deletePayment(paymentId) {
     try {
-        const {rows} = await db.query(`
+        const { rows } = await db.query(`
         DELETE FROM payments
         WHERE payment_id=$1
         RETURNING *;
@@ -49,11 +44,10 @@ async function deletePayment(paymentId) {
     }
 }
 
-//updatePayments
 
 async function updatePayments(paymentId, fields = {}) {
     const setString = Object.keys(fields).map(
-        (key, index) => `"${ key }"=$${ index + 1 }`
+        (key, index) => `"${key}"=$${index + 1}`
     ).join(', ');
 
     if (setString.length === 0) {
@@ -61,10 +55,10 @@ async function updatePayments(paymentId, fields = {}) {
     };
 
     try {
-        const { rows: [ payment ] } = await client.query(`
+        const { rows: [payment] } = await client.query(`
             UPDATE payments
-            SET ${ setString }
-            WHERE id=${ paymentId }
+            SET ${ setString}
+            WHERE id=${ paymentId}
             RETURNING *;
         `, Object.values(fields));
 

@@ -21,7 +21,11 @@ const Categories = ({ setMerchandise, merchandise }) => {
 
     return (
         displayCats ?
-            <Grid>
+            <Grid
+                style={{
+                    padding: '.75em'
+                }}
+            >
                 <Grid.Row columns={3}>
                     <Grid.Column>
                         <Card fluid value={3} name='hiking' onClick={handleClick} className='category' style={{ backgroundImage: `url('/resources/backpack_AZ.jpg')` }}>

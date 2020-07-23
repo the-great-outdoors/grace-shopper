@@ -1,15 +1,15 @@
 const db = require('./database');
 const { getPreferencesByUserId } = require('./userprefs');
 
-async function createUser({ username, hashpassword, firstname, lastname }) {
+async function createUser({ username, password, firstname, lastname }) {
 
     try {
         const { rows: [ user ] } = await db.query(`
-                INSERT INTO users(username, hashpassword, firstname, lastname) 
+                INSERT INTO users(username, password, firstname, lastname) 
                 VALUES($1, $2, $3, $4) 
                 ON CONFLICT (username) DO NOTHING 
                 RETURNING *;
-            `, [ username, hashpassword, firstname, lastname ]);
+            `, [ username, password, firstname, lastname ]);
 
         return user;
     } catch (error) {
