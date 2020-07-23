@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Segment, Image, Button, Dimmer, Loader } from 'semantic-ui-react'
 import axios from 'axios';
 import './UserProfile.css'
-import { EditProfile, Payments } from '../components';
+import { EditProfile, Payments, AddPaymentModal } from '../components';
 
 const UserProfile = ({
     user,
@@ -10,10 +10,10 @@ const UserProfile = ({
     setEditMode,
     editUserProfile,
     userPayments,
-    setUserPayments
-
+    setUserPayments,
+    paymentModalShow,
+    setPaymentModalShow
 }) => {
-
     if (!user.user_id) {
         return <div>
             <Segment>
@@ -30,9 +30,9 @@ const UserProfile = ({
         axios.get(`/api/payments/${user.user_id}`)
             .then(res => {
                 const fetchedPayments = res.data.payments
-                console.log('These are the payments:', fetchedPayments);
-
-                if (fetchedPayments) {
+                
+                if (fetchedPayments.length) {
+                    console.log('These are the payments:', fetchedPayments);
                     setUserPayments(fetchedPayments);
                 } else {
                     console.log('No Payments to fetch!')
@@ -67,6 +67,7 @@ const UserProfile = ({
     //
     useEffect(() => {
         console.log('ID of the User: ', user.user_id);
+      
         axios.get(`/api/users/me`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
@@ -87,6 +88,11 @@ const UserProfile = ({
     const editProfileButtonClick = (e,) => {
         console.log('Entered Edit Profile Click Handler!', e);
         setEditMode(true);
+    };
+
+    const addPaymentOption = () => {
+        console.log('You clicked the add button!');
+        setPaymentModalShow(true);
     };
 
     if (editMode === true) {
@@ -202,15 +208,44 @@ const UserProfile = ({
                                 <p>{shipping}</p>
                             </Segment>
                         </Segment.Group>
-
-                        {userPayments ? <Payments
+                        <Grid.Column
+                            width={10}
+                            style={{
+                                height: '100%',
+                                marginBottom: '1rem'
+                            }}
+                            >
+                            <Segment.Group >
+                                <Segment style={{ backgroundColor: 'olivedrab' }} >Payment Options
+                                <Button
+                                    icon='add'
+                                    compact={true}
+                                    size='mini'
+                                    floated='right'
+                                    onClick={addPaymentOption}
+                                >
+                                </Button>
+                                {
+                                    paymentModalShow
+                                    ? <AddPaymentModal
+                                        setUserPayments={setUserPayments}
+                                        userPayments={userPayments}
+                                        paymentModalShow={paymentModalShow}
+                                        setPaymentModalShow={setPaymentModalShow} />
+                                    : ''
+                                }
+                            </Segment>
+                        {userPayments.length
+                            ? <Payments
                             user={user}
                             userPayments={userPayments} />
-                            : <h1>You have no payment options on file!</h1>
+                            : 
+                            <Segment>You have no payment options on file!</Segment>
                         }
+                        </Segment.Group>
+                        </Grid.Column>
 
                     </Grid.Column>
-
                     <Grid.Column width={3}>
                         <Grid.Row
                             style={{

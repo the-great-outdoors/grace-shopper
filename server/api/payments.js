@@ -33,8 +33,11 @@ paymentsRouter.get('/:userId', async (req, res, next) => {
 
 paymentsRouter.post('/', async (req, res, next) => {
     try {
-        const { userId, name, number, cid, expiration } = req.body;
-        const paymentData = { userId, name, number, cid, expiration }
+        const user = req.user;
+        const userId = user.user_id;
+        console.log('userId from payments:', userId);
+        const { name, number, cardType, cid, expiration } = req.body;
+        const paymentData = { userId, name, number, cardType, cid, expiration };
 
         const payment = await createPayment(paymentData);
 
@@ -98,6 +101,8 @@ paymentsRouter.patch('/:paymentId', requireUser, async (req, res, next) => {
 
 paymentsRouter.delete('/:paymentId', async (req, res, next) => {
     const { paymentId } = req.params;
+    console.log('payment id: ', paymentId);
+
     try {
         await deletePayment(paymentId);
 

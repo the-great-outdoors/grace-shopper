@@ -1,12 +1,13 @@
 const db = require('./database');
 
-async function createPayment({ userId, name, number, cid, expiration, billingStreet, city, state, zip }) {
+async function createPayment({userId, name, number, cardType, cid, expiration}) {
+
     try {
         const { rows: [payment] } = await db.query(`
-        INSERT INTO payments("userId", name, number, cid, expiration)
-        VALUES($1, $2, $3, $4, $5)
+        INSERT INTO payments("userId", name, number, cardType, cid, expiration)
+        VALUES($1, $2, $3, $4, $5, $6)
         RETURNING *;
-    `, [userId, name, number, cid, expiration]);
+    `, [userId, name, number, cardType, cid, expiration]);
 
         return payment;
     } catch (error) {

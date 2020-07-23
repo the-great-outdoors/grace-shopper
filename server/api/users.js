@@ -20,6 +20,7 @@ usersRouter.get('/', async (req, res) => {
 usersRouter.get('/me', requireUser, async (req, res, next) => {
     const user = req.user;
     console.log('User Object: ', user);
+
     if (user && user.user_id) {
         try {
             res.send({
