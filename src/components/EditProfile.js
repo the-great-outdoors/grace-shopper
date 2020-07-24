@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 const EditProfile = ({
     user,
+    editMode,
     setEditMode,
     firstname,
     setFirstname,

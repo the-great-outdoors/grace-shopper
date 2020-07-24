@@ -99,6 +99,7 @@ const UserProfile = ({
         return (
             <EditProfile
                 user={user}
+                editMode={editMode}
                 setEditMode={setEditMode}
                 editUserProfile={editUserProfile}
                 firstname={firstname}
