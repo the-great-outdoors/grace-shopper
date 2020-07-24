@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Segment, Image, Button, Dimmer, Loader } from 'semantic-ui-react'
 import axios from 'axios';
 import './UserProfile.css'
-import { EditProfile, Payments, AddPaymentModal } from '../components';
+import { EditProfile, UserPayments, AddPaymentModal } from '../components';
 
 const UserProfile = ({
     user,
@@ -236,7 +236,7 @@ const UserProfile = ({
                                 }
                             </Segment>
                         {userPayments.length
-                            ? <Payments
+                            ? <UserPayments
                             user={user}
                             userPayments={userPayments} />
                             : 

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Step, List, Button, Icon, Segment, Dimmer, Loader, Image } from "semantic-ui-react";
+import { Step, List, Button, Icon, Segment, Grid, Label, Image, GridColumn } from "semantic-ui-react";
 import Axios from "axios";
 import { Shipping } from './Shipping';
 import { ShippingEdit } from './ShippingEdit';
 import { ShippingOptions } from "./ShippingOptions";
-import Payments from './Payments';
+import { UserPayments } from './index';
 
 
-const Orders = ({ cart, setCart, user, order, setOrder }) => {
+const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, setEditMode }) => {
 
     const [splice, setSplice] = useState({});
     const [step, setStep] = useState('truck')
@@ -89,8 +89,7 @@ const Orders = ({ cart, setCart, user, order, setOrder }) => {
         }
 
 return (
-    !cart ? <div>NO CART FOR YOU</div> :
-        <>
+        <div style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '1rem' }}>
             <Step.Group>
                 <Step active name='truck' onClick={handleClick}>
                     <Icon name='truck' />
@@ -115,35 +114,58 @@ return (
                     </Step.Content>
                 </Step>
             </Step.Group>
-            <List divided relaxed>
+            <Grid columns={3}>
+            <Grid.Row centered>
                 {cart.map((order, index) => {
                     return (
-
-                        <List.Item key={index}>
-                            <List.Icon name='idea' size='large' verticalAlign='middle' />
-                            <List.Content>
-                                <List.Header>{order.name}</List.Header>
-                                <List.Description>{order.description}</List.Description>
-                                <List.Description>{order.quantity}</List.Description>
-                                <List.Description>{order.price}</List.Description>
-                            </List.Content>
-                            <Button Icon='delete' onClick={handleDelete} id={order.item_id}index={index}>Delete</Button>
-                        </List.Item>
+                          <Grid.Column key={index}>
+                            <Segment padded>
+                              <Label attached='top'>{order.name}<Icon name='idea' size='large'/></Label>
+                                <p>Descrition: {order.description}</p>
+                                <p>Quantity: {order.quantity}</p>
+                                <p>Price: {order.price}</p>
+                                <p><Button Icon='delete' onClick={handleDelete} id={order.item_id}index={index}>Delete</Button></p>
+                            </Segment>
+                          </Grid.Column>
                     )
                 })
                 }
-            </List>
-            {step === 'truck' ?
+            </Grid.Row>
+            </Grid>
+            {
+            step === 'truck'
+                ?
                 <ShippingOptions
+                    style={{ marginTop: '1rem', marginBottom: '1rem' }}
                     user={user}
                     setStep={setStep}
-                /> :
-                step === 'payment' ?
-                    <Payments user={user} setStep={setStep} /> :
-                    <Button size='massive' icon animated onClick={handleCheckout}>
-                        <Icon size='massive' name='free code camp' />
+                    user={user}
+                    editMode={editMode}
+                    setEditMode={setEditMode} 
+                />
+                :
+                step === 'payment'
+                ?
+                    <GridColumn width={6}>
+                    <Button animated compact={true}
+                        size='mini'
+                        floated='right'
+                        onClick={e => setStep('review')}>
+                        <Button.Content visible>Next</Button.Content>
+                        <Button.Content hidden>
+                            <Icon name='thumbs up' />
+                        </Button.Content>
+                    </Button>
+                    <UserPayments
+                        user={user}
+                        userPayments={userPayments}
+                        setStep={setStep} />
+                    </GridColumn>
+                :
+                    <Button style={{ marginTop: '1rem' }} positive size='massive' icon animated onClick={handleCheckout}>
+                        Confirm Order
                     </Button>}
-        </>
+        </div>
     )
 }
 

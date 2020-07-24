@@ -126,11 +126,12 @@ const App = () => {
                 </Route>
                 <Route path='/orders'>
                     <Orders 
-                    cart={cart}
-                    setCart={setCart}
-                    user={user}
-                    order={order}
-                    setOrder={setOrder}/>
+                        cart={cart}
+                        setCart={setCart}
+                        user={user}
+                        userPayments={userPayments}
+                        order={order}
+                        setOrder={setOrder} />
                 </Route>
                 <Route path='/'>
                     <Hero

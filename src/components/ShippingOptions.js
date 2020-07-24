@@ -21,7 +21,7 @@ const ShippingOptions = ({ user, setStep}) => {
   
    
     return (
-        <Grid celled='internally'>
+        <Grid>
             {editMode ?
                 <ShippingEdit user={user} setShipping={setShipping} shippingInfo={shippingInfo}
                     setEditMode={setEditMode} /> :

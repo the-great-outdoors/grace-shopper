@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Button, Image } from 'semantic-ui-react';
+import { Modal, Form, Input, Button } from 'semantic-ui-react';
+import axios from 'axios';
 
-const AddPaymentModal = ({ paymentModalShow, setPaymentModalShow }) => {
+const AddPaymentModal = ({ paymentModalShow, setPaymentModalShow, user }) => {
 
     const [name, setName] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -14,6 +15,25 @@ const AddPaymentModal = ({ paymentModalShow, setPaymentModalShow }) => {
     const handleClose = () => {
         console.log('Clicking handle close button!');
         setPaymentModalShow(false);
+    }
+
+    const handleSubmit = () => {
+
+        axios.post('/api/payments', {
+            name: name,
+            number: cardNumber,
+            cardType: cardType,
+            cid: cid,
+            expiration: expiration
+        }, 
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then((res) => {console.log(res)})
+        .catch((error) => {console.error(error)})
+
     }
 
     return(
@@ -29,16 +49,6 @@ const AddPaymentModal = ({ paymentModalShow, setPaymentModalShow }) => {
                 style={{
                     backgroundColor: 'lightgrey'
                 }}>
-                <div className='image'>
-                    <Image
-                        src='http://placeimg.com/100/100/nature'
-                        style={{
-                            maxHeight: '100px',
-                            maxWidth: '100px',
-                            paddingBottom: '5px'
-                        }}
-                    />
-                </div>
                 <Form>
                     <Form.Field required>
                         <label>Name on Card:</label>
@@ -132,14 +142,7 @@ const AddPaymentModal = ({ paymentModalShow, setPaymentModalShow }) => {
                         backgroundColor: 'olivedrab',
                         boxShadow: '3px 3px 5px black'
                     }}
-                    // onClick={
-                    //     (event) => {
-                    //         // event.preventDefault();
-                    //         registerUser();
-                    //         handleClose();
-                    //         clearForm();
-                    //     }
-                    // }
+                    onClick={handleSubmit}
                 />
             </Modal.Actions>
         </Modal>
