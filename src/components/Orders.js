@@ -153,7 +153,7 @@ const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, 
                     step === 'payment'
                         ?
                         <GridColumn width={6}>
-                            <Button animated compact={true}
+                            {/* <Button animated compact={true}
                                 size='mini'
                                 floated='right'
                                 onClick={e => setStep('review')}>
@@ -161,7 +161,7 @@ const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, 
                                 <Button.Content hidden>
                                     <Icon name='thumbs up' />
                                 </Button.Content>
-                            </Button>
+                            </Button> */}
                                     <Payments
                                         setStep={setStep} 
                                         editMode={editMode} 
