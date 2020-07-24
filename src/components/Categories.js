@@ -47,9 +47,9 @@ const Categories = ({ setMerchandise, merchandise }) => {
                 <Grid.Row columns={2}>
                     <Grid.Column width={8}>
 
-                        <Container style={{ height: '400px', backgroundImage: `url('/resources/rock_man_clouds.jpg')`, backgroundSize: 'cover' }}>
+                        <Card value={2} style={{ height: '400px', backgroundImage: `url('/resources/rock_man_clouds.jpg')`, backgroundSize: 'cover' }} onClick={handleClick}>
                             <Header className='catHeader' inverted textAlign='center'>Climbing</Header>
-                        </Container>
+                        </Card>
 
 
                     </Grid.Column>
