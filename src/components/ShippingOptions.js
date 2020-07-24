@@ -7,18 +7,6 @@ const ShippingOptions = ({ user, setStep }) => {
     const [editMode, setEditMode] = useState(false);
     const [shippingInfo, setShipping] = useState({});
 
-    // if (!user.user_id) {
-    //     return <div>
-    //         <Segment>
-    //             <Dimmer active inverted>
-    //                 <Loader inverted active>Loading</Loader>
-    //             </Dimmer>
-
-    //             <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-    //         </Segment>
-    //     </div>;
-    // };
-
     useEffect(() => {
         if (user.user_id) {
             console.log('setting setShipping');
@@ -31,6 +19,10 @@ const ShippingOptions = ({ user, setStep }) => {
 
     }, []);
 
+    const handleInput = (e, data) => {
+        console.log('In handle input function');
+        setShipping(data);
+    } 
 
 
     return (
@@ -82,8 +74,7 @@ const ShippingOptions = ({ user, setStep }) => {
                             <p> First Name:</p>
                             <Input
                                 name='firstname'
-
-                                onChange={handleInput}
+                                defaultValue={firstname}
                             >
                             </Input>
                         </Segment>
@@ -91,8 +82,7 @@ const ShippingOptions = ({ user, setStep }) => {
                             <p>Last Name:</p>
                             <Input
                                 name='lastname'
-
-                                onChange={handleInput}
+                                defaultValue={lastname}
                             >
                             </Input>
                         </Segment>
@@ -101,8 +91,7 @@ const ShippingOptions = ({ user, setStep }) => {
                             <p>Street Address:</p>
                             <Input
                                 name='street'
-
-                                onChange={handleInput}
+                                defaultValue={street}
                             >
                             </Input>
                         </Segment>
@@ -117,8 +106,7 @@ const ShippingOptions = ({ user, setStep }) => {
                                 <p>City:</p>
                                 <Input
                                     name='city'
-
-                                    onChange={handleInput}
+                                    defaultValue={city}
                                 >
                                 </Input>
                             </Segment>
@@ -128,7 +116,7 @@ const ShippingOptions = ({ user, setStep }) => {
                                 <Dropdown
                                     name='state'
                                     placeholder='State'
-
+                                    defaultValue={state}
                                     style={{
                                         border: '1px solid black',
                                         borderRadius: '5px'
@@ -136,7 +124,6 @@ const ShippingOptions = ({ user, setStep }) => {
                                     search
                                     selection
                                     options={stateOptions}
-                                    onChange={handleInput}
                                 />
                             </Segment>
 
@@ -144,8 +131,7 @@ const ShippingOptions = ({ user, setStep }) => {
                                 <p>Zip Code:</p>
                                 <Input
                                     name='zip'
-
-                                    onChange={handleInput}
+                                    defaultValue={zip}
                                 >
                                 </Input>
                             </Segment>
