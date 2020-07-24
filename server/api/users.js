@@ -10,13 +10,6 @@ usersRouter.use((req, res, next) => {
     next();
 });
 
-usersRouter.get('/', async (req, res) => {
-    const users = await getAllUsers();
-    res.send({
-        users
-    });
-});
-
 usersRouter.get('/me', requireUser, async (req, res, next) => {
     const user = req.user;
     console.log('User Object: ', user);
