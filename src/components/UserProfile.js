@@ -34,22 +34,6 @@ const UserProfile = ({
     const [zip, setZip] = useState("");
     const [shipping, setShipping] = useState("");
 
-    // useEffect(() => {
-    //     console.log('ID of the User: ', user.user_id);
-    //     const { user_id } = user;
-    //     axios.get(`/api/users/${user_id}`, { user_id })
-    //         .then(res => {
-    //             console.log('Fetched User: ', res.data.user);
-    //             setFirstname(res.data.user.firstname);
-    //             setLastname(res.data.user.lastname);
-    //             setStreet(res.data.user.userPreferences.street);
-    //             setCity(res.data.user.userPreferences.city);
-    //             setState(res.data.user.userPreferences.state);
-    //             setZip(res.data.user.userPreferences.zip);
-    //             setShipping(res.data.user.userPreferences.shipping);
-    //         })
-    //         .catch(error => console.error(error));
-    //
     useEffect(() => {
         console.log('ID of the User: ', user.user_id);
 
@@ -85,8 +69,6 @@ const UserProfile = ({
 
             }).catch(error => console.error("payments error", error))
     }, []);
-
-
 
     const editProfileButtonClick = (e,) => {
         console.log('Entered Edit Profile Click Handler!', e);
