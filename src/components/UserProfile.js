@@ -26,21 +26,6 @@ const UserProfile = ({
         </div>;
     };
 
-    useEffect(() => {
-        axios.get(`/api/payments/${user.user_id}`)
-            .then(res => {
-                const fetchedPayments = res.data.payments
-
-                if (fetchedPayments.length) {
-                    console.log('These are the payments:', fetchedPayments);
-                    setUserPayments(fetchedPayments);
-                } else {
-                    console.log('No Payments to fetch!')
-                }
-
-            }).catch(error => console.error("payments error", error))
-    }, [user.user_id]);
-
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [street, setStreet] = useState("");
@@ -83,6 +68,24 @@ const UserProfile = ({
             })
             .catch(error => console.error(error));
     }, [user.user_id]);
+
+    useEffect(() => {
+        axios.get(`/api/payments/${user.user_id}`)
+            .then(res => {
+                console.log('IN THE GET ROUTE')
+                const fetchedPayments = res.data.payments
+
+                if (fetchedPayments.length) {
+                    console.log('HERE HEREHERHERHE')
+                    console.log('These are the payments:', fetchedPayments);
+                    setUserPayments(fetchedPayments);
+                } else {
+                    console.log('No Payments to fetch!')
+                }
+
+            }).catch(error => console.error("payments error", error))
+    }, []);
+
 
 
     const editProfileButtonClick = (e,) => {
@@ -239,7 +242,8 @@ const UserProfile = ({
                                 {userPayments.length
                                     ? <UserPayments
                                         user={user}
-                                        userPayments={userPayments} />
+                                        userPayments={userPayments}
+                                        paymentModalShow={paymentModalShow} />
                                     :
                                     <Segment>You have no payment options on file!</Segment>
                                 }
