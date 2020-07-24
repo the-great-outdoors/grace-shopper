@@ -31,12 +31,13 @@ paymentsRouter.get('/:userId', async (req, res, next) => {
     }
 });
 
-paymentsRouter.post('/', async (req, res, next) => {
+paymentsRouter.post('/', requireUser, async (req, res, next) => {
     try {
+        console.log('Inside Payment orders post!')
         const user = req.user;
         const userId = user.user_id;
-        console.log('userId from payments:', userId);
         const { name, number, cardType, cid, expiration } = req.body;
+        console.log('userId from payments:', userId);
         const paymentData = { userId, name, number, cardType, cid, expiration };
 
         const payment = await createPayment(paymentData);
