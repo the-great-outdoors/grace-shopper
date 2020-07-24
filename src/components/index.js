@@ -8,7 +8,7 @@ export { default as Hero } from './Hero';
 export { default as LoginModal } from './LoginModal';
 export { default as Merchandise } from './Merchandise';
 export { default as MerchCards } from './Cards';
-export { default as NavBar } from './NavBar';
+export { default as NavBar } from './Navbar';
 export { default as Orders } from './Orders';
 export { default as UserPayments } from './UserPayment';
 export { default as ProductPage } from './ProductPage';
