@@ -6,6 +6,7 @@ import { Shipping } from './Shipping';
 import { ShippingEdit } from './ShippingEdit';
 import { ShippingOptions } from "./ShippingOptions";
 import { UserPayments } from './index';
+import Payments from "./Payments";
 
 
 const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, setEditMode }) => {
@@ -23,9 +24,11 @@ const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, 
         console.log('checking for active carts');
         if (user.user_id) {
 
-            Axios.post(`/api/orders/cart`,{ message:'Im here!'} ,{headers:{
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }})
+            Axios.post(`/api/orders/cart`, { message: 'Im here!' }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
                 .then((res => {
                     console.log('retrieved active order:', res.data.orders.items)
                     return res.data.orders
@@ -36,16 +39,16 @@ const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, 
                     setCart(data.items);
                     localStorage.removeItem('activeCart');
                 })
-        }else{
+        } else {
             console.log('Guest user');
-            const localCart= localStorage.getItem('activeCart');
+            const localCart = localStorage.getItem('activeCart');
             if (localCart) {
                 setCart(JSON.parse(localCart));
                 console.log('guest user. Items retrieved from memory:', localCart);
             }
         }
 
-    }, []);
+    }, [user.user_id]);
 
     const handleDelete = (event, data) => {
         console.log('from order:', data);
@@ -54,12 +57,14 @@ const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, 
         const itemId = data.id;
 
         if (user.user_id) {
-            Axios.delete(`/api/orders/cart/${itemId}`,{headers:{
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            },data: {order} })
-            .then(data=>{
-                console.log('Deleted item: ',data);
+            Axios.delete(`/api/orders/cart/${itemId}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }, data: { order }
             })
+                .then(data => {
+                    console.log('Deleted item: ', data);
+                })
 
         }
         const cartArray = [...cart];
@@ -73,22 +78,24 @@ const Orders = ({ cart, setCart, user, order, setOrder, userPayments, editMode, 
 
     const handleCheckout = async (event, target) => {
         event.preventDefault();
-        if (!cart||!cart.length) {
+        if (!cart || !cart.length) {
             alert('Nothing in cart. Time to Splurge!')
             return;
         }
         console.log("entered order")
-        const res = await Axios.patch('/api/orders/cart', {status: false, orderId:order}, {headers:{
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }});
+        const res = await Axios.patch('/api/orders/cart', { status: false, orderId: order }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
         localStorage.removeItem('activeCart');
         console.log('order:', res);
         setCart([]);
         alert('Successfully placed order!');
 
-        }
+    }
 
-return (
+    return (
         <div style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '1rem' }}>
             <Step.Group>
                 <Step active name='truck' onClick={handleClick}>
@@ -115,55 +122,54 @@ return (
                 </Step>
             </Step.Group>
             <Grid columns={3}>
-            <Grid.Row centered>
-                {cart.map((order, index) => {
-                    return (
-                          <Grid.Column key={index}>
-                            <Segment padded>
-                              <Label attached='top'>{order.name}<Icon name='idea' size='large'/></Label>
-                                <p>Descrition: {order.description}</p>
-                                <p>Quantity: {order.quantity}</p>
-                                <p>Price: {order.price}</p>
-                                <p><Button Icon='delete' onClick={handleDelete} id={order.item_id}index={index}>Delete</Button></p>
-                            </Segment>
-                          </Grid.Column>
-                    )
-                })
-                }
-            </Grid.Row>
+                <Grid.Row centered>
+                    {cart.map((order, index) => {
+                        return (
+                            <Grid.Column key={index}>
+                                <Segment padded>
+                                    <Label attached='top'>{order.name}<Icon name='idea' size='large' /></Label>
+                                    <p>Description: {order.description}</p>
+                                    <p>Quantity: {order.quantity}</p>
+                                    <p>Price: {order.price}</p>
+                                    <p><Button Icon='delete' onClick={handleDelete} id={order.item_id} index={index}>Delete</Button></p>
+                                </Segment>
+                            </Grid.Column>
+                        )
+                    })
+                    }
+                </Grid.Row>
             </Grid>
             {
-            step === 'truck'
-                ?
-                <ShippingOptions
-                    style={{ marginTop: '1rem', marginBottom: '1rem' }}
-                    user={user}
-                    setStep={setStep}
-                    user={user}
-                    editMode={editMode}
-                    setEditMode={setEditMode} 
-                />
-                :
-                step === 'payment'
-                ?
-                    <GridColumn width={6}>
-                    <Button animated compact={true}
-                        size='mini'
-                        floated='right'
-                        onClick={e => setStep('review')}>
-                        <Button.Content visible>Next</Button.Content>
-                        <Button.Content hidden>
-                            <Icon name='thumbs up' />
-                        </Button.Content>
-                    </Button>
-                    <UserPayments
+                step === 'truck'
+                    ?
+                    <ShippingOptions
+                        style={{ marginTop: '1rem', marginBottom: '1rem' }}
                         user={user}
-                        userPayments={userPayments}
-                        setStep={setStep} />
-                    </GridColumn>
-                :
-                    <Button style={{ marginTop: '1rem' }} positive size='massive' icon animated onClick={handleCheckout}>
-                        Confirm Order
+                        setStep={setStep}
+                        editMode={editMode}
+                        setEditMode={setEditMode}
+                    />
+                    :
+                    step === 'payment'
+                        ?
+                        <GridColumn width={6}>
+                            <Button animated compact={true}
+                                size='mini'
+                                floated='right'
+                                onClick={e => setStep('review')}>
+                                <Button.Content visible>Next</Button.Content>
+                                <Button.Content hidden>
+                                    <Icon name='thumbs up' />
+                                </Button.Content>
+                            </Button>
+                                    <Payments
+                                        setStep={setStep} 
+                                        editMode={editMode} 
+                                        setEditMode={setEditMode} 
+                                        user={user} />
+                        </GridColumn>
+                        :
+                        <Button content='Confirm Order' style={{ marginTop: '1rem', textAlign: 'center' }} positive size='massive' icon animated onClick={handleCheckout}>
                     </Button>}
         </div>
     )

@@ -30,7 +30,7 @@ const UserProfile = ({
         axios.get(`/api/payments/${user.user_id}`)
             .then(res => {
                 const fetchedPayments = res.data.payments
-                
+
                 if (fetchedPayments.length) {
                     console.log('These are the payments:', fetchedPayments);
                     setUserPayments(fetchedPayments);
@@ -39,7 +39,7 @@ const UserProfile = ({
                 }
 
             }).catch(error => console.error("payments error", error))
-    }, []);
+    }, [user.user_id]);
 
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
@@ -67,7 +67,7 @@ const UserProfile = ({
     //
     useEffect(() => {
         console.log('ID of the User: ', user.user_id);
-      
+
         axios.get(`/api/users/me`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
@@ -82,7 +82,7 @@ const UserProfile = ({
                 setShipping(res.data.user.userPreferences.shipping);
             })
             .catch(error => console.error(error));
-    }, []);
+    }, [user.user_id]);
 
 
     const editProfileButtonClick = (e,) => {
@@ -214,35 +214,35 @@ const UserProfile = ({
                                 height: '100%',
                                 marginBottom: '1rem'
                             }}
-                            >
+                        >
                             <Segment.Group >
                                 <Segment style={{ backgroundColor: 'olivedrab' }} >Payment Options
                                 <Button
-                                    icon='add'
-                                    compact={true}
-                                    size='mini'
-                                    floated='right'
-                                    onClick={addPaymentOption}
-                                >
-                                </Button>
-                                {
-                                    paymentModalShow
-                                    ? <AddPaymentModal
-                                        setUserPayments={setUserPayments}
-                                        userPayments={userPayments}
-                                        paymentModalShow={paymentModalShow}
-                                        setPaymentModalShow={setPaymentModalShow} />
-                                    : ''
+                                        icon='add'
+                                        compact={true}
+                                        size='mini'
+                                        floated='right'
+                                        onClick={addPaymentOption}
+                                    >
+                                    </Button>
+                                    {
+                                        paymentModalShow
+                                            ? <AddPaymentModal
+                                                setUserPayments={setUserPayments}
+                                                userPayments={userPayments}
+                                                paymentModalShow={paymentModalShow}
+                                                setPaymentModalShow={setPaymentModalShow} />
+                                            : ''
+                                    }
+                                </Segment>
+                                {userPayments.length
+                                    ? <UserPayments
+                                        user={user}
+                                        userPayments={userPayments} />
+                                    :
+                                    <Segment>You have no payment options on file!</Segment>
                                 }
-                            </Segment>
-                        {userPayments.length
-                            ? <UserPayments
-                            user={user}
-                            userPayments={userPayments} />
-                            : 
-                            <Segment>You have no payment options on file!</Segment>
-                        }
-                        </Segment.Group>
+                            </Segment.Group>
                         </Grid.Column>
 
                     </Grid.Column>
