@@ -10,8 +10,6 @@ const AddPaymentModal = ({ paymentModalShow, setPaymentModalShow, user }) => {
     const [expiration, setExpiration] = useState('');
     const [cardType, setCardType] = useState('');
 
-    
-
     const handleClose = () => {
         console.log('Clicking handle close button!');
         setPaymentModalShow(false);
@@ -31,7 +29,10 @@ const AddPaymentModal = ({ paymentModalShow, setPaymentModalShow, user }) => {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         })
-        .then((res) => {console.log(res)})
+        .then((res) => {
+            console.log(res);
+            setPaymentModalShow(false);
+        })
         .catch((error) => {console.error(error)})
 
     }
