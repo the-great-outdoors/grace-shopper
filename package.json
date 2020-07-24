@@ -7,7 +7,7 @@
     "start": "node server/index.js",
     "start:dev": "nodemon server/index.js",
     "client": "webpack --watch",
-    "seed": "node-dev --respawn server/db/seed.js",
+    "seed": "node server/db/seed.js",
     "test:watch": "jest --watchAll --maxWorkers=1",
     "build": "webpack --mode=\"production\""
   },
