@@ -242,8 +242,8 @@ async function createInitialUsers() {
                 lastname: 'Wayne'
             },
             {
-                username: 'turdferguson',
-                password: 'uraturd99',
+                username: 'tferguson',
+                password: 'fergie99',
                 firstname: 'Thomas',
                 lastname: 'Ferguson'
             }
